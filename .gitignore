@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+build/
+artifacts/
+cache/
+
+# Environment variables - RAHASIA, JANGAN di-commit!
+.env
+.env.local
+.env.production
+
+# Hardhat deployments (opsional, bisa di-commit untuk team)
+# deployments/
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
