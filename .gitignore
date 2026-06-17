@@ -39,6 +39,6 @@ foundry.lock
 .gas-snapshot
 broadcast/
 
-# Non-code files
-docs/
+# Temporary / build artifacts
+stitch_lightweightbridge_crypto_sandbox_simulator.zip
 stitch_lightweightbridge_crypto_sandbox_simulator/
