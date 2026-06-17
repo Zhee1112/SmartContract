@@ -3,7 +3,7 @@ var sbState = { step:1, coin:'ETH', amount:1, operation:'deposit', tier:'d', src
 var sbGasData = {
     deposit:  { a:31412, b:31427, c:122769, d:34156 },
     withdraw: { a:9735,  b:9727,  c:104806, d:12119 },
-    swap:     { a:10593, b:10494, c:103825, d:13443 }
+    swap:     { a:22080, b:15000, c:133344, d:62787 }
 };
 var sbSecScores = { a:0, b:2, c:8, d:8 };
 var sbCoinPrices = { ETH:2500, USDT:1, USDC:1, WBTC:65000, DAI:1, LINK:15, UNI:8, AAVE:100, GRT:0.15, MKR:1500 };
@@ -15,7 +15,7 @@ var sbTierFeatures = {
     a: { name:'Unoptimized', color:'var(--text-muted)', features:[
         {t:'Tanpa Optimasi Gas', d:'Tidak ada custom errors, storage packing, atau CEI pattern.', icon:'block'},
         {t:'Tanpa MEV Protection', d:'Tidak ada mekanisme deteksi atau mitigasi sandwich attack.', icon:'warning'},
-        {t:'OpenZeppelin Guard', d:'依赖 ReentrancyGuardExternal dari OpenZeppelin (2 external calls).', icon:'shield'},
+        {t:'OpenZeppelin Guard', d:'Menggunakan ReentrancyGuardExternal dari OpenZeppelin (2 external calls).', icon:'shield'},
         {t:'Storage Layout', d:'Storage tidak teroptimasi — gas lebih tinggi untuk setiap operasi.', icon:'database'},
         {t:'Referensi Baseline', d:'Digunakan sebagai pembanding untuk mengukur dampak setiap optimasi.', icon:'compare'}
     ]},
@@ -297,7 +297,7 @@ function sbShowReport(attackHits, totalSamples) {
     var mevBlocked = protected ? Math.floor(attackHits * 0.87) : 0;
     var contractSizes = {a:'413,860B',b:'3,553B',c:'6,183B',d:'3,553B'};
     var extCalls = {a:'0',b:'0',c:'5-6',d:'0 (inline)'};
-    var spgSel = (8/gasSel*1000000).toFixed(1);
+    var spgSel = (secScore/gasSel*1000000).toFixed(1);
     var totalAssetValue = sbState.amount * ethPrice;
     var totalTxCost = totalCostUsd + totalAssetValue;
 

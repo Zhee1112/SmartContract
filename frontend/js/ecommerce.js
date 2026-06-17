@@ -1,6 +1,6 @@
 /* ============ E-COMMERCE TERMINAL JS ============ */
 var ecCart = [];
-var ecCurrentTier = { id:4, label:'Tier 4 — Batching Bridge' };
+var ecCurrentTier = { id:4, label:'Tier D — Lightweight EIP-1153' };
 var ecCurrentNetwork = 'MATIC';
 var ecWalletConnected = false;
 var ecWalletAddress = '';
@@ -10,10 +10,10 @@ var ecPrices = { ETH:2500, MATIC:0.22 };
 var ecGasGwei = { ETH:0.55, MATIC:30 };
 
 var ecTiers = {
-    1:{ name:'Tier 1 — Instant Bridge (LP)',   gas:31412,  sec:0,  time:'~10 detik',  contract:'A', color:'#f87171' },
-    2:{ name:'Tier 2 — Optimistic Bridge',      gas:31427,  sec:2,  time:'~2 menit',   contract:'B', color:'#ffb871' },
-    3:{ name:'Tier 3 — Canonical Bridge (PoS)', gas:122769, sec:8,  time:'~7 menit',   contract:'C', color:'var(--primary)' },
-    4:{ name:'Tier 4 — Batching Bridge',        gas:34156,  sec:8,  time:'~10 menit',  contract:'D', color:'#10b981' }
+    1:{ name:'Tier A — Unoptimized Bridge',   gas:31412,  sec:0,  time:'~10 detik',  contract:'A', color:'#f87171' },
+    2:{ name:'Tier B — Static Optimization',      gas:31427,  sec:2,  time:'~2 menit',   contract:'B', color:'#ffb871' },
+    3:{ name:'Tier C — Full Dynamic EIP-1153', gas:122769, sec:8,  time:'~7 menit',   contract:'C', color:'var(--primary)' },
+    4:{ name:'Tier D — Lightweight EIP-1153',        gas:34156,  sec:8,  time:'~10 menit',  contract:'D', color:'#10b981' }
 };
 
 var ecProducts = [

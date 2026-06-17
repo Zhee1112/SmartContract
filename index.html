@@ -156,7 +156,7 @@ button:hover{border-color:var(--text-light);color:var(--text)}
         <div class="card">
             <div class="card-label">Tier D — Dinamis (Ringan)</div>
             <div class="card-value text-primary">Inline EIP-1153</div>
-            <div class="card-note">Semua keamanan Tier C di-inline tanpa external call. Single-slot MEV, penalty inline. Overhead: 8.7% gas vs Tier B. Best cost-effectiveness: 205 SPG.</div>
+            <div class="card-note">Semua keamanan Tier C di-inline tanpa external call. Single-slot MEV, penalty inline. Overhead: 8.7% gas vs Tier B. Best cost-effectiveness: 220.1 SPG.</div>
         </div>
     </div>
     <div class="callout"><strong>Bridge</strong> adalah mekanisme penghubung aset antar jaringan blockchain. Kerentanan bridge telah menyebabkan kerugian lebih dari $2 miliar dalam 3 tahun terakhir (Ronin $620M, Wormhole $320M, Nomad $190M). Penelitian ini mengajukan pendekatan defensif on-chain menggunakan fitur terbaru Ethereum.</div>
@@ -557,7 +557,7 @@ button:hover{border-color:var(--text-light);color:var(--text)}
             <li><strong>Modifikasi EIP-1153 Multiguna</strong>: Dari 1 fungsi (reentrancy guard, 200 gas) menjadi 5 fungsi keamanan (reentrancy + MEV + penalty + pause + block tracking, 9,900 gas) — 48.5x lebih murah dari Tier C</li>
             <li><strong>Tier D (Rollup Ringan)</strong>: Menghemat 52.9% — 88.4% gas dibanding Tier C dengan 0 external calls melalui inline assembly</li>
             <li><strong>Tier C (Rollup Full)</strong>: Overhead 327% karena 5-6 external calls ke MonitorMock per transaksi</li>
-            <li><strong>Cost-effectiveness terbaik</strong>: Tier D mencapai 205 SPG — 3.15x lebih efisien dari Tier C</li>
+            <li><strong>Cost-effectiveness terbaik</strong>: Tier D mencapai 220.1 SPG — 3.4x lebih efisien dari Tier C</li>
             <li><strong>215/215 pengujian lulus</strong> mencakup 13 test suites: fuzz, invariant, edge case, MEV simulation, economic deterrence, dan tier comparison</li>
             <li><strong>Hasil terbukti secara statistik</strong> melalui Welch's t-test (p = 0) dan Cohen's d = 220,64 (effect size LARGE)</li>
             <li><strong>Emergency Pause</strong> tersedia di Tier C & D sebagai mitigasi aktif jika kerentanan baru ditemukan</li>

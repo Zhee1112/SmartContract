@@ -123,6 +123,6 @@
 
 /* Tooltip for tier feature table */
 .tt-wrap{position:relative;cursor:help}
-.tt-wrap .tt-tip{display:none;position:absolute;left:0;top:calc(100% + 6px);width:260px;padding:10px 12px;background:#1a1d24;border:1px solid #374151;border-radius:8px;font-size:.75rem;color:#e5e7eb;line-height:1.5;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.4);pointer-events:none}
+.tt-wrap .tt-tip{display:none;position:absolute;left:0;top:calc(100% + 6px);width:260px;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.75rem;color:var(--text-secondary);line-height:1.5;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.15);pointer-events:none}
 .tt-wrap:hover .tt-tip{display:block}
 .tt-wrap::after{content:"ⓘ";display:inline-block;margin-left:4px;font-size:.65rem;color:#6b7280;vertical-align:super}

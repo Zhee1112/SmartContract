@@ -46,7 +46,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     localStorage.setItem('csrfToken', data.csrfToken);
     localStorage.setItem('user', JSON.stringify(data.user));
 
-    window.location.href = '/dashboard';
+    window.location.href = '/';
   } catch (err) {
     errorEl.textContent = 'Koneksi gagal. Coba lagi.';
     const btn = e.target.querySelector('button[type="submit"]');
@@ -121,7 +121,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     fetch(`${API_BASE}/api/auth/me`, {
       headers: { 'Authorization': `Bearer ${token}` }
     }).then(res => {
-      if (res.ok) window.location.href = '/dashboard';
+      if (res.ok) window.location.href = '/';
     }).catch(() => {});
   }
 })();
