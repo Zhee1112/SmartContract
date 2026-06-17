@@ -681,20 +681,20 @@ tailwind.config = {
 <label style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:4px;color:var(--text-muted)">Bridge Execution Tier</label>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
 <button id="ec-tier-1" class="ec-tier-btn" onclick="ecSetTier(1)">
-<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier 1</span>
-<span style="font-size:10px;opacity:0.7">Instant (LP)</span>
+<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier A</span>
+<span style="font-size:10px;opacity:0.7">Unoptimized</span>
 </button>
 <button id="ec-tier-2" class="ec-tier-btn" onclick="ecSetTier(2)">
-<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier 2</span>
-<span style="font-size:10px;opacity:0.7">Optimistic</span>
+<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier B</span>
+<span style="font-size:10px;opacity:0.7">Static Only</span>
 </button>
 <button id="ec-tier-3" class="ec-tier-btn" onclick="ecSetTier(3)">
-<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier 3</span>
-<span style="font-size:10px;opacity:0.7">Canonical (PoS)</span>
+<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier C</span>
+<span style="font-size:10px;opacity:0.7">Full Dynamic</span>
 </button>
 <button id="ec-tier-4" class="ec-tier-btn active" onclick="ecSetTier(4)">
-<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier 4</span>
-<span style="font-size:10px;opacity:0.7">Batching</span>
+<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier D</span>
+<span style="font-size:10px;opacity:0.7">Lightweight</span>
 </button>
 </div>
 </div>
@@ -745,7 +745,7 @@ tailwind.config = {
 </div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-family:'JetBrains Mono',monospace;font-size:14px">
-<div><span style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;opacity:0.5">BRIDGE TIER</span><span style="color:var(--text)" id="ec-rc-tier">Tier 4 (Batching)</span><span style="font-size:10px;color:var(--text-muted);display:block" id="ec-rc-route">Route: Contract D</span></div>
+<div><span style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;opacity:0.5">BRIDGE TIER</span><span style="color:var(--text)" id="ec-rc-tier">Tier D — Lightweight</span><span style="font-size:10px;color:var(--text-muted);display:block" id="ec-rc-route">Route: Contract D</span></div>
 <div><span style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;opacity:0.5">GAS CONSUMED</span><span style="color:var(--text)" id="ec-rc-gas">34,156 units</span><span style="font-size:10px;color:#ffb871;display:block" id="ec-rc-gas-eth">0.001 MATIC ($0.047)</span></div>
 <div><span style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;opacity:0.5">SECURITY LEVEL</span><span style="color:#10b981;font-weight:700" id="ec-rc-sec">8/8 Verified</span><span style="font-size:10px;color:var(--text-muted);display:block" id="ec-rc-sec-sub">MEV Protected</span></div>
 <div><span style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;opacity:0.5">SETTLEMENT</span><span style="color:var(--text)" id="ec-rc-time">Immediate</span><span style="font-size:10px;color:var(--primary);display:block" id="ec-rc-net">Polygon Network</span></div>
@@ -757,19 +757,19 @@ tailwind.config = {
 <h3 style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:24px">Gas Fee Comparison</h3>
 <div style="display:flex;flex-direction:column;gap:16px">
 <div>
-<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px"><span>Tier 1 — Instant (LP)</span><span style="font-family:'JetBrains Mono',monospace">31,412 gas (Contract A)</span></div>
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px"><span>Tier A — Unoptimized</span><span style="font-family:'JetBrains Mono',monospace">31,412 gas (Contract A)</span></div>
 <div class="ec-gas-bar"><div class="ec-gas-fill" style="width:26%;background:#f87171"></div></div>
 </div>
 <div>
-<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px"><span>Tier 2 — Optimistic</span><span style="font-family:'JetBrains Mono',monospace">31,427 gas (Contract B)</span></div>
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px"><span>Tier B — Static Only</span><span style="font-family:'JetBrains Mono',monospace">31,427 gas (Contract B)</span></div>
 <div class="ec-gas-bar"><div class="ec-gas-fill" style="width:26%;background:#ffb871"></div></div>
 </div>
 <div>
-<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px"><span>Tier 3 — Canonical (PoS)</span><span style="font-family:'JetBrains Mono',monospace">122,769 gas (Contract C)</span></div>
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px"><span>Tier C — Full Dynamic</span><span style="font-family:'JetBrains Mono',monospace">122,769 gas (Contract C)</span></div>
 <div class="ec-gas-bar"><div class="ec-gas-fill" style="width:100%;background:var(--primary)"></div></div>
 </div>
 <div>
-<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px;color:#10b981"><span>Tier 4 — Batching</span><span style="font-family:'JetBrains Mono',monospace">34,156 gas (Contract D)</span></div>
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px;color:#10b981"><span>Tier D — Lightweight</span><span style="font-family:'JetBrains Mono',monospace">34,156 gas (Contract D)</span></div>
 <div class="ec-gas-bar"><div class="ec-gas-fill" style="width:28%;background:#10b981"></div></div>
 </div>
 </div>
@@ -1067,6 +1067,5 @@ function fetchEtherscanData() {
 <script src="js/sandbox.js"></script>
 <script src="js/results.js"></script>
 <script src="js/ecommerce.js"></script>
-</body>
 </body>
 </html>
