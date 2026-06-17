@@ -1,16 +1,1072 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Sistem penggajian berbasis blockchain dengan Rupiah Digital. Transparan, aman, dan otomatis." />
-    <title>IDR Payroll System — Rupiah Digital</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Skripsi Optimasi Gas dan Keamanan Smart Contract Bridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="css/casestudy.css">
+<style>
+:root{--bg:#fff;--surface:#f8f9fb;--surface-alt:#f0f2f5;--border:#e2e5ea;--border-light:#eef0f3;--primary:#1a56db;--primary-light:#e8eefb;--green:#0d7a3f;--green-light:#e6f4ec;--red:#b91c1c;--red-light:#fde8e8;--orange:#b45309;--orange-light:#fef3cd;--text:#111827;--text-secondary:#4b5563;--text-muted:#6b7280;--text-light:#9ca3af}
+[data-theme="dark"]{--bg:#111318;--surface:#1a1d24;--surface-alt:#22252d;--border:#2d3139;--border-light:#252830;--primary:#5b9bf5;--primary-light:rgba(91,155,245,.12);--green:#34d399;--green-light:rgba(52,211,153,.12);--red:#f87171;--red-light:rgba(248,113,113,.12);--orange:#fbbf24;--orange-light:rgba(251,191,36,.12);--text:#e5e7eb;--text-secondary:#9ca3af;--text-muted:#6b7280;--text-light:#4b5563}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;max-width:1100px;margin:0 auto}
+[data-theme="dark"] .nav{background:rgba(17,19,24,.95)}
+.btn-theme{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-left:auto;transition:all .15s;flex-shrink:0}
+.btn-theme:hover{border-color:var(--text-light);color:var(--text)}
+.nav-brand{font-family:'IBM Plex Serif',Georgia,serif;font-weight:600;font-size:.95rem;padding:18px 24px 18px 0;border-right:1px solid var(--border);white-space:nowrap;color:var(--text);letter-spacing:-.01em}
+.nav-tabs{display:flex;margin-left:4px}
+.nav-tab{padding:18px 20px;font-size:.82rem;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;user-select:none;letter-spacing:.02em}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.container{max-width:1100px;margin:0 auto;padding:40px 40px 60px}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-family:'IBM Plex Serif',Georgia,serif;font-size:1.6rem;font-weight:600;color:var(--text);margin-bottom:8px;letter-spacing:-.02em}
+.page-subtitle{font-size:.9rem;color:var(--text-muted);margin-bottom:40px;line-height:1.5}
+.section-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--primary);margin-bottom:8px}
+.section-title{font-family:'IBM Plex Serif',Georgia,serif;font-size:1.15rem;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:-.01em}
+.section-desc{font-size:.88rem;color:var(--text-secondary);margin-bottom:24px;max-width:720px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:16px}
+.card-label{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);margin-bottom:10px}
+.card-value{font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:600;color:var(--text);letter-spacing:-.02em}
+.card-note{font-size:.8rem;color:var(--text-muted);margin-top:6px}
+.text-green{color:var(--green)}.text-red{color:var(--red)}.text-orange{color:var(--orange)}.text-primary{color:var(--primary)}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:768px){.grid-3,.grid-4,.grid-2{grid-template-columns:1fr}.nav-brand{display:none}.container{padding:24px 16px 40px}.sim-stats{grid-template-columns:1fr 1fr}.sb-tier-grid{grid-template-columns:1fr 1fr}.sb-report-grid,.sb-bell-grid,.sb-config-grid{grid-template-columns:1fr!important}.sb-benefits-grid{grid-template-columns:1fr!important}.sb-data-bento{grid-template-columns:1fr 1fr!important}.chart-wrap{height:200px}.chart-box canvas{max-height:180px!important}#sb-log-box{max-height:250px}}
+.chart-panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;position:relative}
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative}
+.chart-box .chart-title{margin-bottom:4px}
+.chart-box .chart-subtitle{margin-bottom:12px}
+.chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.chart-title{font-size:.92rem;font-weight:600;color:var(--text)}
+.chart-subtitle{font-size:.78rem;color:var(--text-muted);margin-top:3px}
+.chart-wrap{position:relative;height:240px}
+.chart-box canvas{max-height:220px!important}
+.btn-expand{font-family:'IBM Plex Sans',sans-serif;font-size:.72rem;font-weight:500;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);padding:5px 12px;border-radius:4px;cursor:pointer;transition:all .15s;letter-spacing:.02em}
+.btn-expand:hover{border-color:var(--text-light);color:var(--text)}
+.callout{border-left:3px solid var(--primary);background:var(--primary-light);padding:16px 20px;border-radius:0 6px 6px 0;margin-top:20px;font-size:.85rem;color:var(--text-secondary);line-height:1.65}
+.callout strong{color:var(--text);font-weight:600}
+.callout-note{border-left-color:var(--orange);background:var(--orange-light)}
+.callout-success{border-left-color:var(--green);background:var(--green-light)}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border-light)}
+th{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);background:var(--bg)}
+.badge{display:inline-block;padding:3px 8px;border-radius:3px;font-size:.7rem;font-weight:600;letter-spacing:.03em}
+.badge-pass{background:var(--green-light);color:var(--green)}
+.divider{border:none;border-top:1px solid var(--border-light);margin:40px 0}
+.summary{border:1px solid var(--border);border-radius:8px;padding:28px;background:var(--surface)}
+.summary h3{font-family:'IBM Plex Serif',Georgia,serif;font-size:1rem;font-weight:600;margin-bottom:16px;color:var(--text)}
+.summary ul{list-style:none;padding:0}
+.summary li{padding:8px 0;font-size:.85rem;color:var(--text-secondary);border-bottom:1px solid var(--border-light);line-height:1.5}
+.summary li:last-child{border-bottom:none}
+.summary li strong{color:var(--text);font-weight:600}
+.summary li::before{content:"";display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:10px;vertical-align:middle}
+.footer{text-align:center;padding:24px 0;color:var(--text-light);font-size:.75rem;border-top:1px solid var(--border-light);margin-top:40px}
+.sim-bar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:16px}
+.sim-bar-title{font-size:.92rem;font-weight:600}
+.sim-bar-sub{font-size:.78rem;color:var(--text-muted);margin-top:2px}
+.sim-controls{display:flex;gap:8px;align-items:center}
+.sim-dot{width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block;margin-right:6px;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.sim-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.sim-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px}
+.sim-card .label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light)}
+.sim-card .val{font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:600;margin-top:6px}
+.sim-card .desc{font-size:.72rem;color:var(--text-muted);margin-top:4px}
+.mempool-wrap{display:flex;align-items:center;gap:16px}
+.mempool-bg{flex-grow:1;height:10px;background:var(--surface-alt);border-radius:5px;overflow:hidden;border:1px solid var(--border-light)}
+.mempool-fill{height:100%;background:var(--primary);width:0%;transition:width .3s;border-radius:5px}
+.route-tag{padding:5px 10px;border-radius:3px;font-size:.72rem;font-weight:600;letter-spacing:.03em;white-space:nowrap}
+.tag-blob{background:#f0e6ff;color:#6b21a8;border:1px solid #d8b4fe}
+.tag-calldata{background:var(--red-light);color:var(--red);border:1px solid #fca5a5}
+button{font-family:'IBM Plex Sans',sans-serif;font-size:.78rem;font-weight:500;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);padding:7px 14px;border-radius:4px;cursor:pointer;transition:all .15s}
+button:hover{border-color:var(--text-light);color:var(--text)}
+.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-primary:hover{background:#1446b8}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:200;justify-content:center;align-items:center;padding:40px}
+.overlay.show{display:flex}
+.overlay-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:28px;width:100%;max-width:1000px;height:80vh;position:relative}
+.overlay-close{position:absolute;top:14px;right:14px;background:var(--surface);border:1px solid var(--border);color:var(--text-muted);width:32px;height:32px;border-radius:4px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.overlay-close:hover{border-color:var(--text-light);color:var(--text)}
+.overlay-chart{width:100%;height:calc(100% - 40px)}
+.help-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg);color:var(--text-muted);font-size:.72rem;font-weight:700;cursor:pointer;margin-left:8px;vertical-align:middle;transition:all .15s;flex-shrink:0}
+.help-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light)}
+.help-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:300;justify-content:center;align-items:center;padding:30px}
+.help-overlay.show{display:flex}
+.help-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:28px 32px;width:100%;max-width:640px;max-height:80vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.help-box h3{font-family:'IBM Plex Serif',Georgia,serif;font-size:1.1rem;font-weight:600;color:var(--text);margin-bottom:12px}
+.help-box p{font-size:.88rem;color:var(--text-secondary);line-height:1.7;margin-bottom:12px}
+.help-box .help-close{position:absolute;top:14px;right:14px;background:var(--surface);border:1px solid var(--border);color:var(--text-muted);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.help-box .help-close:hover{border-color:var(--text-light);color:var(--text)}
+.help-box ul{margin:8px 0 12px 16px;padding:0}
+.help-box li{font-size:.85rem;color:var(--text-secondary);line-height:1.6;margin-bottom:6px}
+.help-box .help-highlight{background:var(--primary-light);border-left:3px solid var(--primary);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:.85rem;color:var(--text-secondary);line-height:1.6}
+</style>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "sb-surface": "#10131a", "sb-surface-dim": "#10131a", "sb-surface-bright": "#363941",
+        "sb-surface-container-lowest": "#0b0e15", "sb-surface-container-low": "#191b23",
+        "sb-surface-container": "#1d2027", "sb-surface-container-high": "#272a31",
+        "sb-surface-container-highest": "#32353c", "sb-on-surface": "#e1e2ec",
+        "sb-on-surface-variant": "#c2c6d6", "sb-outline": "#8c909f", "sb-outline-variant": "#424754",
+        "sb-primary": "#adc6ff", "sb-on-primary": "#002e6a",
+        "sb-primary-container": "#4d8eff", "sb-on-primary-container": "#00285d",
+        "sb-secondary": "#4edea3", "sb-on-secondary": "#003824",
+        "sb-secondary-container": "#00a572", "sb-on-secondary-container": "#00311f",
+        "sb-tertiary": "#ffb95f", "sb-on-tertiary": "#472a00",
+        "sb-tertiary-container": "#ca8100", "sb-on-tertiary-container": "#3e2400",
+        "sb-error": "#ffb4ab", "sb-on-error": "#690005",
+        "sb-error-container": "#93000a", "sb-on-error-container": "#ffdad6"
+      },
+      "fontFamily": {
+        "sb-mono": ["JetBrains Mono"], "sb-sans": ["Inter"]
+      }
+    }
+  }
+}
+</script>
+<link rel="stylesheet" href="css/sandbox.css">
+<link rel="stylesheet" href="css/ecommerce.css">
+</head>
+<body>
+<div class="nav">
+    <div class="nav-brand">Skripsi Dashboard</div>
+    <div class="nav-tabs">
+        <div class="nav-tab active" onclick="switchTab('results')">Hasil Penelitian</div>
+        <div class="nav-tab" onclick="switchTab('sandbox')">Sandbox Simulator</div>
+        <div class="nav-tab" onclick="switchTab('ecommerce')">E-Commerce</div>
+    </div>
+    <div id="auth-info" style="display:flex;align-items:center;gap:10px;margin-left:auto">
+    </div>
+    <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" title="Ganti tema"></button>
+</div>
+
+<div id="page-results" class="page active container">
+<div id="results-container"></div>
+</div><!-- end page-results -->
+<!-- PAGE: SANDBOX SIMULATOR -->
+<div id="page-sandbox" class="page">
+<div class="container" style="max-width:1200px">
+
+<!-- Progress Stepper -->
+<div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:32px;position:relative">
+    <div style="position:absolute;top:50%;left:0;width:100%;height:2px;background:var(--border);z-index:0"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--bg);padding:0 16px;z-index:1">
+        <div id="sb-dot-1" style="width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff" class="sb-pulse">01</div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--primary)">Selection</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--bg);padding:0 16px;z-index:1">
+        <div id="sb-dot-2" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--text-muted)">02</div>
+        <span id="sb-label-2" style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text-muted)">Configuration</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--bg);padding:0 16px;z-index:1">
+        <div id="sb-dot-3" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--text-muted)">03</div>
+        <span id="sb-label-3" style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text-muted)">Simulation</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--bg);padding:0 16px;z-index:1">
+        <div id="sb-dot-4" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--text-muted)">04</div>
+        <span id="sb-label-4" style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text-muted)">Report</span>
+    </div>
+</div>
+
+<!-- ==================== STEP 1: ASSET SELECTION ==================== -->
+<div id="sb-step-1" class="sb-step active">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:16px">
+    <div>
+        <h2 style="font-family:'Inter',sans-serif;font-size:30px;font-weight:700;color:var(--text);letter-spacing:-0.02em;margin-bottom:8px">Asset Selection</h2>
+        <p style="color:var(--text-muted);max-width:600px;font-size:14px">Pilih aset sumber (L1) dan aset tujuan (L2) untuk bridge simulation.</p>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:start">
+    <!-- Source -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+        <h3 style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--secondary);text-transform:uppercase;letter-spacing:0.1em">Source Asset &amp; Network</h3>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div style="cursor:pointer" onclick="sbSelectNetwork('source','ethereum')">
+                    <div id="sb-src-ethereum" style="padding:16px;border:2px solid var(--primary);background:var(--primary-light);border-radius:8px;display:flex;flex-direction:column;gap:8px;transition:all 0.2s">
+                        <div style="display:flex;justify-content:space-between;align-items:center"><span class="material-symbols-outlined" style="color:var(--primary)">token</span><div style="width:8px;height:8px;border-radius:50%;background:#22c55e"></div></div>
+                        <span style="font-size:18px;font-weight:600;color:var(--text)">Ethereum</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">Layer 1</span>
+                    </div>
+                </div>
+                <div style="cursor:pointer" onclick="sbSelectNetwork('source','polygon')">
+                    <div id="sb-src-polygon" style="padding:16px;border:1px solid var(--border);background:var(--surface);border-radius:8px;display:flex;flex-direction:column;gap:8px;transition:all 0.2s">
+                        <div style="display:flex;justify-content:space-between;align-items:center"><span class="material-symbols-outlined" style="color:var(--text-muted)">hub</span><div style="width:8px;height:8px;border-radius:50%;background:#eab308"></div></div>
+                        <span style="font-size:18px;font-weight:600;color:var(--text)">Polygon</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">Sidechain</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text-muted);display:block;margin-bottom:8px">Asset</label>
+                <select id="sb-coin-select" style="width:100%;background:var(--surface-alt);border:1px solid var(--border);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;border-radius:8px;padding:10px 16px;outline:none" onchange="sbUpdateCoin()">
+                    <option value="ETH">ETH (Native Ethereum)</option>
+                    <option value="USDT">USDT (Tether USD)</option>
+                    <option value="USDC">USDC (USD Coin)</option>
+                    <option value="WBTC">WBTC (Wrapped Bitcoin)</option>
+                    <option value="DAI">DAI (Multi-Collateral Dai)</option>
+                    <option value="LINK">LINK (Chainlink)</option>
+                    <option value="UNI">UNI (Uniswap)</option>
+                    <option value="AAVE">AAVE (Aave)</option>
+                    <option value="GRT">GRT (The Graph)</option>
+                    <option value="MKR">MKR (Maker)</option>
+                </select>
+            </div>
+            <div>
+                <label style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text-muted);display:block;margin-bottom:8px">Amount</label>
+                <div style="position:relative">
+                    <input id="sb-amount" type="number" value="1" min="0.001" max="10000" step="0.1" style="width:100%;background:var(--surface-alt);border:1px solid var(--border);color:var(--text);font-size:18px;font-weight:600;border-radius:8px;padding:12px 16px;outline:none" oninput="sbUpdatePreview()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connector -->
+    <div style="display:flex;align-items:center;justify-content:center;padding-top:60px">
+        <span class="material-symbols-outlined" style="font-size:36px;color:var(--primary)">trending_flat</span>
+    </div>
+
+    <!-- Target -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+        <h3 style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--secondary);text-transform:uppercase;letter-spacing:0.1em">Target Asset &amp; Network</h3>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div style="cursor:pointer" onclick="sbSelectNetwork('target','arbitrum')">
+                    <div id="sb-tgt-arbitrum" style="padding:16px;border:2px solid var(--secondary);background:rgba(78,222,163,0.06);border-radius:8px;display:flex;flex-direction:column;gap:8px;transition:all 0.2s">
+                        <div style="display:flex;justify-content:space-between;align-items:center"><span class="material-symbols-outlined" style="color:var(--secondary)">speed</span><div style="width:8px;height:8px;border-radius:50%;background:#22c55e"></div></div>
+                        <span style="font-size:18px;font-weight:600;color:var(--text)">Arbitrum</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">Optimistic Rollup</span>
+                    </div>
+                </div>
+                <div style="cursor:pointer" onclick="sbSelectNetwork('target','optimism')">
+                    <div id="sb-tgt-optimism" style="padding:16px;border:1px solid var(--border);background:var(--surface);border-radius:8px;display:flex;flex-direction:column;gap:8px;transition:all 0.2s">
+                        <div style="display:flex;justify-content:space-between;align-items:center"><span class="material-symbols-outlined" style="color:var(--text-muted)">bolt</span><div style="width:8px;height:8px;border-radius:50%;background:#22c55e"></div></div>
+                        <span style="font-size:18px;font-weight:600;color:var(--text)">Optimism</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">OP Stack Rollup</span>
+                    </div>
+                </div>
+            </div>
+            <div id="sb-target-info" style="background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div style="width:40px;height:40px;border-radius:50%;background:var(--surface-container-highest,var(--surface-alt));display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="color:var(--primary)">token</span></div>
+                    <div><div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text)">Target Asset</div><div style="font-size:14px;color:var(--text-muted)" id="sb-target-asset-name">Wrapped ETH on Arbitrum</div></div>
+                </div>
+                <span class="material-symbols-outlined" style="color:var(--text-muted)">info</span>
+            </div>
+            <div style="background:rgba(78,222,163,0.06);border:1px solid rgba(78,222,163,0.2);border-radius:8px;padding:12px">
+                <p style="font-size:14px;color:var(--secondary)"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;margin-right:6px">auto_awesome</span>Simulasi menggunakan data gas empiris dari 100 sampel pengujian Foundry.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Bar -->
+<div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+    <div style="display:flex;gap:32px">
+        <div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">Coin</div><div id="sb-preview-coin" style="font-size:18px;font-weight:600;color:var(--text)">ETH</div></div>
+        <div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">Amount</div><div id="sb-preview-amount" style="font-size:18px;font-weight:600;color:var(--text)">1.00</div></div>
+        <div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">Route</div><div id="sb-preview-route" style="font-size:18px;font-weight:600;color:var(--text)">ETH ? ARB</div></div>
+    </div>
+    <button onclick="sbGoStep(2)" style="background:var(--primary);color:#fff;padding:12px 32px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;border:none;border-radius:8px;cursor:pointer;transition:all 0.2s" class="sb-glow">Initialize Configuration <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;margin-left:4px">arrow_forward</span></button>
+</div>
+
+<!-- Data Bento -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:32px" class="sb-data-bento">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text-muted)">Network Congestion</span>
+        <div style="height:8px;width:100%;background:var(--surface-alt);border-radius:99px;overflow:hidden"><div style="height:100%;background:#22c55e;width:24%"></div></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#22c55e">Low � Optimal for Simulation</span>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text-muted)">Security Score</span>
+        <div style="display:flex;align-items:baseline;gap:4px"><span style="font-size:24px;font-weight:600;color:var(--secondary)" id="sb-sec-score">8/8</span></div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text-muted)">Gas Market Trend</span>
+        <div style="display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="color:var(--red)">trending_up</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text)">+12 Gwei (Last 1h)</span></div>
+    </div>
+</div>
+</div><!-- end step 1 -->
+
+<!-- ==================== STEP 2: BRIDGE CONFIGURATION ==================== -->
+<div id="sb-step-2" class="sb-step">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:16px">
+    <div>
+        <h2 style="font-family:'Inter',sans-serif;font-size:30px;font-weight:700;color:var(--text);letter-spacing:-0.02em;margin-bottom:8px">Bridge Architecture Configuration</h2>
+        <p style="color:var(--text-muted);max-width:600px;font-size:14px">Pilih operasi bridge dan arsitektur keamanan. Setiap tier memiliki tradeoff gas vs keamanan yang berbeda.</p>
+    </div>
+    <div style="display:flex;background:var(--surface-container-high,#272a31);padding:4px;border-radius:8px;border:1px solid var(--border)">
+        <button id="sb-op-deposit" onclick="sbSetOp('deposit')" style="padding:8px 24px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;border:none;cursor:pointer;background:var(--primary);color:#fff">Deposit</button>
+        <button id="sb-op-swap" onclick="sbSetOp('swap')" style="padding:8px 24px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text-muted)">Swap</button>
+        <button id="sb-op-withdraw" onclick="sbSetOp('withdraw')" style="padding:8px 24px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text-muted)">Withdraw</button>
+    </div>
+</div>
+
+<!-- Tier Cards -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px" class="sb-tier-grid">
+    <!-- Tier A -->
+    <div class="sb-tier-card" id="sb-tier-a" onclick="sbSelectTier('a')" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px">
+            <div><p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Tier A</p><h3 style="font-size:18px;font-weight:600;color:var(--text)">Unoptimized</h3></div>
+            <button onclick="event.stopPropagation();sbShowTierDetail('a')" style="background:var(--surface-alt);border:1px solid var(--border);border-radius:6px;padding:4px 8px;cursor:pointer;display:flex;align-items:center;gap:4px"><span class="material-symbols-outlined" style="font-size:14px;color:var(--text-muted)">info</span><span style="font-size:10px;color:var(--text-muted)">Detail</span></button>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:16px">
+            <div><span style="font-size:12px;color:var(--text-muted)">Gas Cost</span><div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:var(--text)" id="sb-gas-a">22,080</div></div>
+            <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Security</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--red)">0/8</span></div><div style="height:6px;background:var(--surface-alt);border-radius:99px;overflow:hidden"><div style="height:100%;background:var(--red);width:5%"></div></div></div>
+        </div>
+    </div>
+    <!-- Tier B -->
+    <div class="sb-tier-card" id="sb-tier-b" onclick="sbSelectTier('b')" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px">
+            <div><p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Tier B</p><h3 style="font-size:18px;font-weight:600;color:var(--text)">Static</h3></div>
+            <button onclick="event.stopPropagation();sbShowTierDetail('b')" style="background:var(--surface-alt);border:1px solid var(--border);border-radius:6px;padding:4px 8px;cursor:pointer;display:flex;align-items:center;gap:4px"><span class="material-symbols-outlined" style="font-size:14px;color:var(--text-muted)">info</span><span style="font-size:10px;color:var(--text-muted)">Detail</span></button>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:16px">
+            <div><span style="font-size:12px;color:var(--text-muted)">Gas Cost</span><div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:var(--text)" id="sb-gas-b">15,000</div></div>
+            <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Security</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--orange)">2/8</span></div><div style="height:6px;background:var(--surface-alt);border-radius:99px;overflow:hidden"><div style="height:100%;background:var(--orange);width:25%"></div></div></div>
+        </div>
+    </div>
+    <!-- Tier C -->
+    <div class="sb-tier-card" id="sb-tier-c" onclick="sbSelectTier('c')" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px">
+            <div><p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Tier C</p><h3 style="font-size:18px;font-weight:600;color:var(--text)">External Dynamic</h3></div>
+            <button onclick="event.stopPropagation();sbShowTierDetail('c')" style="background:var(--surface-alt);border:1px solid var(--border);border-radius:6px;padding:4px 8px;cursor:pointer;display:flex;align-items:center;gap:4px"><span class="material-symbols-outlined" style="font-size:14px;color:var(--text-muted)">info</span><span style="font-size:10px;color:var(--text-muted)">Detail</span></button>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:16px">
+            <div><span style="font-size:12px;color:var(--text-muted)">Gas Cost</span><div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:var(--text)" id="sb-gas-c">133,344</div></div>
+            <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Security</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--secondary)">8/8</span></div><div style="height:6px;background:var(--surface-alt);border-radius:99px;overflow:hidden"><div style="height:100%;background:var(--secondary);width:100%"></div></div></div>
+        </div>
+    </div>
+    <!-- Tier D -->
+    <div class="sb-tier-card" id="sb-tier-d" onclick="sbSelectTier('d')" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px">
+            <div><p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Tier D</p><h3 style="font-size:18px;font-weight:600;color:var(--text)">LightweightBridge</h3></div>
+            <button onclick="event.stopPropagation();sbShowTierDetail('d')" style="background:var(--surface-alt);border:1px solid var(--border);border-radius:6px;padding:4px 8px;cursor:pointer;display:flex;align-items:center;gap:4px"><span class="material-symbols-outlined" style="font-size:14px;color:var(--text-muted)">info</span><span style="font-size:10px;color:var(--text-muted)">Detail</span></button>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:16px">
+            <div><span style="font-size:12px;color:var(--text-muted)">Gas Cost</span><div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:var(--text)" id="sb-gas-d">62,787</div></div>
+            <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Security</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--secondary)">8/8</span></div><div style="height:6px;background:var(--surface-alt);border-radius:99px;overflow:hidden"><div style="height:100%;background:var(--secondary);width:100%"></div></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- Tier Detail Modal -->
+<div id="sb-tier-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center" onclick="if(event.target===this)sbCloseTierModal()">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto">
+        <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div><p id="sb-modal-tag" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin:0 0 4px">Tier A</p><h3 id="sb-modal-title" style="font-size:20px;font-weight:700;color:var(--text);margin:0">Unoptimized</h3></div>
+            <button onclick="sbCloseTierModal()" style="background:var(--surface-alt);border:1px solid var(--border);border-radius:6px;padding:6px;cursor:pointer"><span class="material-symbols-outlined" style="font-size:18px;color:var(--text-muted)">close</span></button>
+        </div>
+        <div id="sb-modal-body" style="padding:20px 24px"></div>
+        <div style="padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
+            <button onclick="sbCloseTierModal();sbSelectTier(sbCurrentDetailTier)" style="background:var(--primary);color:#000;padding:10px 24px;border:none;border-radius:8px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">Pilih Tier Ini</button>
+        </div>
+    </div>
+</div>
+
+<!-- Config Summary + Execute -->
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px" class="sb-config-grid">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px">
+        <h4 style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;margin-bottom:16px">Simulation Parameters</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+                <div><label style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted);display:block;margin-bottom:4px">Source Chain</label><div style="background:var(--surface-alt);border:1px solid var(--border);padding:10px 12px;border-radius:4px;color:var(--text)" id="sb-cfg-src">Ethereum Mainnet</div></div>
+                <div><label style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted);display:block;margin-bottom:4px">Coin</label><div style="background:var(--surface-alt);border:1px solid var(--border);padding:10px 12px;border-radius:4px;color:var(--text)" id="sb-cfg-coin">ETH</div></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+                <div><label style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted);display:block;margin-bottom:4px">Destination</label><div style="background:var(--surface-alt);border:1px solid var(--border);padding:10px 12px;border-radius:4px;color:var(--text)" id="sb-cfg-dst">Arbitrum One</div></div>
+                <div><label style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted);display:block;margin-bottom:4px">Amount</label><div style="background:var(--surface-alt);border:1px solid var(--border);padding:10px 12px;border-radius:4px;color:var(--text)" id="sb-cfg-amt">1.00 ETH</div></div>
+            </div>
+        </div>
+    </div>
+    <div style="background:var(--surface-alt,#22252d);border:1px solid var(--border);border-radius:8px;padding:24px;display:flex;flex-direction:column;justify-content:space-between">
+        <div>
+            <h4 style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px">Action Required</h4>
+            <p style="color:var(--text);font-size:14px">Menjalankan simulasi bridge dengan data gas empiris 100 sampel Foundry.</p>
+        </div>
+        <button onclick="sbRunSimulation()" style="width:100%;background:var(--primary);color:#000;padding:16px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;transition:all 0.2s" class="sb-glow">Execute Simulation <span class="material-symbols-outlined" style="font-size:18px">play_arrow</span></button>
+    </div>
+</div>
+</div><!-- end step 2 -->
+
+<!-- ==================== STEP 3: LIVE EXECUTION ==================== -->
+<div id="sb-step-3" class="sb-step">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:16px">
+    <div style="display:flex;align-items:center;gap:16px">
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:16px;color:#fff">check</span></div><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--secondary)">Config</span></div>
+        <div style="width:48px;height:1px;background:var(--border)"></div>
+        <div style="display:flex;align-items:center;gap:8px"><div id="sb-exec-dot" style="width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff" class="sb-pulse">3</div><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--primary);font-weight:700">Live Execution</span></div>
+        <div style="width:48px;height:1px;background:var(--border)"></div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--text-muted)">4</div><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted)">Report</span></div>
+    </div>
+    <span id="sb-exec-badge" style="padding:4px 12px;border-radius:4px;background:var(--red-light);color:var(--red);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500"></span>
+</div>
+
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:24px" class="sb-sim-layout">
+    <!-- Left: Animation + Logs -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+        <!-- Bridge Packet Distribution -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px;position:relative;overflow:hidden;min-height:280px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+                <h3 style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--text)">Bridge Packet Distribution</h3>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--secondary)">? LIVE STREAM</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-around">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                    <div style="width:64px;height:64px;border-radius:12px;background:var(--surface-container-high,#272a31);border:2px solid var(--primary);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:24px;color:var(--primary)">account_balance</span></div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:11px" id="sb-exec-src">Ethereum (L1)</span>
+                </div>
+                <div style="flex:1;height:2px;background:var(--border);margin:0 24px;position:relative">
+                    <div class="sb-data-packet" style="top:-8px;animation-delay:0s"><div style="width:16px;height:16px;border-radius:50%;background:var(--primary);box-shadow:0 0 8px var(--primary)"></div></div>
+                    <div class="sb-data-packet" style="top:-8px;animation-delay:1.2s"><div style="width:12px;height:12px;border-radius:50%;background:var(--secondary);box-shadow:0 0 8px var(--secondary)"></div></div>
+                    <div class="sb-data-packet" style="top:-8px;animation-delay:2.5s"><div style="width:16px;height:16px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px var(--orange)"></div></div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                    <div style="width:64px;height:64px;border-radius:12px;background:var(--surface-container-high,#272a31);border:2px solid var(--secondary);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:24px;color:var(--secondary)">speed</span></div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:11px" id="sb-exec-tgt">Arbitrum (L2)</span>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px">
+                <div style="background:var(--surface-alt);padding:8px;border-radius:4px;border:1px solid var(--border)"><p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">THROUGHPUT</p><p style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--primary)" id="sb-exec-tp">1,422 TX/S</p></div>
+                <div style="background:var(--surface-alt);padding:8px;border-radius:4px;border:1px solid var(--border)"><p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">LATENCY</p><p style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--secondary)" id="sb-exec-lat">42.1 MS</p></div>
+                <div style="background:var(--surface-alt);padding:8px;border-radius:4px;border:1px solid var(--border)"><p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">GAS ESCROW</p><p style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--orange)" id="sb-exec-gas">0.014 ETH</p></div>
+            </div>
+        </div>
+        <!-- Transaction Log -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;flex:1;display:flex;flex-direction:column;min-height:300px">
+            <div style="padding:8px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-container-high,#272a31)">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="font-size:16px">list_alt</span> Simulated Foundry Logs</span>
+                <div style="display:flex;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--red)"></span><span style="width:8px;height:8px;border-radius:50%;background:var(--orange)"></span><span style="width:8px;height:8px;border-radius:50%;background:var(--secondary)"></span></div>
+            </div>
+            <div id="sb-log-box" class="sb-log-box" style="flex:1;max-height:320px;overflow-y:auto;padding:16px;font-family:'JetBrains Mono',monospace;font-size:11px;display:flex;flex-direction:column;gap:4px;background:#0b0e15">
+                <p style="color:var(--text-muted);opacity:0.5">[09:41:02] Initializing ChainBridge Research Sandbox...</p>
+            </div>
+        </div>
+    </div>
+    <!-- Right: Security Panel -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+        <!-- MEV Scanner -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px;position:relative;overflow:hidden;min-height:180px">
+            <div class="sb-scanner-line" style="position:absolute;inset-x:0;top:0;height:50%;z-index:1"></div>
+            <div style="position:relative;z-index:0;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center">
+                <h3 style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text-muted);margin-bottom:16px">MEV SCANNING ENGINE</h3>
+                <div style="display:flex;gap:8px" id="sb-scanner-bars">
+                    <div style="width:32px;height:32px;background:var(--border);opacity:0.2;border-radius:4px"></div>
+                    <div style="width:32px;height:48px;background:var(--primary);opacity:0.4;border-radius:4px"></div>
+                    <div style="width:32px;height:24px;background:var(--border);opacity:0.2;border-radius:4px"></div>
+                    <div style="width:32px;height:56px;background:var(--red);opacity:0.6;border-radius:4px;animation:pulse 1s infinite"></div>
+                    <div style="width:32px;height:40px;background:var(--border);opacity:0.2;border-radius:4px"></div>
+                    <div style="width:32px;height:28px;background:var(--border);opacity:0.2;border-radius:4px"></div>
+                </div>
+                <p id="sb-scanner-status" style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:12px;color:var(--red)">SCANNING...</p>
+            </div>
+        </div>
+        <!-- Security Status -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:12px">
+            <h3 style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;text-transform:uppercase;color:var(--text)">Security Status</h3>
+            <div id="sb-alert-box" style="padding:12px;border-radius:8px;display:none;gap:12px;align-items:start">
+                <span class="material-symbols-outlined" style="font-size:20px" id="sb-alert-icon">report</span>
+                <div><p style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700" id="sb-alert-title"></p><p style="font-size:14px;margin-top:4px;opacity:0.8" id="sb-alert-desc"></p></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px"><span style="color:var(--text-muted)">Reentrancy Risk</span><span id="sb-stat-reent" style="color:var(--secondary)">CHECKING</span></div>
+                <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px"><span style="color:var(--text-muted)">MEV Detection</span><span id="sb-stat-mev" style="color:var(--primary)">ACTIVE</span></div>
+                <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px"><span style="color:var(--text-muted)">Emergency Pause</span><span id="sb-stat-pause" style="color:var(--text-muted)">STANDBY</span></div>
+                <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px"><span style="color:var(--text-muted)">Front-running Risk</span><span id="sb-stat-front" style="color:var(--red)">HIGH</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div><!-- end step 3 -->
+
+<!-- ==================== STEP 4: FINAL REPORT ==================== -->
+<div id="sb-step-4" class="sb-step">
+
+<!-- Transfer Complete Banner -->
+<div style="background:linear-gradient(135deg,rgba(78,222,163,0.08),rgba(78,222,163,0.02));border:1px solid var(--secondary);border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:16px;margin-bottom:24px">
+    <div style="width:48px;height:48px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="material-symbols-outlined" style="font-size:28px;color:#000">check_circle</span></div>
+    <div><h2 style="font-size:18px;font-weight:700;color:var(--text);margin:0">Transfer Complete</h2><p style="font-size:13px;color:var(--text-muted);margin:4px 0 0">Your transaction has been successfully simulated with high efficiency.</p></div>
+</div>
+
+<!-- Stepper -->
+<div style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:28px;height:28px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:16px;color:#000">check</span></div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--secondary)">Asset Selection</span></div>
+    <div style="width:60px;height:2px;background:var(--secondary);margin:0 -4px;margin-bottom:20px"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:28px;height:28px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:16px;color:#000">check</span></div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--secondary)">Configuration</span></div>
+    <div style="width:60px;height:2px;background:var(--secondary);margin:0 -4px;margin-bottom:20px"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:28px;height:28px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:16px;color:#000">check</span></div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--secondary)">Simulation</span></div>
+    <div style="width:60px;height:2px;background:var(--border);margin:0 -4px;margin-bottom:20px"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:28px;height:28px;border-radius:50%;border:2px solid var(--primary);background:transparent;display:flex;align-items:center;justify-content:center" class="sb-pulse"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--primary);font-weight:700">4</span></div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--primary);font-weight:700">Final Report</span></div>
+</div>
+
+<!-- Summary Banner -->
+<div style="background:var(--surface);border:1px solid var(--primary);border-radius:10px;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:16px">
+    <div style="display:flex;align-items:center;gap:16px">
+        <div style="width:44px;height:44px;border-radius:8px;background:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="material-symbols-outlined" style="font-size:24px;color:#000">science</span></div>
+        <div><h2 style="font-size:17px;font-weight:700;color:var(--text);margin:0">Final Performance Report</h2><p id="sb-report-title" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--primary);margin:4px 0 0"></p></div>
+    </div>
+    <div id="sb-tier-badge" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--secondary);font-weight:600"></div>
+</div>
+
+<!-- Benchmarking + Stats Cards -->
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px" class="sb-report-grid">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface-container-high,#272a31);display:flex;justify-content:space-between;align-items:center">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted)">Efficiency Benchmarking</span>
+        </div>
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch" class="sb-report-table-wrap">
+        <table style="width:100%;border-collapse:collapse;min-width:480px">
+            <thead><tr style="background:var(--surface-alt)">
+                <th style="padding:12px 16px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);border-bottom:1px solid var(--border)">Metric</th>
+                <th id="sb-th-selected" style="padding:12px 16px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);border-bottom:1px solid var(--border)">Deskripsi</th>
+                <th style="padding:12px 16px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);border-bottom:1px solid var(--border)">Nilai</th>
+            </tr></thead>
+            <tbody id="sb-report-table">
+                <tr><td colspan="3" style="padding:40px 16px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted);opacity:0.4">Run a simulation to see efficiency benchmarking data</td></tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;text-align:center">
+            <p style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);margin:0 0 8px;letter-spacing:0.05em">SIMULATION SUMMARY</p>
+            <p style="font-size:32px;font-weight:700;color:var(--primary);margin:0" id="sb-sim-gas">—</p>
+            <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);margin:8px 0 0">Average Gas Usage</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;text-align:center">
+            <p style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);margin:0 0 8px;letter-spacing:0.05em">COST BREAKDOWN</p>
+            <p style="font-size:20px;font-weight:700;margin:0;color:var(--secondary)" id="sb-sim-usd">—</p>
+            <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);margin:8px 0 0;font-style:italic" id="sb-sim-eth">— ETH @ 30 Gwei</p>
+        </div>
+    </div>
+</div>
+
+<!-- Bell Curve + Meta Data -->
+<div style="display:grid;grid-template-columns:5fr 3fr;gap:16px;margin-bottom:16px" class="sb-bell-grid">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface-container-high,#272a31);display:flex;justify-content:space-between;align-items:center">
+            <span id="sb-bell-title" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted)">Gas Distribution</span>
+            <div id="sb-bell-legend" style="display:flex;gap:16px">
+                <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:50%;background:var(--secondary)"></div><span id="sb-bell-legend-label" style="font-family:'JetBrains Mono',monospace;font-size:11px">Tier D</span></div>
+            </div>
+        </div>
+        <div style="padding:24px;flex:1;min-height:220px;display:flex;align-items:end;position:relative">
+            <svg style="width:100%;height:180px" viewBox="0 0 400 180">
+                <line x1="0" x2="400" y1="160" y2="160" stroke="var(--border)" stroke-width="1"></line>
+                <line id="sb-bell-center-line" x1="200" x2="200" y1="160" y2="0" stroke="var(--border)" stroke-dasharray="4" stroke-width="1"></line>
+                <path id="sb-bell-curve" class="sb-bell-line" d="M 180 160 Q 300 -50 420 160" fill="rgba(78,222,163,0.1)" stroke="var(--secondary)" stroke-width="2"></path>
+                <text fill="var(--text-muted)" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="200" y="175" id="sb-bell-label-sel">— k Gas</text>
+            </svg>
+        </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;flex:1;display:flex;flex-direction:column">
+            <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface-container-high,#272a31)"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted)">Peer-Review Meta-Data</span></div>
+            <div style="padding:16px;flex:1;display:flex;flex-direction:column;justify-content:center">
+                <div style="display:flex;flex-direction:column;gap:14px">
+                    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">Methodology</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500">Monte Carlo (n=10k)</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">Validation Engine</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500">Sim-Bridge Core v1.02</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">Hardware Anchor</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500">AWS Nitro hPC.8xl</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">Publication Format</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500">IEEE Standard / LaTeX</span></div>
+                </div>
+            </div>
+        </div>
+        <button onclick="sbExportReport()" style="width:100%;background:var(--primary);color:#000;padding:14px;font-weight:700;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;font-family:'JetBrains Mono',monospace;font-size:13px" class="sb-glow"><span class="material-symbols-outlined">download</span> Download Report for Journal</button>
+        <button onclick="sbGoStep(1)" style="width:100%;background:transparent;color:var(--text-muted);padding:12px;font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px"><span class="material-symbols-outlined" style="font-size:16px">refresh</span> Back to Start</button>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);text-align:center;margin:0" id="sb-generated-time">Generated: —</p>
+    </div>
+</div>
+
+<!-- Dynamic Benefits + Footer (populated by sbShowReport) -->
+<div id="sb-benefits-container"></div>
+
+</div><!-- end step 4 -->
+
+</div><!-- end container -->
+</div><!-- end page-sandbox -->
+
+<!-- PAGE: E-COMMERCE CASE STUDY -->
+<div id="page-ecommerce" class="page">
+<div class="container" style="max-width:1200px">
+
+<!-- Top Bar: Title + Actions -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+<div>
+<h2 style="font-family:'IBM Plex Serif',Georgia,serif;font-size:1.5rem;font-weight:600;color:var(--text);margin-bottom:4px">Next-Gen Inventory</h2>
+<p style="font-size:14px;color:var(--text-muted)">Bridged assets ready for immediate settlement.</p>
+</div>
+<div style="display:flex;gap:8px;align-items:center">
+<!-- Wallet Profile (hidden until connected) -->
+<div id="ec-profile" style="display:none;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 14px">
+<div style="width:28px;height:28px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center">
+<span class="material-symbols-outlined" style="font-size:16px;color:var(--primary)">account_circle</span>
+</div>
+<div style="line-height:1.3">
+<div id="ec-profile-addr" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--text)">0x0000...0000</div>
+<div style="display:flex;gap:8px;font-size:10px;color:var(--text-muted)">
+<span id="ec-profile-bal">0 ETH</span>
+<span>·</span>
+<span id="ec-profile-net">Polygon</span>
+</div>
+</div>
+</div>
+<!-- Connect Wallet Button -->
+<button id="ec-wallet-btn" onclick="ecConnectWallet()" style="padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:#8247e5;color:#f5eaff;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.03em">Connect Wallet</button>
+<!-- Add Product Button -->
+<button onclick="ecOpenAddModal()" style="padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text-secondary);font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.03em;display:flex;align-items:center;gap:4px" onmouseover="this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-secondary)'">
+<span class="material-symbols-outlined" style="font-size:16px">add</span> Add Product
+</button>
+<!-- Reset Demo Button -->
+<button onclick="ecResetDemo()" style="padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text-secondary);font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.03em;display:flex;align-items:center;gap:4px" onmouseover="this.style.borderColor='#f87171';this.style.color='#f87171'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-secondary)'">
+<span class="material-symbols-outlined" style="font-size:16px">restart_alt</span> Reset Demo
+</button>
+</div>
+</div>
+
+<!-- Wallet Connect Prompt (shown when not connected) -->
+<div id="ec-connect-section" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:12px">
+<span class="material-symbols-outlined" style="font-size:20px;color:#fbbf24">warning</span>
+<span style="font-size:14px;color:var(--text-secondary)">Connect wallet terlebih dahulu untuk melakukan pembayaran dengan kripto.</span>
+</div>
+<button onclick="ecConnectWallet()" style="padding:8px 20px;border:none;border-radius:8px;background:#8247e5;color:#f5eaff;font-size:13px;font-weight:600;cursor:pointer">Connect Wallet</button>
+</div>
+
+<div class="ec-grid" style="display:grid;grid-template-columns:1fr 380px;gap:20px">
+
+<!-- Left: Product Catalog -->
+<div>
+<div id="ec-product-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px"></div>
+</div>
+
+<!-- Right: Cart & Checkout -->
+<div>
+<div class="ec-glass" style="padding:24px;position:sticky;top:80px">
+<h2 style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px">
+<span class="material-symbols-outlined">shopping_cart</span> Finalize Checkout
+</h2>
+
+<!-- Cart List -->
+<div id="ec-cart-items" style="margin-bottom:24px;max-height:192px;overflow-y:auto" class="ec-scroll">
+<div style="text-align:center;padding:40px 0;opacity:0.5;font-style:italic;color:var(--text-muted)">Cart is empty</div>
+</div>
+
+<div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px">
+<!-- Network Selector -->
+<div style="margin-bottom:16px">
+<label style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:4px;color:var(--text-muted)">Settlement Network</label>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<button id="ec-net-eth" class="ec-net-btn" onclick="ecSetNetwork('ETH')">Ethereum</button>
+<button id="ec-net-poly" class="ec-net-btn active" onclick="ecSetNetwork('MATIC')">Polygon</button>
+</div>
+</div>
+
+<!-- Bridge Tier -->
+<div style="margin-bottom:16px">
+<label style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;margin-bottom:4px;color:var(--text-muted)">Bridge Execution Tier</label>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<button id="ec-tier-1" class="ec-tier-btn" onclick="ecSetTier(1)">
+<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier 1</span>
+<span style="font-size:10px;opacity:0.7">Instant (LP)</span>
+</button>
+<button id="ec-tier-2" class="ec-tier-btn" onclick="ecSetTier(2)">
+<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier 2</span>
+<span style="font-size:10px;opacity:0.7">Optimistic</span>
+</button>
+<button id="ec-tier-3" class="ec-tier-btn" onclick="ecSetTier(3)">
+<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier 3</span>
+<span style="font-size:10px;opacity:0.7">Canonical (PoS)</span>
+</button>
+<button id="ec-tier-4" class="ec-tier-btn active" onclick="ecSetTier(4)">
+<span style="font-size:12px;font-weight:700;letter-spacing:0.05em">Tier 4</span>
+<span style="font-size:10px;opacity:0.7">Batching</span>
+</button>
+</div>
+</div>
+
+<!-- Summary -->
+<div class="ec-summary">
+<div class="ec-summary-row"><span style="opacity:0.7">Subtotal</span><span id="ec-summary-subtotal">0 MATIC</span></div>
+<div class="ec-summary-row" style="color:#ffb871"><span style="opacity:0.7">Gas Fee (Bridge Cost)</span><span id="ec-summary-gas">0 MATIC</span></div>
+<div class="ec-summary-row" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-top:8px;color:var(--text);font-weight:700"><span>TOTAL BAYAR</span><span id="ec-summary-total" style="font-size:16px;color:var(--primary)">0 MATIC</span></div>
+</div>
+
+<!-- Pay Button -->
+<button class="ec-pay" id="ec-pay-btn" onclick="ecProcessPayment()" disabled>Pay Now</button>
+</div>
+</div>
+
+</div><!-- end grid -->
+
+<!-- Processing Overlay -->
+<div class="ec-overlay" id="ec-processing">
+<div class="ec-overlay-box">
+<div class="ec-scan-line"></div>
+<div class="ec-spinner"></div>
+<h2 style="font-size:24px;font-weight:600;color:var(--primary);margin-bottom:8px">Processing Bridge...</h2>
+<p style="font-family:'JetBrains Mono',monospace;font-size:14px;opacity:0.7">Routing assets through Tier <span id="ec-active-tier-num">4</span></p>
+<div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text-muted);margin-top:16px;max-width:320px;margin-left:auto;margin-right:auto;animation:ec-pulse 2s infinite">
+0x71C7656EC7ab88b098defB751B7401B5f6d8976F -&gt; 0x8247E5...
+</div>
+</div>
+</div>
+
+<!-- Transaction Receipt -->
+<div class="ec-receipt" id="ec-receipt" style="margin-top:40px;padding-top:40px;border-top:1px solid rgba(255,255,255,0.1)">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+<!-- Receipt Card -->
+<div class="ec-glass ec-receipt-glow" style="border-color:rgba(16,185,129,0.3);padding:32px;position:relative;overflow:hidden;border-radius:16px">
+<div style="position:absolute;top:0;right:0;padding:16px;opacity:0.1">
+<span class="material-symbols-outlined" style="font-size:120px">verified</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+<div style="width:48px;height:48px;background:rgba(16,185,129,0.2);color:#10b981;border-radius:50%;display:flex;align-items:center;justify-content:center">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<h3 style="font-size:18px;font-weight:600;color:var(--text)">Transaction Finalized</h3>
+<p style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#10b981">Hash: <span id="ec-rc-hash">0x8247...e5c2</span></p>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-family:'JetBrains Mono',monospace;font-size:14px">
+<div><span style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;opacity:0.5">BRIDGE TIER</span><span style="color:var(--text)" id="ec-rc-tier">Tier 4 (Batching)</span><span style="font-size:10px;color:var(--text-muted);display:block" id="ec-rc-route">Route: Contract D</span></div>
+<div><span style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;opacity:0.5">GAS CONSUMED</span><span style="color:var(--text)" id="ec-rc-gas">34,156 units</span><span style="font-size:10px;color:#ffb871;display:block" id="ec-rc-gas-eth">0.001 MATIC ($0.047)</span></div>
+<div><span style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;opacity:0.5">SECURITY LEVEL</span><span style="color:#10b981;font-weight:700" id="ec-rc-sec">8/8 Verified</span><span style="font-size:10px;color:var(--text-muted);display:block" id="ec-rc-sec-sub">MEV Protected</span></div>
+<div><span style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:block;opacity:0.5">SETTLEMENT</span><span style="color:var(--text)" id="ec-rc-time">Immediate</span><span style="font-size:10px;color:var(--primary);display:block" id="ec-rc-net">Polygon Network</span></div>
+</div>
+</div>
+
+<!-- Gas Comparison -->
+<div class="ec-glass" style="padding:32px;border-radius:16px">
+<h3 style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:24px">Gas Fee Comparison</h3>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div>
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px"><span>Tier 1 — Instant (LP)</span><span style="font-family:'JetBrains Mono',monospace">31,412 gas (Contract A)</span></div>
+<div class="ec-gas-bar"><div class="ec-gas-fill" style="width:26%;background:#f87171"></div></div>
+</div>
+<div>
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px"><span>Tier 2 — Optimistic</span><span style="font-family:'JetBrains Mono',monospace">31,427 gas (Contract B)</span></div>
+<div class="ec-gas-bar"><div class="ec-gas-fill" style="width:26%;background:#ffb871"></div></div>
+</div>
+<div>
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px"><span>Tier 3 — Canonical (PoS)</span><span style="font-family:'JetBrains Mono',monospace">122,769 gas (Contract C)</span></div>
+<div class="ec-gas-bar"><div class="ec-gas-fill" style="width:100%;background:var(--primary)"></div></div>
+</div>
+<div>
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:0.05em;margin-bottom:4px;color:#10b981"><span>Tier 4 — Batching</span><span style="font-family:'JetBrains Mono',monospace">34,156 gas (Contract D)</span></div>
+<div class="ec-gas-bar"><div class="ec-gas-fill" style="width:28%;background:#10b981"></div></div>
+</div>
+</div>
+<p style="margin-top:16px;font-size:10px;color:var(--text-muted);font-style:italic">* Gas measured from 100 samples per operation. Biaya bridge = gas fee saja, tanpa persentase tambahan.</p>
+</div>
+
+</div><!-- end grid -->
+</div><!-- end receipt -->
+
+</div><!-- end container -->
+</div><!-- end page-ecommerce -->
+
+<!-- Add Product Modal -->
+<div id="ec-add-modal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
+<div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:480px;box-shadow:0 25px 60px rgba(0,0,0,0.3)">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+<h3 style="font-size:18px;font-weight:600;color:var(--text)">Tambah Produk Baru</h3>
+<button onclick="ecCloseAddModal()" style="background:var(--surface-alt);border:1px solid var(--border);color:var(--text-muted);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">✕</button>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<div>
+<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px">Nama Produk *</label>
+<input id="ec-new-name" type="text" placeholder="Contoh: Hardware Wallet Pro" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"/>
+</div>
+<div>
+<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px">Harga (USD) *</label>
+<input id="ec-new-price" type="number" min="0.01" step="0.01" placeholder="Contoh: 299" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;outline:none;transition:border-color 0.2s" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"/>
+</div>
+<div>
+<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px">Deskripsi</label>
+<input id="ec-new-desc" type="text" placeholder="Deskripsi singkat produk" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"/>
+</div>
+<div>
+<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px">URL Gambar (opsional)</label>
+<input id="ec-new-img" type="text" placeholder="https://..." style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"/>
+</div>
+<div style="display:flex;gap:10px;margin-top:8px">
+<button onclick="ecCloseAddModal()" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text-secondary);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s">Batal</button>
+<button onclick="ecSubmitProduct()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#8247e5;color:#f5eaff;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Tambah Produk</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Overlay for chart detail -->
+<div class="overlay" id="overlay">
+    <div class="overlay-box">
+        <button class="overlay-close" onclick="closeOverlay()">&times;</button>
+        <div class="chart-title" id="overlay-title" style="margin-bottom:16px"></div>
+        <div class="overlay-chart"><canvas id="overlayCanvas"></canvas></div>
+    </div>
+</div>
+<script>
+var charts = [];
+function getTheme() { return localStorage.getItem('theme') || 'light'; }
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    var btn = document.getElementById('btn-theme');
+    btn.textContent = theme === 'dark' ? '\u2600' : '\u263E';
+    btn.title = theme === 'dark' ? 'Mode Terang' : 'Mode Gelap';
+    localStorage.setItem('theme', theme);
+    updateChartColors(theme);
+}
+function toggleTheme() { applyTheme(getTheme() === 'dark' ? 'light' : 'dark'); }
+function getChartColors(theme) {
+    if (theme === 'dark') {
+        return { text: '#9ca3af', textLight: '#4b5563', grid: 'rgba(255,255,255,0.04)', tooltipBg: '#1a1d24', tooltipTitle: '#f9fafb', tooltipBody: '#d1d5db', tooltipBorder: '#374151' };
+    }
+    return { text: '#9ca3af', textLight: '#6b7280', grid: 'rgba(0,0,0,0.05)', tooltipBg: '#111827', tooltipTitle: '#f9fafb', tooltipBody: '#d1d5db', tooltipBorder: '#374151' };
+}
+function updateChartColors(theme) {
+    var c = getChartColors(theme);
+    for (var i = 0; i < charts.length; i++) {
+        var ch = charts[i];
+        if (!ch || !ch.options) continue;
+        if (ch.options.scales) {
+            var sc = ch.options.scales;
+            for (var k in sc) {
+                if (sc[k].ticks) sc[k].ticks.color = c.text;
+                if (sc[k].title) sc[k].title.color = c.text;
+                if (sc[k].grid) sc[k].grid.color = (k === 'x' && ch.config.type !== 'bar') ? c.grid : (ch.config.type === 'bar' && k === 'x' ? 'transparent' : c.grid);
+            }
+        }
+        if (ch.options.plugins) {
+            if (ch.options.plugins.legend && ch.options.plugins.legend.labels) ch.options.plugins.legend.labels.color = c.textLight;
+            if (ch.options.plugins.tooltip) {
+                ch.options.plugins.tooltip.backgroundColor = c.tooltipBg;
+                ch.options.plugins.tooltip.titleColor = c.tooltipTitle;
+                ch.options.plugins.tooltip.bodyColor = c.tooltipBody;
+                ch.options.plugins.tooltip.borderColor = c.tooltipBorder;
+            }
+        }
+        ch.update('none');
+    }
+}
+function switchTab(t) {
+    var tabs = document.querySelectorAll('.nav-tab');
+    var pages = document.querySelectorAll('.page');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+    for (var i = 0; i < pages.length; i++) pages[i].classList.remove('active');
+    if (t === 'sandbox') {
+        tabs[1].classList.add('active');
+        document.getElementById('page-sandbox').classList.add('active');
+    } else if (t === 'ecommerce') {
+        tabs[2].classList.add('active');
+        document.getElementById('page-ecommerce').classList.add('active');
+    } else {
+        tabs[0].classList.add('active');
+        document.getElementById('page-results').classList.add('active');
+    }
+}
+
+function switchResultTab(net) {
+    var ethTab = document.getElementById('tab-eth');
+    var polyTab = document.getElementById('tab-polygon');
+    var ethContent = document.getElementById('result-tab-eth');
+    var polyContent = document.getElementById('result-tab-polygon');
+    if (net === 'polygon') {
+        ethTab.style.background = 'transparent';
+        ethTab.style.color = 'var(--text-muted)';
+        polyTab.style.background = '#8247e5';
+        polyTab.style.color = '#fff';
+        ethContent.style.display = 'none';
+        polyContent.style.display = 'block';
+        if (!window._polyChartsInit) { initPolyCharts(); window._polyChartsInit = true; }
+    } else {
+        ethTab.style.background = 'var(--primary)';
+        ethTab.style.color = '#fff';
+        polyTab.style.background = 'transparent';
+        polyTab.style.color = 'var(--text-muted)';
+        ethContent.style.display = 'block';
+        polyContent.style.display = 'none';
+    }
+}
+
+var overlayChart = null;
+function toggleExpand(boxId) {
+    var box = document.getElementById(boxId);
+    var srcCanvas = box.querySelector('canvas');
+    var title = box.querySelector('.chart-title').textContent;
+    document.getElementById('overlay-title').textContent = title;
+    document.getElementById('overlay').classList.add('show');
+    var srcChart = Chart.getChart(srcCanvas);
+    if (overlayChart) { overlayChart.destroy(); overlayChart = null; }
+    overlayChart = new Chart(document.getElementById('overlayCanvas'), {
+        type: srcChart.config.type,
+        data: JSON.parse(JSON.stringify(srcChart.data)),
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#6b7280', usePointStyle: true, padding: 16, font: { family: "'IBM Plex Sans'" } } }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#111827', titleColor: '#f9fafb', bodyColor: '#d1d5db', padding: 14, cornerRadius: 6 } },
+            scales: { x: { ticks: { color: '#9ca3af' }, grid: { color: '#f3f4f6', lineWidth: 0.5 } }, y: { ticks: { color: '#9ca3af' }, grid: { color: '#f3f4f6', lineWidth: 0.5 } } }
+        }
+    });
+}
+function closeOverlay() {
+    document.getElementById('overlay').classList.remove('show');
+    if (overlayChart) { overlayChart.destroy(); overlayChart = null; }
+}
+
+var gasChartSim, costChartSim;
+var MAX_P = 60;
+var labels = [], l1G = [], blobG = [], sC = [], dC = [];
+var cBlock = 0, l1F = 40, blobF = 5, pTx = 0, bSlB = 0;
+var TX_SZ = 120, TGT = 100000, C_GAS = 16, BLOB_SZ = 131072, ALPHA = .88, MAX_D = 25;
+var tSE = 0, tDE = 0, tB = 0, fC = 0, mF = 0, dH = [], sP = 0, simI, isR = false;
+
+function initSimCharts() {
+    gasChartSim = new Chart(document.getElementById('gasPriceChart'), {
+        type: 'line',
+        data: { labels: labels, datasets: [
+            { label: 'L1 Fee', borderColor: 'rgba(185,28,28,.6)', backgroundColor: 'rgba(185,28,28,.05)', borderWidth: 1.5, pointRadius: 0, data: l1G, tension: .3, fill: true },
+            { label: 'Blob Fee', borderColor: 'rgba(13,122,63,.6)', backgroundColor: 'rgba(13,122,63,.05)', borderWidth: 1.5, pointRadius: 0, data: blobG, tension: .3, fill: true }
+        ]},
+        options: { responsive: true, maintainAspectRatio: false, animation: { duration: 0 }, interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { labels: { color: '#6b7280', usePointStyle: true } }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#111827', titleColor: '#f9fafb', bodyColor: '#d1d5db', borderColor: '#374151', borderWidth: 1, padding: 14, cornerRadius: 6, callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + ' Gwei'; } } } },
+            scales: { y: { beginAtZero: true, max: 160, ticks: { color: '#9ca3af' }, title: { display: true, text: 'Gwei', color: '#9ca3af' }, grid: { color: 'rgba(0,0,0,0.03)', lineWidth: 0.5 } }, x: { grid: { display: false }, ticks: { color: '#9ca3af' }, title: { display: true, text: 'Blok', color: '#9ca3af' } } }
+        }
+    });
+    costChartSim = new Chart(document.getElementById('simCostChart'), {
+        type: 'line',
+        data: { labels: labels, datasets: [
+            { label: 'Static', borderColor: 'rgba(180,83,9,.6)', borderWidth: 1.5, pointRadius: 0, stepped: true, data: sC },
+            { label: 'Dynamic', borderColor: 'rgba(13,122,63,.6)', borderWidth: 1.5, pointRadius: 0, stepped: true, data: dC, fill: { target: 'origin', above: 'rgba(13,122,63,.05)' } }
+        ]},
+        options: { responsive: true, maintainAspectRatio: false, animation: { duration: 0 }, interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { labels: { color: '#6b7280', usePointStyle: true } }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#111827', titleColor: '#f9fafb', bodyColor: '#d1d5db', borderColor: '#374151', borderWidth: 1, padding: 14, cornerRadius: 6, callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(4) + ' ETH'; } } } },
+            scales: { y: { beginAtZero: true, ticks: { color: '#9ca3af' }, title: { display: true, text: 'ETH', color: '#9ca3af' }, grid: { color: 'rgba(0,0,0,0.03)', lineWidth: 0.5 } }, x: { grid: { display: false }, ticks: { color: '#9ca3af' }, title: { display: true, text: 'Blok', color: '#9ca3af' } } }
+        }
+    });
+    charts.push(gasChartSim);
+    charts.push(costChartSim);
+}
+
+function updateSim() {
+    cBlock++;
+    l1F = Math.max(10, Math.min(150, l1F + (Math.random() - .45) * 15));
+    if (Math.random() < .05) blobF = Math.max(1, blobF + 15); else blobF = Math.max(1, Math.min(40, blobF + (Math.random() - .45) * 5));
+    var inTx = Math.floor(Math.random() * 50) + 10, spTx = Math.floor(inTx * (Math.random() * .2)), vTx = inTx - spTx;
+    mF += spTx; pTx += vTx; sP += inTx; bSlB++;
+    var raw = pTx * TX_SZ, beff = raw * ALPHA;
+    document.getElementById('mempool-kb').textContent = (beff / 1000).toFixed(1);
+    document.getElementById('mempool-bar').style.width = Math.min(100, (beff / TGT) * 100) + '%';
+    var ind = document.getElementById('route-indicator'); ind.className = 'route-tag'; ind.innerText = 'MENGHIMPUN...';
+    if (cBlock % 10 === 0 && sP > 0) { tSE += (sP * TX_SZ) * C_GAS * l1F * 1e-9; sP = 0; }
+    if (beff >= TGT || bSlB >= MAX_D) {
+        var cC = (beff * C_GAS) * l1F * 1e-9, cB = BLOB_SZ * blobF * 1e-9;
+        var route, cls, cost;
+        if (cB <= cC) { route = 'BLOB'; cls = 'tag-blob'; cost = cB; ind.innerText = 'BLOB (EIP-4844)'; }
+        else { route = 'CALLDATA'; cls = 'tag-calldata'; cost = cC; fC++; ind.innerText = 'CALLDATA (FALLBACK)'; }
+        tDE += cost; tB++; dH.push(bSlB); ind.className = 'route-tag ' + cls;
+        addLog(cBlock, route, l1F, blobF, (beff / 1000).toFixed(2), bSlB, cost);
+        pTx = 0; bSlB = 0; document.getElementById('mempool-bar').style.width = '0%';
+    }
+    labels.push(cBlock); l1G.push(l1F); blobG.push(blobF); sC.push(tSE); dC.push(tDE);
+    if (labels.length > MAX_P) { labels.shift(); l1G.shift(); blobG.shift(); sC.shift(); dC.shift(); }
+    document.getElementById('val-mev').innerHTML = mF + ' <span style="font-size:.85rem;color:var(--text-muted)">Tx</span>';
+    if (tB > 0) { document.getElementById('val-fallback').textContent = (fC / tB * 100).toFixed(1) + '%'; document.getElementById('val-delay').innerHTML = (dH.reduce(function(a, b) { return a + b; }, 0) / dH.length).toFixed(1) + ' <span style="font-size:.85rem;color:var(--text-muted)">Blok</span>'; }
+    if (tDE > 0) document.getElementById('val-factor-s').textContent = (tSE / tDE).toFixed(1) + 'x';
+    gasChartSim.update(); costChartSim.update();
+}
+
+function addLog(block, route, l1, blob, sz, delay, cost) {
+    var tb = document.getElementById('tableBody'), r = document.createElement('tr');
+    var cls = route === 'BLOB' ? 'tag-blob' : 'tag-calldata';
+    r.innerHTML = '<td style="font-family:\'IBM Plex Mono\',monospace;font-size:.78rem">#' + block + '</td><td><span class="route-tag ' + cls + '">' + route + '</span></td><td>' + l1.toFixed(1) + '</td><td>' + blob.toFixed(1) + '</td><td>' + sz + ' KB</td><td>' + delay + ' blk</td><td style="font-family:\'IBM Plex Mono\',monospace;font-weight:600">' + cost.toFixed(4) + '</td>';
+    tb.insertBefore(r, tb.firstChild);
+    if (tb.children.length > 50) tb.removeChild(tb.lastChild);
+}
+
+function toggleSim() {
+    var b = document.getElementById('btn-pause');
+    if (isR) { clearInterval(simI); b.textContent = 'Resume'; b.classList.remove('btn-primary'); }
+    else { simI = setInterval(updateSim, 400); b.textContent = 'Pause'; b.classList.add('btn-primary'); }
+    isR = !isR;
+}
+
+function resetSim() {
+    clearInterval(simI); isR = false;
+    labels.length = 0; l1G.length = 0; blobG.length = 0; sC.length = 0; dC.length = 0;
+    cBlock = 0; l1F = 40; blobF = 5; pTx = 0; bSlB = 0;
+    tSE = 0; tDE = 0; tB = 0; fC = 0; mF = 0; dH = []; sP = 0;
+    document.getElementById('tableBody').innerHTML = '';
+    document.getElementById('val-factor-s').textContent = '0,0x';
+    document.getElementById('val-delay').innerHTML = '0 <span style="font-size:.85rem;color:var(--text-muted)">Blok</span>';
+    document.getElementById('val-fallback').textContent = '0,0%';
+    document.getElementById('val-mev').innerHTML = '0 <span style="font-size:.85rem;color:var(--text-muted)">Tx</span>';
+    gasChartSim.update(); costChartSim.update();
+    isR = false; toggleSim();
+}
+
+window.onload = function() {
+    applyTheme(getTheme());
+    fetchEtherscanData();
+    try {
+        initSimCharts();
+        for (var i = 0; i < MAX_P; i++) { labels.push(''); l1G.push(0); blobG.push(0); sC.push(0); dC.push(0); }
+        gasChartSim.update(); costChartSim.update();
+        setTimeout(function() { try { resetSim(); } catch(e) {} }, 500);
+    } catch(e) { console.warn('Sim charts skipped:', e); }
+    try { sbGoStep(1); } catch(e) {}
+    fetch('results.html').then(function(r){return r.text()}).then(function(html){
+        var c = document.getElementById('results-container');
+        if(c) c.innerHTML = html;
+        fetchEtherscanData();
+        function tryInitEth(retries){
+            retries = retries || 0;
+            var bc = document.getElementById('bridgeChart');
+            var sc = document.getElementById('savingsChart');
+            if(bc && sc && bc.offsetWidth > 0 && sc.offsetWidth > 0){
+                try { initEthCharts(); } catch(e){ console.warn('ETH charts error:', e); }
+            } else if(retries < 30){
+                setTimeout(function(){ tryInitEth(retries+1); }, 100);
+            }
+        }
+        tryInitEth();
+    }).catch(function(e){ console.warn('Results load failed:', e); });
+};
+
+function fetchEtherscanData() {
+    var el;
+    el = document.getElementById('eth-block-info'); if(el) el.textContent = 'Block #25,243,215';
+    el = document.getElementById('eth-price'); if(el) el.textContent = '$2,500.00';
+    el = document.getElementById('eth-basefee'); if(el) el.textContent = '0.55 Gwei';
+    el = document.getElementById('eth-gas-low'); if(el) el.textContent = '0.51 Gwei';
+    el = document.getElementById('eth-gas-avg'); if(el) el.textContent = '0.55 Gwei';
+    el = document.getElementById('eth-updated'); if(el) el.textContent = '4 Jun 2026';
+    el = document.getElementById('polygon-block-info'); if(el) el.textContent = 'Block #72,463,891';
+    el = document.getElementById('polygon-price'); if(el) el.textContent = '$0.22';
+    el = document.getElementById('polygon-gas'); if(el) el.textContent = '30 Gwei';
+    el = document.getElementById('polygon-eth-price'); if(el) el.textContent = '$2,500.00';
+    el = document.getElementById('polygon-txcount'); if(el) el.textContent = '3,241,570';
+    el = document.getElementById('polygon-updated'); if(el) el.textContent = '4 Jun 2026';
+}
+</script>
+<script src="js/sandbox.js"></script>
+<script src="js/results.js"></script>
+<script src="js/ecommerce.js"></script>
+</body>
+</body>
 </html>

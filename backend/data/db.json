@@ -1,0 +1,141 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "$2a$12$bFlrlzbcdykn0mMW56ThX.891.qIapNUqjqGZShH2SM7StI0petu.",
+      "role": "admin",
+      "created_at": "2026-06-09T13:52:06.529Z",
+      "last_login": "2026-06-09T17:59:26.143Z"
+    }
+  ],
+  "sessions": [
+    {
+      "id": "5884078f-c814-44a4-82c3-7c4e65309701",
+      "user_id": 1,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTAxMzE1MCwiZXhwIjoxNzgxMDk5NTUwfQ.-gDgq6IF7IpJhW9ZrsXta3qrdUYiNWk1YJsiHLEbdVo",
+      "expires_at": "2026-06-10T13:52:30.705Z",
+      "created_at": "2026-06-09T13:52:30.735Z"
+    },
+    {
+      "id": "31558f4a-3d7e-4c60-ab71-2eff532d51d8",
+      "user_id": 1,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTAxMzE2NiwiZXhwIjoxNzgxMDk5NTY2fQ.xYPi3irLjEVNjvpEc2hSVfkNKBufMgaTJrbXcwYMMrM",
+      "expires_at": "2026-06-10T13:52:46.175Z",
+      "created_at": "2026-06-09T13:52:46.176Z"
+    },
+    {
+      "id": "6bf4f04c-58c5-4127-b83e-70d42bf8ee08",
+      "user_id": 1,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTAxMzIxOSwiZXhwIjoxNzgxMDk5NjE5fQ.v-953CgxFAUyao1uriz-W5xIJrnBi6UE4umu3Dc5f8Q",
+      "expires_at": "2026-06-10T13:53:39.639Z",
+      "created_at": "2026-06-09T13:53:39.661Z"
+    },
+    {
+      "id": "50663a48-2570-4b6c-a967-f86922e78165",
+      "user_id": 1,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTAyMDYxNywiZXhwIjoxNzgxMTA3MDE3fQ.8ycv_71B3dIR8IVOcLWG8jhcZOXOBXoCJAEPdZHXG5o",
+      "expires_at": "2026-06-10T15:56:57.361Z",
+      "created_at": "2026-06-09T15:56:57.395Z"
+    },
+    {
+      "id": "83e260ec-43e8-4628-8735-95bff8e804a9",
+      "user_id": 1,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTAyMDYzMCwiZXhwIjoxNzgxMTA3MDMwfQ.TowqRDgVIS_6inFLFRCfG0yWuJbqFWgACc3__Tc2LYM",
+      "expires_at": "2026-06-10T15:57:10.891Z",
+      "created_at": "2026-06-09T15:57:10.894Z"
+    },
+    {
+      "id": "c18c1fe6-aeef-4c71-94b3-7a5bcd517c81",
+      "user_id": 1,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTAyMDYzMiwiZXhwIjoxNzgxMTA3MDMyfQ.5NA6Fut_Jnztura5-u73flwUh-3aPJCjCWwyDasyD7k",
+      "expires_at": "2026-06-10T15:57:12.143Z",
+      "created_at": "2026-06-09T15:57:12.143Z"
+    },
+    {
+      "id": "6e1c8922-3706-4b65-a91f-463882c9254c",
+      "user_id": 1,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTAyMDYzMywiZXhwIjoxNzgxMTA3MDMzfQ.ddmhio7no7hMCmmMpofXvoMGmZZY3noCgauE63_roj8",
+      "expires_at": "2026-06-10T15:57:13.617Z",
+      "created_at": "2026-06-09T15:57:13.618Z"
+    },
+    {
+      "id": "feaaaa39-5c40-49b2-9d23-f95ab1875a93",
+      "user_id": 1,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTAyMDYzNSwiZXhwIjoxNzgxMTA3MDM1fQ.DschnqfEqSY0cgL9FOAAtszL5gAYG3FRx6RNXxkAP8Q",
+      "expires_at": "2026-06-10T15:57:15.623Z",
+      "created_at": "2026-06-09T15:57:15.624Z"
+    },
+    {
+      "id": "9fe889c1-b474-4e09-bee0-1f81402ce0ac",
+      "user_id": 1,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTAyMDYzNiwiZXhwIjoxNzgxMTA3MDM2fQ.m5i8oipA2dgZcQ64bal2jd_p8SY9flVat6_LNutJKgM",
+      "expires_at": "2026-06-10T15:57:16.653Z",
+      "created_at": "2026-06-09T15:57:16.654Z"
+    },
+    {
+      "id": "441381a0-18e4-4aeb-a35b-6dbe5802692a",
+      "user_id": 1,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTAyMjQ0NSwiZXhwIjoxNzgxMTA4ODQ1fQ.N8ueLzrO4JGTuJJYCliP4UZW0maSDDiKFlQlLrc_63Y",
+      "expires_at": "2026-06-10T16:27:25.178Z",
+      "created_at": "2026-06-09T16:27:25.248Z"
+    },
+    {
+      "id": "6175f15c-3a2c-42a2-be18-4593538c880c",
+      "user_id": 1,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MTAyNzk2NiwiZXhwIjoxNzgxMTE0MzY2fQ.S9ei9SZMYK5UrjBQPmtw_pGhXXvd06diUszmvRbZ4vI",
+      "expires_at": "2026-06-10T17:59:26.147Z",
+      "created_at": "2026-06-09T17:59:26.245Z"
+    }
+  ],
+  "simulation_logs": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "scenario": "sandwich_attack",
+      "input_params": "{\"amount\":10,\"attackerAmount\":5}",
+      "results": "{\"scenario\":\"Sandwich Attack\",\"results\":{\"A\":{\"gas\":22080,\"security\":\"0/8\",\"attackerPnL\":\"+4748.30 tokens\",\"victimPnL\":\"-806.05 tokens\",\"status\":\"EXPLOITED\",\"penalty\":0},\"B\":{\"gas\":15000,\"security\":\"2/8\",\"attackerPnL\":\"0 (CEI)\",\"victimPnL\":\"-806.05 tokens (no MEV detect)\",\"status\":\"PARTIAL\",\"penalty\":0},\"C\":{\"gas\":133344,\"security\":\"8/8\",\"attackerPnL\":\"-5.00 ETH (penalty)\",\"victimPnL\":\"0 (MEV detected)\",\"status\":\"PROTECTED\",\"penalty\":\"5.0000\"},\"D\":{\"gas\":62787,\"security\":\"8/8\",\"attackerPnL\":\"-5.00 ETH (penalty)\",\"victimPnL\":\"0 (MEV detected)\",\"status\":\"PROTECTED\",\"penalty\":\"5.0000\"}}}",
+      "created_at": "2026-06-09T13:53:39.795Z"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "scenario": "normal_swap",
+      "input_params": "{\"amount\":10}",
+      "results": "{\"scenario\":\"Normal Swap\",\"results\":{\"A\":{\"gas\":22080,\"security\":\"0/8\",\"tokensReceived\":\"9066.11\",\"penalty\":0,\"status\":\"success\"},\"B\":{\"gas\":15000,\"security\":\"2/8\",\"tokensReceived\":\"9066.11\",\"penalty\":0,\"status\":\"success\"},\"C\":{\"gas\":133344,\"security\":\"8/8\",\"tokensReceived\":\"9066.11\",\"penalty\":0,\"status\":\"success\"},\"D\":{\"gas\":62787,\"security\":\"8/8\",\"tokensReceived\":\"9066.11\",\"penalty\":0,\"status\":\"success\"}}}",
+      "created_at": "2026-06-09T15:57:11.048Z"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "scenario": "sandwich_attack",
+      "input_params": "{\"amount\":10,\"attackerAmount\":5}",
+      "results": "{\"scenario\":\"Sandwich Attack\",\"results\":{\"A\":{\"gas\":22080,\"security\":\"0/8\",\"attackerPnL\":\"+4748.30 tokens\",\"victimPnL\":\"-806.05 tokens\",\"status\":\"EXPLOITED\",\"penalty\":0},\"B\":{\"gas\":15000,\"security\":\"2/8\",\"attackerPnL\":\"0 (CEI)\",\"victimPnL\":\"-806.05 tokens (no MEV detect)\",\"status\":\"PARTIAL\",\"penalty\":0},\"C\":{\"gas\":133344,\"security\":\"8/8\",\"attackerPnL\":\"-5.00 ETH (penalty)\",\"victimPnL\":\"0 (MEV detected)\",\"status\":\"PROTECTED\",\"penalty\":\"5.0000\"},\"D\":{\"gas\":62787,\"security\":\"8/8\",\"attackerPnL\":\"-5.00 ETH (penalty)\",\"victimPnL\":\"0 (MEV detected)\",\"status\":\"PROTECTED\",\"penalty\":\"5.0000\"}}}",
+      "created_at": "2026-06-09T15:57:12.273Z"
+    },
+    {
+      "id": 4,
+      "user_id": 1,
+      "scenario": "reentrancy_attack",
+      "input_params": "{\"amount\":10}",
+      "results": "{\"scenario\":\"Reentrancy Attack\",\"results\":{\"A\":{\"gas\":9735,\"security\":\"0/8\",\"attackSuccess\":true,\"fundLost\":\"30 ETH\",\"status\":\"EXPLOITED\"},\"B\":{\"gas\":9727,\"security\":\"2/8\",\"attackSuccess\":false,\"fundLost\":\"0 ETH\",\"status\":\"BLOCKED\"},\"C\":{\"gas\":104806,\"security\":\"8/8\",\"attackSuccess\":false,\"fundLost\":\"0 ETH\",\"status\":\"BLOCKED\"},\"D\":{\"gas\":12119,\"security\":\"8/8\",\"attackSuccess\":false,\"fundLost\":\"0 ETH\",\"status\":\"BLOCKED\"}}}",
+      "created_at": "2026-06-09T15:57:13.750Z"
+    },
+    {
+      "id": 5,
+      "user_id": 1,
+      "scenario": "flash_loan_attack",
+      "input_params": "{\"amount\":100}",
+      "results": "{\"scenario\":\"Flash Loan Attack\",\"results\":{\"A\":{\"gas\":31412,\"security\":\"0/8\",\"manipulationSuccess\":true,\"penalty\":\"0\",\"status\":\"MANIPULATED\"},\"B\":{\"gas\":31427,\"security\":\"2/8\",\"manipulationSuccess\":true,\"penalty\":\"0\",\"status\":\"MANIPULATED\"},\"C\":{\"gas\":122769,\"security\":\"8/8\",\"manipulationSuccess\":false,\"penalty\":\"100.0000 ETH\",\"status\":\"PROTECTED\"},\"D\":{\"gas\":34156,\"security\":\"8/8\",\"manipulationSuccess\":false,\"penalty\":\"100.0000 ETH\",\"status\":\"PROTECTED\"}}}",
+      "created_at": "2026-06-09T15:57:15.798Z"
+    },
+    {
+      "id": 6,
+      "user_id": 1,
+      "scenario": "emergency_pause",
+      "input_params": "{\"amount\":10}",
+      "results": "{\"scenario\":\"Emergency Pause\",\"results\":{\"A\":{\"security\":\"0/8\",\"hasPause\":false,\"responseTime\":\"N/A\",\"status\":\"NO PROTECTION\"},\"B\":{\"security\":\"2/8\",\"hasPause\":false,\"responseTime\":\"N/A\",\"status\":\"NO PAUSE\"},\"C\":{\"security\":\"8/8\",\"hasPause\":true,\"responseTime\":\"~50ms (External)\",\"status\":\"INSTANT PAUSE\"},\"D\":{\"security\":\"8/8\",\"hasPause\":true,\"responseTime\":\"~10ms (Inline)\",\"status\":\"INSTANT PAUSE\"}}}",
+      "created_at": "2026-06-09T15:57:16.782Z"
+    }
+  ]
+}

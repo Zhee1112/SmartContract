@@ -8,6 +8,7 @@ dist/
 build/
 artifacts/
 cache/
+out/
 
 # Environment variables - RAHASIA, JANGAN di-commit!
 .env
@@ -28,3 +29,16 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Simulation outputs
+logs/
+
+# Foundry
+bin/
+foundry.lock
+.gas-snapshot
+broadcast/
+
+# Non-code files
+docs/
+stitch_lightweightbridge_crypto_sandbox_simulator/

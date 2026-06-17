@@ -1,0 +1,128 @@
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;text-transform:none;letter-spacing:normal;word-wrap:normal;white-space:nowrap;direction:ltr}
+.sb-glow{box-shadow:0 0 15px rgba(59,130,246,0.15)}
+.sb-glow-active{box-shadow:0 0 0 2px rgba(77,142,255,0.2)}
+@keyframes sb-scan{0%{transform:translateY(-100%);opacity:0}50%{opacity:0.5}100%{transform:translateY(100%);opacity:0}}
+.sb-scanner-line{background:linear-gradient(to bottom,transparent,#adc6ff,transparent);animation:sb-scan 2s infinite linear}
+@keyframes sb-float{0%{left:10%;opacity:0;transform:scale(0.5)}20%{opacity:1;transform:scale(1)}80%{opacity:1;transform:scale(1)}100%{left:90%;opacity:0;transform:scale(0.5)}}
+.sb-data-packet{position:absolute;animation:sb-float 3s infinite linear}
+@keyframes sb-pulse-glow{0%,100%{box-shadow:0 0 5px rgba(59,130,246,0.2)}50%{box-shadow:0 0 15px rgba(59,130,246,0.5)}}
+.sb-pulse{animation:sb-pulse-glow 2s infinite ease-in-out}
+.sb-tier-card{transition:all 0.2s cubic-bezier(0.4,0,0.2,1)}
+.sb-tier-card:hover{box-shadow:0 0 12px rgba(59,130,246,0.15)}
+.sb-log-box::-webkit-scrollbar{width:4px}
+.sb-log-box::-webkit-scrollbar-thumb{background:#424754;border-radius:2px}
+.sb-bell-line{stroke-dasharray:1000;stroke-dashoffset:1000;animation:sb-draw 2s ease-out forwards}
+@keyframes sb-draw{to{stroke-dashoffset:0}}
+#page-sandbox{display:none}
+#page-sandbox.active{display:block}
+.sb-step{display:none}
+.sb-step.active{display:block}
+
+/* ===== RESPONSIVE: Tablet (max-width: 1024px) ===== */
+@media(max-width:1024px){
+  .sb-report-grid{grid-template-columns:1fr!important}
+  .sb-bell-grid{grid-template-columns:1fr!important}
+  .sb-config-grid{grid-template-columns:1fr!important}
+  .sb-sim-layout{flex-direction:column!important}
+  .sb-sim-left,.sb-sim-right{width:100%!important;min-width:0!important}
+}
+
+/* ===== RESPONSIVE: Mobile (max-width: 768px) ===== */
+@media(max-width:768px){
+  .nav{padding:0 16px}
+  .nav-brand{display:none}
+  .nav-tab{padding:14px 12px;font-size:.75rem}
+  .container{padding:16px 12px 40px}
+
+  /* Sandbox stepper */
+  .sb-step-bar{flex-wrap:wrap;gap:8px;justify-content:center!important}
+  .sb-step-bar [style*="width:60px"]{display:none}
+
+  /* Tier cards: 2 per row */
+  .sb-tier-grid{grid-template-columns:1fr 1fr!important;gap:10px!important}
+  .sb-tier-grid [style*="position:absolute;top:-12px"]{font-size:9px;padding:2px 8px}
+
+  /* Data bento */
+  [style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr 1fr!important}
+
+  /* Report bento */
+  .sb-report-grid{grid-template-columns:1fr!important}
+  .sb-bell-grid{grid-template-columns:1fr!important}
+  .sb-config-grid{grid-template-columns:1fr!important}
+  .sb-sim-layout{flex-direction:column!important}
+  .sb-sim-left,.sb-sim-right{width:100%!important;min-width:0!important}
+
+  /* Summary banner */
+  [style*="Final Performance Report"]{font-size:15px!important}
+  [style*="STATISTICAL SIGNIFICANCE"]{font-size:9px!important}
+
+  /* Benchmarking table scroll */
+  .sb-report-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .sb-report-table-wrap table{min-width:480px}
+
+  /* Bell curve */
+  .sb-bell-svg{height:140px!important}
+
+  /* Peer-review + buttons */
+  .sb-export-col{grid-template-columns:1fr!important}
+
+  /* "Apa artinya" cards */
+  .sb-benefits-grid{grid-template-columns:1fr!important;gap:16px!important}
+
+  /* Chart containers */
+  .chart-wrap{height:200px}
+  .chart-box canvas{max-height:180px!important}
+  .chart-panel{padding:14px}
+
+  /* Action bar */
+  [style*="justify-content:space-between"][style*="border-top"]{flex-direction:column;align-items:stretch!important}
+  [style*="justify-content:space-between"][style*="border-top"] button{width:100%}
+
+  /* Coin grid */
+  .sb-coin-grid{grid-template-columns:repeat(3,1fr)!important;gap:8px!important}
+  .sb-coin-item{padding:12px 8px!important}
+  .sb-coin-item span:last-child{font-size:11px!important}
+
+  /* Log box */
+  #sb-log-box{max-height:250px;font-size:10px!important}
+
+  /* Cohen's D card */
+  [style*="COHEN'S D EFFECT SIZE"]~p{font-size:24px!important}
+
+  /* Transfer complete banner */
+  [style*="Transfer Complete"]{padding:14px 16px!important}
+  [style*="Transfer Complete"] h2{font-size:15px!important}
+
+  /* Config summary */
+  [style*="Simulation Parameters"]~div{grid-template-columns:1fr!important}
+
+  /* Overview cards */
+  [style*="grid-template-columns:repeat(4"]{grid-template-columns:1fr 1fr!important}
+}
+
+/* ===== RESPONSIVE: Small Phone (max-width: 480px) ===== */
+@media(max-width:480px){
+  .sb-tier-grid{grid-template-columns:1fr!important}
+  [style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns:repeat(4"]{grid-template-columns:1fr 1fr!important}
+  .nav-tab{padding:12px 8px;font-size:.7rem}
+  .container{padding:12px 10px 32px}
+  .chart-wrap{height:180px}
+  #sb-log-box{max-height:200px;font-size:9px!important}
+
+  .sb-coin-grid{grid-template-columns:repeat(3,1fr)!important;gap:6px!important}
+  .sb-coin-item{padding:10px 6px!important}
+
+  /* Step header */
+  .sb-step h2{font-size:20px!important}
+  .sb-step p{font-size:12px!important}
+
+  /* Summary banner flex */
+  [style*="Final Performance Report"]{font-size:13px!important}
+}
+
+/* Tooltip for tier feature table */
+.tt-wrap{position:relative;cursor:help}
+.tt-wrap .tt-tip{display:none;position:absolute;left:0;top:calc(100% + 6px);width:260px;padding:10px 12px;background:#1a1d24;border:1px solid #374151;border-radius:8px;font-size:.75rem;color:#e5e7eb;line-height:1.5;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.4);pointer-events:none}
+.tt-wrap:hover .tt-tip{display:block}
+.tt-wrap::after{content:"ⓘ";display:inline-block;margin-left:4px;font-size:.65rem;color:#6b7280;vertical-align:super}

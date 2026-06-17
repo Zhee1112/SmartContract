@@ -1,0 +1,783 @@
+<div>
+<div class="page-title">Optimalisasi Gas dan Keamanan Smart Contract Bridge</div>
+<div class="page-subtitle">Implementasi EIP-1153 Transient Storage dan Early Warning System pada Arsitektur 4-Tier</div>
+
+<!-- Network Tabs -->
+<div style="display:flex;gap:0;margin-bottom:28px;background:var(--surface);border:1px solid var(--border-light);border-radius:8px;overflow:hidden;padding:4px">
+    <button id="tab-eth" onclick="switchResultTab('eth')" style="flex:1;padding:12px 24px;border:none;border-radius:6px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-size:.85rem;font-weight:600;transition:all 0.2s;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px">
+        <span style="width:20px;height:20px;border-radius:50%;background:#627eea;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff">E</span>
+        Hasil Ethereum Mainnet
+    </button>
+    <button id="tab-polygon" onclick="switchResultTab('polygon')" style="flex:1;padding:12px 24px;border:none;border-radius:6px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-size:.85rem;font-weight:600;transition:all 0.2s;background:transparent;color:var(--text-muted);display:flex;align-items:center;justify-content:center;gap:8px">
+        <span style="width:20px;height:20px;border-radius:50%;background:#8247e5;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff">P</span>
+        Hasil Polygon PoS
+    </button>
+</div>
+
+<!-- ==================== ETHEREUM TAB ==================== -->
+<div id="result-tab-eth">
+
+<!-- Glossary -->
+<div class="card" style="margin-bottom:28px">
+<div class="section-label" style="margin-bottom:16px">Glosarium — Istilah Blockchain</div>
+<div class="section-desc" style="margin-bottom:20px">Istilah teknis yang sering muncul dalam penelitian ini, dijelaskan secara sederhana untuk pemula.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Smart Contract</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Program yang berjalan otomatis di blockchain. Seperti Mesin ATM — kalau syarat terpenuhi, transaksi langsung dieksekusi tanpa perlu perantara.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Bridge</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Jembatan penghubung antar blockchain. Memungkinkan aset dipindah dari Ethereum ke Polygon atau sebaliknya.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Gas</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Biaya untuk menjalankan transaksi di blockchain. Seperti bensin mobil — makin kompleks transaksi, makin banyak gas yang dibutuhkan.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Gwei / Wei</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Satuan kecil ETH. 1 ETH = 1,000,000,000 Gwei = 10^18 Wei. Seperti Rupiah dan Sen.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Sandwich Attack</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Serangan MEV: bot membeli di depan transaksi korban (mendorong harga naik) lalu menjual setelahnya — korban mendapat harga lebih buruk.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">PoS (Proof of Stake)</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Mekanisme konsensus di mana validator menjamin keamanan dengan mengunci (stake) koin mereka. Ethereum dan Polygon menggunakan PoS.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Rollup</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Solusi Layer 2 yang menggabungkan banyak transaksi menjadi satu, lalu diselesaikan di Layer 1. Mengurangi biaya gas secara drastis.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">SPG (Security Per Gas)</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Metrik yang kami ciptakan: rasio tingkat keamanan terhadap gas yang dibutuhkan. Makin tinggi SPG, makin efisien bridge tersebut.</div>
+</div>
+</div>
+</div>
+
+<!-- Tier Features -->
+<div class="card" style="margin-bottom:28px">
+<div class="section-label" style="margin-bottom:16px">Fitur Tiap Tier — Perbandingan Lengkap</div>
+<div class="section-desc" style="margin-bottom:20px">Arahkan kursor ke nama fitur untuk penjelasan lengkap.</div>
+<table style="width:100%;border-collapse:separate;border-spacing:0;font-size:.78rem;color:var(--text)">
+<thead>
+<tr style="background:var(--bg)">
+<th style="text-align:left;padding:10px 12px;border:1px solid var(--border-light);border-radius:8px 0 0 0;font-weight:600;color:var(--text)">Fitur</th>
+<th style="text-align:center;padding:10px 12px;border:1px solid var(--border-light);font-weight:600;color:#ef4444">A · Unoptimized</th>
+<th style="text-align:center;padding:10px 12px;border:1px solid var(--border-light);font-weight:600;color:#f59e0b">B · Static Only</th>
+<th style="text-align:center;padding:10px 12px;border:1px solid var(--border-light);font-weight:600;color:#8b5cf6">C · Full Dynamic</th>
+<th style="text-align:center;padding:10px 12px;border:1px solid var(--border-light);border-radius:0 8px 0 0;font-weight:600;color:#10b981">D · Rollup Ringan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Custom Errors<span class="tt-tip">Mengganti revert("pesan") dengan custom error. Lebih hemat gas karena tidak menyimpan string, dan error code lebih ringan dari teks.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr style="background:var(--bg)">
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Immutable Admin<span class="tt-tip">Admin address di-set sekali saat deploy, tidak bisa diubah. Mencegah hacker mengubah owner secara permanen. Lebih hemat gas karena tidak perlu storage slot untuk menyimpan alamat admin.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">CEI Pattern<span class="tt-tip">Checks-Effects-Interactions: cek validasi → ubah state → panggil function lain. Pola ini mencegah reentrancy karena state sudah diupdate sebelum external call.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr style="background:var(--bg)">
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Reentrancy Guard<span class="tt-tip">Mencegah hacker memanggil ulang function sebelum transaksi selesai. Tier B menggunakan flag statis (locked/not), Tier C & D menggunakan transient storage (TSTORE) yang lebih efisien.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#f59e0b">Static</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Penalty Rate<span class="tt-tip">Denda otomatis untuk transaksi mencurigakan. Tier B menggunakan rate statis 10%, Tier C & D menggunakan rate dinamis berdasarkan skor anomali — makin mencurigakan, makin besar dendanya.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#f59e0b">Static 10%</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr style="background:var(--bg)">
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Dynamic Fee Threshold<span class="tt-tip">Batas biaya transaksi yang bisa berubah otomatis berdasarkan kondisi jaringan. Jaringan sibuk → threshold naik, jaringan sepi → threshold turun. Tier A & B menggunakan biaya tetap.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">EIP-1153 (TSTORE)<span class="tt-tip">Standar Ethereum 2024 untuk Transient Storage (TSTORE/TLOAD). Menyimpan data sementara yang otomatis hilang setelah transaksi selesai — lebih murah dari storage permanen. Tier C memanggil external ke MonitorMock, Tier D mengimplementasikan langsung di dalam kontrak.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#8b5cf6">External</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅ Inline</td>
+</tr>
+<tr style="background:var(--bg)">
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">MEV Protection<span class="tt-tip">Melindungi dari bot yang memanipulasi urutan transaksi (sandwich attack). Tier C menyimpan 5 slot waktu di storage permanen, Tier D menggunakan 1 slot transient storage yang lebih hemat gas.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#8b5cf6">5 Slots</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅ 1 Slot</td>
+</tr>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Emergency Pause<span class="tt-tip">Sistem mitigasi aktif: jika anomali terdeteksi, transaksi bisa dijeda sementara sampai admin mengonfirmasi keamanan. Melindungi pengguna dari serangan yang sedang berlangsung.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr style="background:var(--bg)">
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">External Calls<span class="tt-tip">Jumlah panggilan ke kontrak lain per transaksi. Semakin banyak, semakin mahal gas-nya. Tier C butuh 5-6 panggilan ke MonitorMock per transaksi, Tier A/B/D tidak ada panggilan ke kontrak lain (0).</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#8b5cf6">0</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#8b5cf6">0</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">5-6 / tx</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">0</td>
+</tr>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);border-radius:0 0 0 8px;font-weight:500"><span class="tt-wrap">Security Score<span class="tt-tip">Skor keamanan dari 0-8 berdasarkan jumlah fitur keamanan aktif: custom errors, immutable admin, CEI, reentrancy guard, penalty, dynamic fee, EIP-1153, MEV protection.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);font-weight:600;color:#ef4444">0/8</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);font-weight:600;color:#f59e0b">2/8</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);font-weight:600;color:#8b5cf6">8/8</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);border-radius:0 0 8px 0;font-weight:600;color:#10b981">8/8</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- Banner -->
+<div class="card" style="background:linear-gradient(135deg,#1a1d24,#22252d);color:#e5e7eb;border-color:#374151;position:relative;overflow:hidden;margin-bottom:28px">
+    <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(98,126,234,0.15),transparent);border-radius:50%"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <div style="width:28px;height:28px;border-radius:50%;background:#627eea;display:flex;align-items:center;justify-content:center"><span style="font-size:14px;color:#fff;font-weight:700">E</span></div>
+        <div>
+            <div style="font-size:.82rem;font-weight:600;color:#e5e7eb">Ethereum Mainnet</div>
+            <div style="font-size:.68rem;color:#6b7280">Network ID: 1 · PoS</div>
+        </div>
+        <div style="margin-left:auto;padding:2px 8px;border-radius:4px;background:rgba(98,126,234,0.15);font-size:.68rem;color:#627eea;font-weight:600">4 Jun 2026</div>
+    </div>
+    <div id="eth-block-info" style="font-size:.9rem;font-weight:600;margin-bottom:12px;color:#e5e7eb">Loading...</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:10px">
+            <div style="font-size:.65rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">ETH Price</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:1.1rem;font-weight:600;color:#34d399" id="eth-price">$2,500</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:10px">
+            <div style="font-size:.65rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Base Fee</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:1.1rem;font-weight:600;color:#60a5fa" id="eth-basefee">0.55 Gwei</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:10px">
+            <div style="font-size:.65rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Gas Low</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:.85rem;font-weight:600;color:#22c55e" id="eth-gas-low">0.51 Gwei</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:10px">
+            <div style="font-size:.65rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Gas Avg</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:.85rem;font-weight:600;color:#fbbf24" id="eth-gas-avg">0.55 Gwei</div>
+        </div>
+    </div>
+    <div style="margin-top:10px;padding-top:8px;border-top:1px solid #374151;font-size:.68rem;color:#6b7280;display:flex;justify-content:space-between">
+        <span>Currency: ETH (Wei/Gwei)</span>
+        <span id="eth-updated">Block #25,243,215</span>
+    </div>
+</div>
+
+<!-- 01 -->
+<div class="section-label">01 — Konteks Penelitian <button class="help-btn" onclick="showHelp('01')" title="Penjelasan sederhana">?</button></div>
+<div class="section-title">Apa yang Diteliti</div>
+<div class="section-desc">Empat arsitektur bridge blockchain dibandingkan untuk mengukur efisiensi gas dan tingkat keamanan terhadap serangan reentrancy dan MEV sandwich.</div>
+<div class="grid-4">
+    <div class="card"><div class="card-label">Tier A — Baseline</div><div class="card-value text-red">Unoptimized</div><div class="card-note">Tidak ada mekanisme pertahanan. Update state setelah transfer (CEI violation). Digunakan sebagai baseline pengukuran.</div></div>
+    <div class="card"><div class="card-label">Tier B — Statis</div><div class="card-value text-orange">Static Only</div><div class="card-note">CEI pattern, struct packing (1 slot 32B), custom errors, immutable admin. Tanpa proteksi dinamis on-chain.</div></div>
+    <div class="card"><div class="card-label">Tier C — Dinamis (Full)</div><div class="card-value text-green">EIP-1153 + EWS</div><div class="card-note">Transient storage via MonitorMock, Early Warning System, deteksi MEV sandwich, penalty dinamis. Overhead: ~391% gas vs Tier B. 55.7x lebih mahal dari Tier D.</div></div>
+    <div class="card"><div class="card-label">Tier D — Dinamis (Ringan)</div><div class="card-value text-primary">Inline EIP-1153</div><div class="card-note">Semua keamanan Tier C di-inline tanpa external call. Single-slot MEV, penalty inline. Overhead: 8.7% gas vs Tier B. Best cost-effectiveness: 205 SPG.</div></div>
+</div>
+<div class="callout"><strong>Bridge</strong> adalah mekanisme penghubung aset antar jaringan blockchain. Kerentanan bridge telah menyebabkan kerugian lebih dari $2 miliar dalam 3 tahun terakhir (Ronin $620M, Wormhole $320M, Nomad $190M). Penelitian ini mengajukan pendekatan defensif on-chain menggunakan fitur terbaru Ethereum.</div>
+
+<hr class="divider">
+
+<!-- 02 -->
+<div class="section-label">02 — Hasil Pengujian <button class="help-btn" onclick="showHelp('02')" title="Penjelasan sederhana">?</button></div>
+<div class="section-title">Validasi Keamanan & Persentase Peningkatan</div>
+<div class="section-desc">215 skenario pengujian membuktikan bahwa Tier D (kontribusi penelitian) mencapai skor keamanan 100% dengan biaya gas hanya 8.7% lebih tinggi dari baseline.</div>
+<div class="grid-4">
+    <div class="card"><div class="card-label">Tier A</div><div class="card-value text-red">0/8 Fitur</div><div class="card-note" style="font-size:.75rem"><strong style="color:var(--red)">0%</strong> keamanan. Reentrancy bisa dieksploitasi.</div></div>
+    <div class="card"><div class="card-label">Tier B</div><div class="card-value text-orange">2/8 Fitur</div><div class="card-note" style="font-size:.75rem"><strong style="color:var(--orange)">25%</strong> keamanan. CEI mencegah single-function reentrancy.</div></div>
+    <div class="card"><div class="card-label">Tier C</div><div class="card-value text-green">8/8 Fitur</div><div class="card-note" style="font-size:.75rem"><strong style="color:var(--green)">100%</strong> keamanan. Overhead <strong>391%</strong> gas.</div></div>
+    <div class="card"><div class="card-label">Tier D</div><div class="card-value text-primary">8/8 Fitur</div><div class="card-note" style="font-size:.75rem"><strong style="color:var(--primary)">100%</strong> keamanan. Overhead hanya <strong>8.7%</strong> gas.</div></div>
+</div>
+<div class="callout callout-success"><strong>Temuan Kunci</strong>: Tier D mencapai skor keamanan <strong>100% (8/8 fitur)</strong> — identik dengan Tier C — namun dengan biaya gas deposit hanya <strong>34,156 gas</strong> (vs Tier C: 122,769 gas).</div>
+
+<hr class="divider">
+
+<!-- 03 -->
+<div class="section-label">03 — Analisis Gas Rinci <button class="help-btn" onclick="showHelp('03')" title="Penjelasan sederhana">?</button></div>
+<div class="section-title">Mengapa Harga Gas Berbeda Tiap Tier?</div>
+<div class="section-desc">Analisis breakdown komponen gas di Ethereum Mainnet. Setiap tier diuji 100 sampel menggunakan Foundry (forge test).</div>
+<div class="chart-panel" id="box-bridge">
+    <div class="chart-header">
+        <div><div class="chart-title">Perbandingan Gas: Deposit, Withdraw, Swap</div><div class="chart-subtitle">Sumber: GasStatsTest (100 sampel per tier) — Data Primer</div></div>
+        <button class="btn-expand" onclick="toggleExpand('box-bridge')">Perlebar</button>
+    </div>
+    <div class="chart-wrap"><canvas id="bridgeChart"></canvas></div>
+</div>
+<div class="callout callout-note"><strong>Analisis Kenapa Tier C Mahal</strong>: Deposit 122,769 gas terdiri dari 5-6 external calls ke MonitorMock (~21,300 gas), dynamic array SSTORE untuk txRecords (~22,100 gas), ABI encode/decode (~15,000 gas), cold code loading (~13,000 gas). <strong>Tier D mengeliminasi semua biaya ini</strong> dengan inline assembly — hanya menambah 2,900 gas (single-slot SSTORE) + 300 gas (pure math penalty).</div>
+
+<!-- Gas Breakdown Detail -->
+<div class="grid-4" style="margin-top:16px">
+    <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--red)">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--red-light)"><div style="font-size:.78rem;font-weight:700;color:var(--red)">Tier A — 31,412 Gas</div><div style="font-size:.72rem;color:var(--text-muted)">Baseline</div></div>
+        <table style="font-size:.72rem"><thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead><tbody>
+            <tr><td>SSTORE (state)</td><td style="text-align:right">5,000</td></tr><tr><td>SLOAD (balance)</td><td style="text-align:right">2,100</td></tr><tr><td>Transfer ETH</td><td style="text-align:right">9,000</td></tr><tr><td>Function overhead</td><td style="text-align:right">15,312</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">31,412</td></tr>
+            <tr><td colspan="2" style="font-size:.68rem;color:var(--text-muted);padding-top:8px">Tidak ada fitur keamanan.</td></tr>
+        </tbody></table>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--orange)">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--orange-light)"><div style="font-size:.78rem;font-weight:700;color:var(--orange)">Tier B — 31,427 Gas</div><div style="font-size:.72rem;color:var(--text-muted)">Static Only</div></div>
+        <table style="font-size:.72rem"><thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead><tbody>
+            <tr><td>SSTORE (state)</td><td style="text-align:right">5,000</td></tr><tr><td>SLOAD (balance)</td><td style="text-align:right">2,100</td></tr><tr><td>Transfer ETH</td><td style="text-align:right">9,000</td></tr><tr><td>Function overhead</td><td style="text-align:right">15,327</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">31,427</td></tr>
+            <tr><td colspan="2" style="font-size:.68rem;color:var(--text-muted);padding-top:8px">+15 gas vs A. CEI + packing.</td></tr>
+        </tbody></table>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--green)">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--green-light)"><div style="font-size:.78rem;font-weight:700;color:var(--green)">Tier C — 122,769 Gas</div><div style="font-size:.72rem;color:var(--text-muted)">Full Dynamic</div></div>
+        <table style="font-size:.72rem"><thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead><tbody>
+            <tr><td>SSTORE + SLOAD + Transfer</td><td style="text-align:right">16,100</td></tr>
+            <tr style="background:var(--red-light)"><td><strong>5 External calls</strong></td><td style="text-align:right"><strong>22,000</strong></td></tr>
+            <tr style="background:var(--red-light)"><td><strong>Dynamic array SSTORE</strong></td><td style="text-align:right"><strong>22,100</strong></td></tr>
+            <tr style="background:var(--orange-light)"><td><strong>ABI encode/decode</strong></td><td style="text-align:right"><strong>15,000</strong></td></tr>
+            <tr style="background:var(--orange-light)"><td><strong>Cold code loading</strong></td><td style="text-align:right"><strong>13,000</strong></td></tr>
+            <tr><td>Overhead lainnya</td><td style="text-align:right">34,569</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">122,769</td></tr>
+        </tbody></table>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--primary)">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--primary-light)"><div style="font-size:.78rem;font-weight:700;color:var(--primary)">Tier D — 34,156 Gas</div><div style="font-size:.72rem;color:var(--text-muted)">Lightweight Inline</div></div>
+        <table style="font-size:.72rem"><thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead><tbody>
+            <tr><td>SSTORE + SLOAD + Transfer</td><td style="text-align:right">16,100</td></tr>
+            <tr style="background:var(--green-light)"><td><strong>TSTORE + TLOAD inline</strong></td><td style="text-align:right"><strong>300</strong></td></tr>
+            <tr style="background:var(--green-light)"><td><strong>MEV detect + penalty</strong></td><td style="text-align:right"><strong>2,400</strong></td></tr>
+            <tr style="background:var(--green-light)"><td><strong>SSTORE lastTx slot</strong></td><td style="text-align:right"><strong>2,900</strong></td></tr>
+            <tr><td>Function overhead</td><td style="text-align:right">12,456</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">34,156</td></tr>
+        </tbody></table>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- 04 -->
+<div class="section-label">04 — Perbandingan Statis vs Dinamis <button class="help-btn" onclick="showHelp('04')" title="Penjelasan sederhana">?</button></div>
+<div class="section-title">Fitur Statis vs Dinamis per Tier</div>
+<div class="section-desc">Setiap tier dibagi menjadi fitur statis (compile-time) dan dinamis (runtime).</div>
+<div class="grid-2">
+    <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);background:var(--surface-alt)"><div class="chart-title" style="font-size:.88rem">Fitur Statis (Compile-Time)</div></div>
+        <table style="font-size:.78rem"><thead><tr><th>Fitur</th><th style="text-align:center">A</th><th style="text-align:center">B</th><th style="text-align:center">C</th><th style="text-align:center">D</th></tr></thead><tbody>
+            <tr><td>CEI Pattern</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Variable Packing</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Custom Errors</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Immutable Admin</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Unchecked Math</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:center">0/5</td><td style="text-align:center">5/5</td><td style="text-align:center">5/5</td><td style="text-align:center">5/5</td></tr>
+        </tbody></table>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);background:var(--surface-alt)"><div class="chart-title" style="font-size:.88rem">Fitur Dinamis (Runtime)</div></div>
+        <table style="font-size:.78rem"><thead><tr><th>Fitur</th><th style="text-align:center">A</th><th style="text-align:center">B</th><th style="text-align:center">C</th><th style="text-align:center">D</th></tr></thead><tbody>
+            <tr><td>Reentrancy Guard</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>MEV Detection</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Economic Penalty</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Emergency Pause</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Block Tracking</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>EIP-1153 (TSTORE/TLOAD)</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:center">0/6</td><td style="text-align:center">0/6</td><td style="text-align:center">6/6</td><td style="text-align:center">6/6</td></tr>
+        </tbody></table>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- 05 -->
+<div class="section-label">05 — Cost-Effectiveness <button class="help-btn" onclick="showHelp('05')" title="Penjelasan sederhana">?</button></div>
+<div class="section-title">Ranking: Security Points per Gas (SPG)</div>
+<div class="section-desc">SPG = Skor Keamanan / Gas Cost — semakin tinggi semakin efisien.</div>
+<div class="grid-4">
+    <div class="card" style="border-left:3px solid var(--primary)"><div class="card-label">#1 — Tier D (Winner)</div><div class="card-value text-primary" style="font-size:2rem">220.1 SPG</div><div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">8 / 34,156 x 1M = <strong>220.1</strong></div></div>
+    <div class="card" style="border-left:3px solid var(--green)"><div class="card-label">#2 — Tier C</div><div class="card-value text-green" style="font-size:2rem">65.2 SPG</div><div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">8 / 122,769 x 1M = <strong>65.2</strong></div></div>
+    <div class="card" style="border-left:3px solid var(--orange)"><div class="card-label">#3 — Tier B</div><div class="card-value text-orange" style="font-size:2rem">63.6 SPG</div><div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">2 / 31,427 x 1M = <strong>63.6</strong></div></div>
+    <div class="card" style="border-left:3px solid var(--red)"><div class="card-label">#4 — Tier A</div><div class="card-value text-red" style="font-size:2rem">0.0 SPG</div><div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">0 / 31,412 x 1M = <strong>0.0</strong></div></div>
+</div>
+<div class="callout callout-success" style="margin-top:16px"><strong>Kesimpulan</strong>: Tier D (220.1 SPG) <strong>3.4x lebih efisien</strong> dari Tier C (65.2 SPG). Tier C punya skor keamanan sama (8/8) tapi gas 3.6x lebih mahal.</div>
+
+<hr class="divider">
+
+<!-- 06 -->
+<div class="section-label">06 — Biaya Real-World (USD) <button class="help-btn" onclick="showHelp('06')" title="Penjelasan sederhana">?</button></div>
+<div class="section-title">Estimasi Biaya per Transaksi di Ethereum Mainnet</div>
+<div class="section-desc">Perhitungan berdasarkan data gas dari Foundry (100 sampel) dikalikan harga gas Ethereum. Base Fee: 0.55 Gwei, ETH = $2,500.</div>
+<div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border-light)"><div class="chart-title" style="font-size:.88rem">Biaya Lengkap per Operasi</div></div>
+    <table style="font-size:.78rem">
+        <thead><tr><th>Skenario</th><th style="text-align:right">Operasi</th><th style="text-align:right">Tier A</th><th style="text-align:right">Tier B</th><th style="text-align:right">Tier C</th><th style="text-align:right">Tier D</th><th style="text-align:right">D vs C Hemat</th></tr></thead>
+        <tbody>
+            <tr style="background:var(--green-light)"><td rowspan="3"><strong>0.55 Gwei</strong><br><span style="font-size:.7rem;color:var(--text-muted)">Saat ini</span></td><td style="text-align:right">Deposit</td><td style="text-align:right">$0.043</td><td style="text-align:right">$0.043</td><td style="text-align:right">$0.169</td><td style="text-align:right">$0.047</td><td style="text-align:right;color:var(--green)"><strong>-72%</strong></td></tr>
+            <tr style="background:var(--green-light)"><td style="text-align:right">Withdraw</td><td style="text-align:right">$0.013</td><td style="text-align:right">$0.013</td><td style="text-align:right">$0.144</td><td style="text-align:right">$0.017</td><td style="text-align:right;color:var(--green)"><strong>-88%</strong></td></tr>
+            <tr style="background:var(--green-light)"><td style="text-align:right">Swap</td><td style="text-align:right">$0.030</td><td style="text-align:right">$0.021</td><td style="text-align:right">$0.183</td><td style="text-align:right">$0.086</td><td style="text-align:right;color:var(--green)"><strong>-53%</strong></td></tr>
+            <tr><td rowspan="3"><strong>10 Gwei</strong><br><span style="font-size:.7rem;color:var(--text-muted)">Normal</span></td><td style="text-align:right">Deposit</td><td style="text-align:right">$0.785</td><td style="text-align:right">$0.786</td><td style="text-align:right">$3.069</td><td style="text-align:right">$0.854</td><td style="text-align:right;color:var(--green)"><strong>-72%</strong></td></tr>
+            <tr><td style="text-align:right">Withdraw</td><td style="text-align:right">$0.243</td><td style="text-align:right">$0.243</td><td style="text-align:right">$2.620</td><td style="text-align:right">$0.303</td><td style="text-align:right;color:var(--green)"><strong>-88%</strong></td></tr>
+            <tr><td style="text-align:right">Swap</td><td style="text-align:right">$0.552</td><td style="text-align:right">$0.375</td><td style="text-align:right">$3.334</td><td style="text-align:right">$1.570</td><td style="text-align:right;color:var(--green)"><strong>-53%</strong></td></tr>
+            <tr style="background:var(--red-light)"><td rowspan="3"><strong>80 Gwei</strong><br><span style="font-size:.7rem;color:var(--text-muted)">Sibuk</span></td><td style="text-align:right">Deposit</td><td style="text-align:right">$6.282</td><td style="text-align:right">$6.285</td><td style="text-align:right">$24.554</td><td style="text-align:right">$6.831</td><td style="text-align:right;color:var(--green)"><strong>-72%</strong></td></tr>
+            <tr style="background:var(--red-light)"><td style="text-align:right">Withdraw</td><td style="text-align:right">$1.947</td><td style="text-align:right">$1.945</td><td style="text-align:right">$20.961</td><td style="text-align:right">$2.424</td><td style="text-align:right;color:var(--green)"><strong>-88%</strong></td></tr>
+            <tr style="background:var(--red-light)"><td style="text-align:right">Swap</td><td style="text-align:right">$4.416</td><td style="text-align:right">$3.000</td><td style="text-align:right">$26.669</td><td style="text-align:right">$12.557</td><td style="text-align:right;color:var(--green)"><strong>-53%</strong></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<hr class="divider">
+
+<!-- 07 -->
+<div class="section-label">07 — Analisis Statistik</div>
+<div class="section-title">Uji Hipotesis</div>
+<div class="section-desc">Hasil divalidasi menggunakan Welch's t-test dan Cohen's d untuk ukuran efek.</div>
+<div class="grid-3">
+    <div class="card"><div class="card-label">Uji Hipotesis</div><div class="card-value text-green">REJECT H0</div><div class="card-note">p-value = 2,25 x 10^-222</div></div>
+    <div class="card"><div class="card-label">Ukuran Efek (Cohen's d)</div><div class="card-value text-primary">220,64</div><div class="card-note">Kriteria LARGE: d > 0,8</div></div>
+    <div class="card"><div class="card-label">Rasio Biaya</div><div class="card-value text-primary">55,7x</div><div class="card-note">Mesin dinamis 55,7x lebih murah</div></div>
+</div>
+<div class="chart-panel" style="margin-top:14px" id="box-savings">
+    <div class="chart-header">
+        <div><div class="chart-title">Distribusi Penghematan (n = 100)</div><div class="chart-subtitle">Seluruh percobaan menghasilkan penghematan di atas 98,17%</div></div>
+        <button class="btn-expand" onclick="toggleExpand('box-savings')">Perlebar</button>
+    </div>
+    <div class="chart-wrap"><canvas id="savingsChart"></canvas></div>
+</div>
+
+<hr class="divider">
+
+<!-- 08 -->
+<div class="section-label">08 — Rincian Pengujian</div>
+<div class="section-title">215 Skenario Pengujian</div>
+<div class="card" style="padding:0;overflow:hidden">
+    <table><thead><tr><th>Test Suite</th><th>Jumlah</th><th>Status</th><th>Deskripsi</th></tr></thead>
+    <tbody>
+        <tr><td style="font-weight:600">CostAnalysisTest</td><td>8</td><td><span class="badge badge-pass">PASS</span></td><td>Biaya per fitur, Tier D vs C</td></tr>
+        <tr><td style="font-weight:600">EconomicDeterrenceTest</td><td>25</td><td><span class="badge badge-pass">PASS</span></td><td>ROI attacker, penalty boundary</td></tr>
+        <tr><td style="font-weight:600">EdgeCaseTest</td><td>41</td><td><span class="badge badge-pass">PASS</span></td><td>Zero amount, overflow, access control</td></tr>
+        <tr><td style="font-weight:600">EIP1153Benchmark</td><td>7</td><td><span class="badge badge-pass">PASS</span></td><td>TSTORE vs SSTORE gas comparison</td></tr>
+        <tr><td style="font-weight:600">FuzzTest</td><td>8</td><td><span class="badge badge-pass">PASS</span></td><td>256 iterasi fuzz per fungsi</td></tr>
+        <tr><td style="font-weight:600">GasStatsTest</td><td>3</td><td><span class="badge badge-pass">PASS</span></td><td>100 sampel statistik</td></tr>
+        <tr><td style="font-weight:600">InvariantTest</td><td>4</td><td><span class="badge badge-pass">PASS</span></td><td>Saldo >= 0, callDepth reset</td></tr>
+        <tr><td style="font-weight:600">MEVSimulationTest</td><td>25</td><td><span class="badge badge-pass">PASS</span></td><td>Sandwich attack detection</td></tr>
+        <tr><td style="font-weight:600">MultiContractTest</td><td>14</td><td><span class="badge badge-pass">PASS</span></td><td>4-tier comparison</td></tr>
+        <tr><td style="font-weight:600">SecurityComparisonTest</td><td>6</td><td><span class="badge badge-pass">PASS</span></td><td>Reentrancy/MEV/pause all tiers</td></tr>
+        <tr><td style="font-weight:600">TierComparisonTest</td><td>50</td><td><span class="badge badge-pass">PASS</span></td><td>State, events, access per tier</td></tr>
+        <tr><td style="font-weight:600">VictimBridgeSecurityTest</td><td>23</td><td><span class="badge badge-pass">PASS</span></td><td>Reentrancy + emergency pause</td></tr>
+    </tbody></table>
+</div>
+
+<hr class="divider">
+
+<!-- 09 -->
+<div class="section-label">09 — Kesimpulan <button class="help-btn" onclick="showHelp('09')" title="Penjelasan sederhana">?</button></div>
+<div class="section-title">Temuan Penelitian</div>
+<div class="summary">
+    <h3>Ringkasan Hasil</h3>
+    <ul>
+        <li><strong>Modifikasi EIP-1153 Multiguna</strong>: Dari 1 fungsi menjadi 5 fungsi keamanan — 48.5x lebih murah dari Tier C</li>
+        <li><strong>Tier D (Rollup Ringan)</strong>: Menghemat 52.9% — 88.4% gas dibanding Tier C dengan 0 external calls</li>
+        <li><strong>Tier C (Rollup Full)</strong>: Overhead 327% karena 5-6 external calls ke MonitorMock per transaksi</li>
+        <li><strong>Cost-effectiveness terbaik</strong>: Tier D mencapai 220.1 SPG — 3.4x lebih efisien dari Tier C</li>
+        <li><strong>215/215 pengujian lulus</strong> mencakup 13 test suites</li>
+        <li><strong>Hasil terbukti secara statistik</strong> melalui Welch's t-test (p = 0) dan Cohen's d = 220,64</li>
+        <li><strong>Emergency Pause</strong> tersedia di Tier C & D sebagai mitigasi aktif</li>
+        <li><strong>Penghematan real-world</strong>: Tier D menghemat $79,000 — $213,000/bulan untuk bridge 100K tx</li>
+    </ul>
+</div>
+<div class="footer">Dashboard Skripsi — Ethereum Mainnet Results<br>Data: 215 pengujian (Foundry, 100 sampel) · 4 Juni 2026</div>
+</div><!-- end result-tab-eth -->
+
+<!-- ==================== POLYGON TAB ==================== -->
+<div id="result-tab-polygon" style="display:none">
+
+<!-- Glossary -->
+<div class="card" style="margin-bottom:28px">
+<div class="section-label" style="margin-bottom:16px">Glosarium — Istilah Blockchain</div>
+<div class="section-desc" style="margin-bottom:20px">Istilah teknis yang sering muncul dalam penelitian ini, dijelaskan secara sederhana untuk pemula.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Smart Contract</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Program yang berjalan otomatis di blockchain. Seperti Mesin ATM — kalau syarat terpenuhi, transaksi langsung dieksekusi tanpa perlu perantara.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Bridge</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Jembatan penghubung antar blockchain. Memungkinkan aset dipindah dari Ethereum ke Polygon atau sebaliknya.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Gas</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Biaya untuk menjalankan transaksi di blockchain. Seperti bensin mobil — makin kompleks transaksi, makin banyak gas yang dibutuhkan.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Gwei / Wei</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Satuan kecil ETH. 1 ETH = 1,000,000,000 Gwei = 10^18 Wei. Seperti Rupiah dan Sen.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Sandwich Attack</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Serangan MEV: bot membeli di depan transaksi korban (mendorong harga naik) lalu menjual setelahnya — korban mendapat harga lebih buruk.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">PoS (Proof of Stake)</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Mekanisme konsensus di mana validator menjamin keamanan dengan mengunci (stake) koin mereka. Ethereum dan Polygon menggunakan PoS.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">Rollup</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Solusi Layer 2 yang menggabungkan banyak transaksi menjadi satu, lalu diselesaikan di Layer 1. Mengurangi biaya gas secara drastis.</div>
+</div>
+<div style="padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border-light)">
+<div style="font-weight:600;font-size:.85rem;color:var(--text);margin-bottom:4px">SPG (Security Per Gas)</div>
+<div style="font-size:.78rem;color:var(--text-secondary);line-height:1.5">Metrik yang kami ciptakan: rasio tingkat keamanan terhadap gas yang dibutuhkan. Makin tinggi SPG, makin efisien bridge tersebut.</div>
+</div>
+</div>
+</div>
+
+<!-- Tier Features -->
+<div class="card" style="margin-bottom:28px">
+<div class="section-label" style="margin-bottom:16px">Fitur Tiap Tier — Perbandingan Lengkap</div>
+<div class="section-desc" style="margin-bottom:20px">Arahkan kursor ke nama fitur untuk penjelasan lengkap.</div>
+<table style="width:100%;border-collapse:separate;border-spacing:0;font-size:.78rem;color:var(--text)">
+<thead>
+<tr style="background:var(--bg)">
+<th style="text-align:left;padding:10px 12px;border:1px solid var(--border-light);border-radius:8px 0 0 0;font-weight:600;color:var(--text)">Fitur</th>
+<th style="text-align:center;padding:10px 12px;border:1px solid var(--border-light);font-weight:600;color:#ef4444">A · Unoptimized</th>
+<th style="text-align:center;padding:10px 12px;border:1px solid var(--border-light);font-weight:600;color:#f59e0b">B · Static Only</th>
+<th style="text-align:center;padding:10px 12px;border:1px solid var(--border-light);font-weight:600;color:#8b5cf6">C · Full Dynamic</th>
+<th style="text-align:center;padding:10px 12px;border:1px solid var(--border-light);border-radius:0 8px 0 0;font-weight:600;color:#10b981">D · Rollup Ringan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Custom Errors<span class="tt-tip">Mengganti revert("pesan") dengan custom error. Lebih hemat gas karena tidak menyimpan string, dan error code lebih ringan dari teks.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr style="background:var(--bg)">
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Immutable Admin<span class="tt-tip">Admin address di-set sekali saat deploy, tidak bisa diubah. Mencegah hacker mengubah owner secara permanen. Lebih hemat gas karena tidak perlu storage slot untuk menyimpan alamat admin.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">CEI Pattern<span class="tt-tip">Checks-Effects-Interactions: cek validasi → ubah state → panggil function lain. Pola ini mencegah reentrancy karena state sudah diupdate sebelum external call.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr style="background:var(--bg)">
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Reentrancy Guard<span class="tt-tip">Mencegah hacker memanggil ulang function sebelum transaksi selesai. Tier B menggunakan flag statis (locked/not), Tier C & D menggunakan transient storage (TSTORE) yang lebih efisien.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#f59e0b">Static</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Penalty Rate<span class="tt-tip">Denda otomatis untuk transaksi mencurigakan. Tier B menggunakan rate statis 10%, Tier C & D menggunakan rate dinamis berdasarkan skor anomali — makin mencurigakan, makin besar dendanya.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#f59e0b">Static 10%</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr style="background:var(--bg)">
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Dynamic Fee Threshold<span class="tt-tip">Batas biaya transaksi yang bisa berubah otomatis berdasarkan kondisi jaringan. Jaringan sibuk → threshold naik, jaringan sepi → threshold turun. Tier A & B menggunakan biaya tetap.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">EIP-1153 (TSTORE)<span class="tt-tip">Standar Ethereum 2024 untuk Transient Storage (TSTORE/TLOAD). Menyimpan data sementara yang otomatis hilang setelah transaksi selesai — lebih murah dari storage permanen. Tier C memanggil external ke MonitorMock, Tier D mengimplementasikan langsung di dalam kontrak.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#8b5cf6">External</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅ Inline</td>
+</tr>
+<tr style="background:var(--bg)">
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">MEV Protection<span class="tt-tip">Melindungi dari bot yang memanipulasi urutan transaksi (sandwich attack). Tier C menyimpan 5 slot waktu di storage permanen, Tier D menggunakan 1 slot transient storage yang lebih hemat gas.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#8b5cf6">5 Slots</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅ 1 Slot</td>
+</tr>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">Emergency Pause<span class="tt-tip">Sistem mitigasi aktif: jika anomali terdeteksi, transaksi bisa dijeda sementara sampai admin mengonfirmasi keamanan. Melindungi pengguna dari serangan yang sedang berlangsung.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">❌</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">✅</td>
+</tr>
+<tr style="background:var(--bg)">
+<td style="padding:10px 12px;border:1px solid var(--border-light);font-weight:500"><span class="tt-wrap">External Calls<span class="tt-tip">Jumlah panggilan ke kontrak lain per transaksi. Semakin banyak, semakin mahal gas-nya. Tier C butuh 5-6 panggilan ke MonitorMock per transaksi, Tier A/B/D tidak ada panggilan ke kontrak lain (0).</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#8b5cf6">0</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#8b5cf6">0</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#ef4444">5-6 / tx</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);color:#10b981">0</td>
+</tr>
+<tr>
+<td style="padding:10px 12px;border:1px solid var(--border-light);border-radius:0 0 0 8px;font-weight:500"><span class="tt-wrap">Security Score<span class="tt-tip">Skor keamanan dari 0-8 berdasarkan jumlah fitur keamanan aktif: custom errors, immutable admin, CEI, reentrancy guard, penalty, dynamic fee, EIP-1153, MEV protection.</span></span></td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);font-weight:600;color:#ef4444">0/8</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);font-weight:600;color:#f59e0b">2/8</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);font-weight:600;color:#8b5cf6">8/8</td>
+<td style="text-align:center;padding:10px;border:1px solid var(--border-light);border-radius:0 0 8px 0;font-weight:600;color:#10b981">8/8</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- Banner -->
+<div class="card" style="background:linear-gradient(135deg,#1a1d24,#22252d);color:#e5e7eb;border-color:#374151;position:relative;overflow:hidden;margin-bottom:28px">
+    <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(130,71,229,0.15),transparent);border-radius:50%"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <div style="width:28px;height:28px;border-radius:50%;background:#8247e5;display:flex;align-items:center;justify-content:center"><span style="font-size:14px;color:#fff;font-weight:700">P</span></div>
+        <div>
+            <div style="font-size:.82rem;font-weight:600;color:#e5e7eb">Polygon PoS</div>
+            <div style="font-size:.68rem;color:#6b7280">Network ID: 137 · PoS</div>
+        </div>
+        <div style="margin-left:auto;padding:2px 8px;border-radius:4px;background:rgba(130,71,229,0.15);font-size:.68rem;color:#8247e5;font-weight:600">4 Jun 2026</div>
+    </div>
+    <div id="polygon-block-info" style="font-size:.9rem;font-weight:600;margin-bottom:12px;color:#e5e7eb">Block #72,463,891</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:10px">
+            <div style="font-size:.65rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">MATIC Price</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:1.1rem;font-weight:600;color:#8247e5" id="polygon-price">$0.22</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:10px">
+            <div style="font-size:.65rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Gas Price</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:1.1rem;font-weight:600;color:#60a5fa" id="polygon-gas">30 Gwei</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:10px">
+            <div style="font-size:.65rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">ETH Price</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:.85rem;font-weight:600;color:#34d399" id="polygon-eth-price">$2,500</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:10px">
+            <div style="font-size:.65rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Tx Count (24h)</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:.85rem;font-weight:600;color:#fbbf24" id="polygon-txcount">3,241,570</div>
+        </div>
+    </div>
+    <div style="margin-top:10px;padding-top:8px;border-top:1px solid #374151;font-size:.68rem;color:#6b7280;display:flex;justify-content:space-between">
+        <span>Currency: MATIC (Gwei)</span>
+        <span id="polygon-updated">Block #72,463,891</span>
+    </div>
+</div>
+
+<!-- 01 -->
+<div class="section-label">01 — Konteks Penelitian</div>
+<div class="section-title">Perbandingan 4-Tier Bridge di Polygon PoS</div>
+<div class="section-desc">Gas units identik (EVM-compatible). Biaya berbeda karena Polygon gas 30 Gwei + MATIC $0.22.</div>
+<div class="grid-4">
+    <div class="card" style="border-top:3px solid var(--red)"><div class="card-label">Tier A — Baseline</div><div class="card-value text-red">Unoptimized</div><div class="card-note">Gas 31,412. Tidak aman. CEI violation.</div></div>
+    <div class="card" style="border-top:3px solid var(--orange)"><div class="card-label">Tier B — Statis</div><div class="card-value text-orange">Static Only</div><div class="card-note">Gas 31,427. CEI + packing. 25% keamanan.</div></div>
+    <div class="card" style="border-top:3px solid var(--green)"><div class="card-label">Tier C — Dinamis</div><div class="card-value text-green">EIP-1153 + EWS</div><div class="card-note">Gas 122,769. 100% keamanan. Overhead 391%.</div></div>
+    <div class="card" style="border-top:3px solid var(--primary)"><div class="card-label">Tier D — Ringan</div><div class="card-value text-primary">Inline EIP-1153</div><div class="card-note">Gas 34,156. 100% keamanan. Overhead 8.7%.</div></div>
+</div>
+<div class="callout"><strong>Polygon PoS</strong>: Gas price tetap 30 Gwei (MATIC). Bridge ber-volume tinggi sangat menguntungkan di Polygon karena biaya transaksi 20x lebih rendah dari Ethereum.</div>
+
+<hr class="divider">
+
+<!-- 02 -->
+<div class="section-label">02 — Hasil Pengujian</div>
+<div class="section-title">Validasi Keamanan & Persentase Peningkatan</div>
+<div class="section-desc">215 skenario pengujian — gas units identik dengan Ethereum (EVM-compatible).</div>
+<div class="grid-4">
+    <div class="card"><div class="card-label">Tier A</div><div class="card-value text-red">0/8 Fitur</div><div class="card-note" style="font-size:.75rem"><strong style="color:var(--red)">0%</strong> keamanan. Reentrancy bisa dieksploitasi.</div></div>
+    <div class="card"><div class="card-label">Tier B</div><div class="card-value text-orange">2/8 Fitur</div><div class="card-note" style="font-size:.75rem"><strong style="color:var(--orange)">25%</strong> keamanan. CEI mencegah single-function reentrancy.</div></div>
+    <div class="card"><div class="card-label">Tier C</div><div class="card-value text-green">8/8 Fitur</div><div class="card-note" style="font-size:.75rem"><strong style="color:var(--green)">100%</strong> keamanan. Overhead <strong>391%</strong> gas.</div></div>
+    <div class="card"><div class="card-label">Tier D</div><div class="card-value text-primary">8/8 Fitur</div><div class="card-note" style="font-size:.75rem"><strong style="color:var(--primary)">100%</strong> keamanan. Overhead hanya <strong>8.7%</strong> gas.</div></div>
+</div>
+<div class="callout callout-success"><strong>Temuan Kunci</strong>: Gas units sama persis dengan Ethereum. Tier D tetap unggul: 34,156 gas deposit vs Tier C 122,769 gas — dengan biaya MATIC jauh lebih rendah.</div>
+
+<hr class="divider">
+
+<!-- 03 -->
+<div class="section-label">03 — Analisis Gas Rinci</div>
+<div class="section-title">Breakdown Komponen Gas Polygon PoS</div>
+<div class="section-desc">Gas units identik Ethereum. Biaya MATIC berbeda: 30 Gwei x $0.22/MATIC.</div>
+<div class="chart-panel" id="box-bridge-poly">
+    <div class="chart-header">
+        <div><div class="chart-title">Perbandingan Gas: Deposit, Withdraw, Swap</div><div class="chart-subtitle">Sumber: GasStatsTest (100 sampel per tier)</div></div>
+        <button class="btn-expand" onclick="toggleExpand('box-bridge-poly')">Perlebar</button>
+    </div>
+    <div class="chart-wrap"><canvas id="chart-gas-poly"></canvas></div>
+</div>
+<div class="grid-4" style="margin-top:16px">
+    <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--red)">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--red-light)"><div style="font-size:.78rem;font-weight:700;color:var(--red)">Tier A — 31,412 Gas</div><div style="font-size:.72rem;color:var(--text-muted)">Baseline</div></div>
+        <table style="font-size:.72rem"><thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead><tbody>
+            <tr><td>SSTORE (state)</td><td style="text-align:right">5,000</td></tr><tr><td>SLOAD (balance)</td><td style="text-align:right">2,100</td></tr><tr><td>Transfer ETH</td><td style="text-align:right">9,000</td></tr><tr><td>Function overhead</td><td style="text-align:right">15,312</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">31,412</td></tr>
+        </tbody></table>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--orange)">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--orange-light)"><div style="font-size:.78rem;font-weight:700;color:var(--orange)">Tier B — 31,427 Gas</div><div style="font-size:.72rem;color:var(--text-muted)">Static Only</div></div>
+        <table style="font-size:.72rem"><thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead><tbody>
+            <tr><td>SSTORE (state)</td><td style="text-align:right">5,000</td></tr><tr><td>SLOAD (balance)</td><td style="text-align:right">2,100</td></tr><tr><td>Transfer ETH</td><td style="text-align:right">9,000</td></tr><tr><td>Function overhead</td><td style="text-align:right">15,327</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">31,427</td></tr>
+        </tbody></table>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--green)">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--green-light)"><div style="font-size:.78rem;font-weight:700;color:var(--green)">Tier C — 122,769 Gas</div><div style="font-size:.72rem;color:var(--text-muted)">Full Dynamic</div></div>
+        <table style="font-size:.72rem"><thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead><tbody>
+            <tr><td>SSTORE + SLOAD + Transfer</td><td style="text-align:right">16,100</td></tr>
+            <tr style="background:var(--red-light)"><td><strong>5 External calls</strong></td><td style="text-align:right"><strong>22,000</strong></td></tr>
+            <tr style="background:var(--red-light)"><td><strong>Dynamic array SSTORE</strong></td><td style="text-align:right"><strong>22,100</strong></td></tr>
+            <tr style="background:var(--orange-light)"><td><strong>ABI + Cold code</strong></td><td style="text-align:right"><strong>28,000</strong></td></tr>
+            <tr><td>Overhead lainnya</td><td style="text-align:right">34,569</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">122,769</td></tr>
+        </tbody></table>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--primary)">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--primary-light)"><div style="font-size:.78rem;font-weight:700;color:var(--primary)">Tier D — 34,156 Gas</div><div style="font-size:.72rem;color:var(--text-muted)">Lightweight Inline</div></div>
+        <table style="font-size:.72rem"><thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead><tbody>
+            <tr><td>SSTORE + SLOAD + Transfer</td><td style="text-align:right">16,100</td></tr>
+            <tr style="background:var(--green-light)"><td><strong>TSTORE + TLOAD inline</strong></td><td style="text-align:right"><strong>300</strong></td></tr>
+            <tr style="background:var(--green-light)"><td><strong>MEV detect + penalty</strong></td><td style="text-align:right"><strong>2,400</strong></td></tr>
+            <tr style="background:var(--green-light)"><td><strong>SSTORE lastTx slot</strong></td><td style="text-align:right"><strong>2,900</strong></td></tr>
+            <tr><td>Function overhead</td><td style="text-align:right">12,456</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">34,156</td></tr>
+        </tbody></table>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- 04 -->
+<div class="section-label">04 — Perbandingan Statis vs Dinamis</div>
+<div class="section-title">Fitur Statis vs Dinamis per Tier</div>
+<div class="section-desc">Struktur identik dengan Ethereum. Gas units sama karena EVM-compatible.</div>
+<div class="grid-2">
+    <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);background:var(--surface-alt)"><div class="chart-title" style="font-size:.88rem">Fitur Statis (Compile-Time)</div></div>
+        <table style="font-size:.78rem"><thead><tr><th>Fitur</th><th style="text-align:center">A</th><th style="text-align:center">B</th><th style="text-align:center">C</th><th style="text-align:center">D</th></tr></thead><tbody>
+            <tr><td>CEI Pattern</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Variable Packing</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Custom Errors</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Immutable Admin</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Unchecked Math</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:center">0/5</td><td style="text-align:center">5/5</td><td style="text-align:center">5/5</td><td style="text-align:center">5/5</td></tr>
+        </tbody></table>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);background:var(--surface-alt)"><div class="chart-title" style="font-size:.88rem">Fitur Dinamis (Runtime)</div></div>
+        <table style="font-size:.78rem"><thead><tr><th>Fitur</th><th style="text-align:center">A</th><th style="text-align:center">B</th><th style="text-align:center">C</th><th style="text-align:center">D</th></tr></thead><tbody>
+            <tr><td>Reentrancy Guard</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>MEV Detection</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Economic Penalty</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Emergency Pause</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>Block Tracking</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr><td>EIP-1153 (TSTORE/TLOAD)</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--red)">X</td><td style="text-align:center;color:var(--green)">V</td><td style="text-align:center;color:var(--green)">V</td></tr>
+            <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:center">0/6</td><td style="text-align:center">0/6</td><td style="text-align:center">6/6</td><td style="text-align:center">6/6</td></tr>
+        </tbody></table>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- 05 -->
+<div class="section-label">05 — Cost-Effectiveness</div>
+<div class="section-title">Ranking: Security Points per Gas (SPG)</div>
+<div class="section-desc">SPG = Skor Keamanan / Gas Cost. Gas units identik (EVM), ranking tetap sama.</div>
+<div class="grid-4">
+    <div class="card" style="border-left:3px solid var(--primary)"><div class="card-label">#1 — Tier D (Winner)</div><div class="card-value text-primary" style="font-size:2rem">220.1 SPG</div><div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">8 / 34,156 x 1M</div></div>
+    <div class="card" style="border-left:3px solid var(--green)"><div class="card-label">#2 — Tier C</div><div class="card-value text-green" style="font-size:2rem">65.2 SPG</div><div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">8 / 122,769 x 1M</div></div>
+    <div class="card" style="border-left:3px solid var(--orange)"><div class="card-label">#3 — Tier B</div><div class="card-value text-orange" style="font-size:2rem">63.6 SPG</div><div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">2 / 31,427 x 1M</div></div>
+    <div class="card" style="border-left:3px solid var(--red)"><div class="card-label">#4 — Tier A</div><div class="card-value text-red" style="font-size:2rem">0.0 SPG</div><div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">0 / 31,412 x 1M</div></div>
+</div>
+<div class="callout callout-success" style="margin-top:16px"><strong>Kesimpulan Polygon</strong>: SPG ranking tetap D > C > B > A. Biaya MATIC membuat total cost 20x lebih rendah dari Ethereum.</div>
+
+<hr class="divider">
+
+<!-- 06 -->
+<div class="section-label">06 — Biaya Real-World (MATIC/USD)</div>
+<div class="section-title">Estimasi Biaya per Transaksi di Polygon PoS</div>
+<div class="section-desc">Gas 30 Gwei x MATIC $0.22. Bridge 100K tx/bulan.</div>
+<div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border-light)"><div class="chart-title" style="font-size:.88rem">Biaya Lengkap per Operasi (MATIC)</div></div>
+    <table style="font-size:.78rem">
+        <thead><tr><th>Tier</th><th style="text-align:right">Deposit (MATIC)</th><th style="text-align:right">Deposit (USD)</th><th style="text-align:right">Withdraw (USD)</th><th style="text-align:right">Swap (USD)</th><th style="text-align:right">100K tx/bulan</th></tr></thead>
+        <tbody>
+            <tr><td style="font-weight:600">Tier A</td><td style="text-align:right">0.0009424</td><td style="text-align:right">$0.000207</td><td style="text-align:right">$0.000064</td><td style="text-align:right">$0.000146</td><td style="text-align:right;color:var(--text-muted)">$20.74</td></tr>
+            <tr><td style="font-weight:600">Tier B</td><td style="text-align:right">0.0009428</td><td style="text-align:right">$0.000207</td><td style="text-align:right">$0.000064</td><td style="text-align:right">$0.000099</td><td style="text-align:right;color:var(--text-muted)">$20.75</td></tr>
+            <tr style="background:var(--red-light)"><td style="font-weight:600;color:var(--red)">Tier C</td><td style="text-align:right;color:var(--red)">0.0036831</td><td style="text-align:right;color:var(--red)">$0.000810</td><td style="text-align:right;color:var(--red)">$0.000694</td><td style="text-align:right;color:var(--red)">$0.000884</td><td style="text-align:right;color:var(--red)">$81.03</td></tr>
+            <tr style="background:rgba(130,71,229,0.06)"><td style="font-weight:700;color:#8247e5">Tier D</td><td style="text-align:right;font-weight:600;color:var(--green)">0.0010247</td><td style="text-align:right;font-weight:600;color:var(--green)">$0.000225</td><td style="text-align:right;font-weight:600;color:var(--green)">$0.000080</td><td style="text-align:right;font-weight:600;color:var(--green)">$0.000416</td><td style="text-align:right;font-weight:600;color:var(--green)">$22.54</td></tr>
+        </tbody>
+    </table>
+</div>
+<div class="callout callout-info" style="margin-top:16px"><strong>Polygon vs Ethereum</strong>: Bridge 100K tx/bulan: Ethereum Tier D = $453K/bln, Polygon Tier D = <strong>$22.54/bln</strong>. Polygon 20x lebih murah.</div>
+
+<hr class="divider">
+
+<!-- 07 -->
+<div class="section-label">07 — Analisis Statistik</div>
+<div class="section-title">Distribusi Gas (Polygon PoS)</div>
+<div class="section-desc">Distribusi identik dengan Ethereum (EVM-compatible). 100 sampel per operasi.</div>
+<div class="chart-panel" id="box-distribution-poly">
+    <div class="chart-header">
+        <div><div class="chart-title">Distribusi Gas Polygon</div><div class="chart-subtitle">100 sampel per tier, histogram + kurva normal</div></div>
+        <button class="btn-expand" onclick="toggleExpand('box-distribution-poly')">Perlebar</button>
+    </div>
+    <div class="chart-wrap"><canvas id="chart-distribution-poly"></canvas></div>
+</div>
+
+<hr class="divider">
+
+<!-- 08 -->
+<div class="section-label">08 — Rincian Pengujian</div>
+<div class="section-title">215 Skenario Pengujian</div>
+<div class="card" style="padding:0;overflow:hidden">
+    <table><thead><tr><th>Test Suite</th><th>Jumlah</th><th>Status</th><th>Deskripsi</th></tr></thead>
+    <tbody>
+        <tr><td style="font-weight:600">CostAnalysisTest</td><td>8</td><td><span class="badge badge-pass">PASS</span></td><td>Biaya per fitur, Tier D vs C</td></tr>
+        <tr><td style="font-weight:600">EconomicDeterrenceTest</td><td>25</td><td><span class="badge badge-pass">PASS</span></td><td>ROI attacker, penalty boundary</td></tr>
+        <tr><td style="font-weight:600">EdgeCaseTest</td><td>41</td><td><span class="badge badge-pass">PASS</span></td><td>Zero amount, overflow, access control</td></tr>
+        <tr><td style="font-weight:600">EIP1153Benchmark</td><td>7</td><td><span class="badge badge-pass">PASS</span></td><td>TSTORE vs SSTORE gas comparison</td></tr>
+        <tr><td style="font-weight:600">FuzzTest</td><td>8</td><td><span class="badge badge-pass">PASS</span></td><td>256 iterasi fuzz per fungsi</td></tr>
+        <tr><td style="font-weight:600">GasStatsTest</td><td>3</td><td><span class="badge badge-pass">PASS</span></td><td>100 sampel statistik</td></tr>
+        <tr><td style="font-weight:600">InvariantTest</td><td>4</td><td><span class="badge badge-pass">PASS</span></td><td>Saldo >= 0, callDepth reset</td></tr>
+        <tr><td style="font-weight:600">MEVSimulationTest</td><td>25</td><td><span class="badge badge-pass">PASS</span></td><td>Sandwich attack detection</td></tr>
+        <tr><td style="font-weight:600">MultiContractTest</td><td>14</td><td><span class="badge badge-pass">PASS</span></td><td>4-tier comparison</td></tr>
+        <tr><td style="font-weight:600">SecurityComparisonTest</td><td>6</td><td><span class="badge badge-pass">PASS</span></td><td>Reentrancy/MEV/pause all tiers</td></tr>
+        <tr><td style="font-weight:600">TierComparisonTest</td><td>50</td><td><span class="badge badge-pass">PASS</span></td><td>State, events, access per tier</td></tr>
+        <tr><td style="font-weight:600">VictimBridgeSecurityTest</td><td>23</td><td><span class="badge badge-pass">PASS</span></td><td>Reentrancy + emergency pause</td></tr>
+    </tbody></table>
+</div>
+
+<hr class="divider">
+
+<!-- 09 -->
+<div class="section-label">09 — Kesimpulan</div>
+<div class="section-title">Temuan Penelitian — Polygon PoS</div>
+<div class="summary">
+    <h3>Ringkasan Hasil Polygon</h3>
+    <ul>
+        <li><strong>Gas units identik</strong>: Polygon EVM-compatible, semua gas values = Ethereum</li>
+        <li><strong>Biaya 20x lebih rendah</strong>: Polygon 30 Gwei MATIC $0.22 vs Ethereum 0.55 Gwei ETH $2,500</li>
+        <li><strong>Tier D tetap juara</strong>: SPG 220.1 — biaya $22.54/bln (100K tx) vs Tier C $81.03/bln</li>
+        <li><strong>215/215 pengujian lulus</strong>: Kode tidak berubah, hanya deployment target berbeda</li>
+        <li><strong>Emergency Pause</strong>: Tersedia di Tier C & D, mitigasi aktif jika kerentanan ditemukan</li>
+        <li><strong>Rekomendasi</strong>: Polygon + Tier D = kombinasi optimal untuk bridge ber-volume tinggi</li>
+    </ul>
+</div>
+<div class="footer">Dashboard Skripsi — Polygon PoS Results<br>Data: 215 pengujian (Foundry, 100 sampel) · 4 Juni 2026</div>
+</div><!-- end result-tab-polygon -->
+</div>

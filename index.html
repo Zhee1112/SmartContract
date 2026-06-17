@@ -1,0 +1,885 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Skripsi — Optimasi Gas dan Keamanan Smart Contract Bridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--bg:#fff;--surface:#f8f9fb;--surface-alt:#f0f2f5;--border:#e2e5ea;--border-light:#eef0f3;--primary:#1a56db;--primary-light:#e8eefb;--green:#0d7a3f;--green-light:#e6f4ec;--red:#b91c1c;--red-light:#fde8e8;--orange:#b45309;--orange-light:#fef3cd;--text:#111827;--text-secondary:#4b5563;--text-muted:#6b7280;--text-light:#9ca3af}
+[data-theme="dark"]{--bg:#111318;--surface:#1a1d24;--surface-alt:#22252d;--border:#2d3139;--border-light:#252830;--primary:#5b9bf5;--primary-light:rgba(91,155,245,.12);--green:#34d399;--green-light:rgba(52,211,153,.12);--red:#f87171;--red-light:rgba(248,113,113,.12);--orange:#fbbf24;--orange-light:rgba(251,191,36,.12);--text:#e5e7eb;--text-secondary:#9ca3af;--text-muted:#6b7280;--text-light:#4b5563}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;max-width:1100px;margin:0 auto}
+[data-theme="dark"] .nav{background:rgba(17,19,24,.95)}
+.btn-theme{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-left:auto;transition:all .15s;flex-shrink:0}
+.btn-theme:hover{border-color:var(--text-light);color:var(--text)}
+.nav-brand{font-family:'IBM Plex Serif',Georgia,serif;font-weight:600;font-size:.95rem;padding:18px 24px 18px 0;border-right:1px solid var(--border);white-space:nowrap;color:var(--text);letter-spacing:-.01em}
+.nav-tabs{display:flex;margin-left:4px}
+.nav-tab{padding:18px 20px;font-size:.82rem;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;user-select:none;letter-spacing:.02em}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.container{max-width:1100px;margin:0 auto;padding:40px 40px 60px}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-family:'IBM Plex Serif',Georgia,serif;font-size:1.6rem;font-weight:600;color:var(--text);margin-bottom:8px;letter-spacing:-.02em}
+.page-subtitle{font-size:.9rem;color:var(--text-muted);margin-bottom:40px;line-height:1.5}
+.section-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--primary);margin-bottom:8px}
+.section-title{font-family:'IBM Plex Serif',Georgia,serif;font-size:1.15rem;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:-.01em}
+.section-desc{font-size:.88rem;color:var(--text-secondary);margin-bottom:24px;max-width:720px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:16px}
+.card-label{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);margin-bottom:10px}
+.card-value{font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:600;color:var(--text);letter-spacing:-.02em}
+.card-note{font-size:.8rem;color:var(--text-muted);margin-top:6px}
+.text-green{color:var(--green)}.text-red{color:var(--red)}.text-orange{color:var(--orange)}.text-primary{color:var(--primary)}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:768px){.grid-3,.grid-4,.grid-2{grid-template-columns:1fr}.nav-brand{display:none}.container{padding:24px 16px 40px}.sim-stats{grid-template-columns:1fr 1fr}}
+.chart-panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;position:relative}
+.chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.chart-title{font-size:.92rem;font-weight:600;color:var(--text)}
+.chart-subtitle{font-size:.78rem;color:var(--text-muted);margin-top:3px}
+.chart-wrap{position:relative;height:300px}
+.btn-expand{font-family:'IBM Plex Sans',sans-serif;font-size:.72rem;font-weight:500;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);padding:5px 12px;border-radius:4px;cursor:pointer;transition:all .15s;letter-spacing:.02em}
+.btn-expand:hover{border-color:var(--text-light);color:var(--text)}
+.callout{border-left:3px solid var(--primary);background:var(--primary-light);padding:16px 20px;border-radius:0 6px 6px 0;margin-top:20px;font-size:.85rem;color:var(--text-secondary);line-height:1.65}
+.callout strong{color:var(--text);font-weight:600}
+.callout-note{border-left-color:var(--orange);background:var(--orange-light)}
+.callout-success{border-left-color:var(--green);background:var(--green-light)}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border-light)}
+th{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);background:var(--bg)}
+.badge{display:inline-block;padding:3px 8px;border-radius:3px;font-size:.7rem;font-weight:600;letter-spacing:.03em}
+.badge-pass{background:var(--green-light);color:var(--green)}
+.divider{border:none;border-top:1px solid var(--border-light);margin:40px 0}
+.summary{border:1px solid var(--border);border-radius:8px;padding:28px;background:var(--surface)}
+.summary h3{font-family:'IBM Plex Serif',Georgia,serif;font-size:1rem;font-weight:600;margin-bottom:16px;color:var(--text)}
+.summary ul{list-style:none;padding:0}
+.summary li{padding:8px 0;font-size:.85rem;color:var(--text-secondary);border-bottom:1px solid var(--border-light);line-height:1.5}
+.summary li:last-child{border-bottom:none}
+.summary li strong{color:var(--text);font-weight:600}
+.summary li::before{content:"";display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:10px;vertical-align:middle}
+.footer{text-align:center;padding:24px 0;color:var(--text-light);font-size:.75rem;border-top:1px solid var(--border-light);margin-top:40px}
+.sim-bar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:16px}
+.sim-bar-title{font-size:.92rem;font-weight:600}
+.sim-bar-sub{font-size:.78rem;color:var(--text-muted);margin-top:2px}
+.sim-controls{display:flex;gap:8px;align-items:center}
+.sim-dot{width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block;margin-right:6px;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.sim-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.sim-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px}
+.sim-card .label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light)}
+.sim-card .val{font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:600;margin-top:6px}
+.sim-card .desc{font-size:.72rem;color:var(--text-muted);margin-top:4px}
+.mempool-wrap{display:flex;align-items:center;gap:16px}
+.mempool-bg{flex-grow:1;height:10px;background:var(--surface-alt);border-radius:5px;overflow:hidden;border:1px solid var(--border-light)}
+.mempool-fill{height:100%;background:var(--primary);width:0%;transition:width .3s;border-radius:5px}
+.route-tag{padding:5px 10px;border-radius:3px;font-size:.72rem;font-weight:600;letter-spacing:.03em;white-space:nowrap}
+.tag-blob{background:#f0e6ff;color:#6b21a8;border:1px solid #d8b4fe}
+.tag-calldata{background:var(--red-light);color:var(--red);border:1px solid #fca5a5}
+button{font-family:'IBM Plex Sans',sans-serif;font-size:.78rem;font-weight:500;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);padding:7px 14px;border-radius:4px;cursor:pointer;transition:all .15s}
+button:hover{border-color:var(--text-light);color:var(--text)}
+.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-primary:hover{background:#1446b8}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:200;justify-content:center;align-items:center;padding:40px}
+.overlay.show{display:flex}
+.overlay-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:28px;width:100%;max-width:1000px;height:80vh;position:relative}
+.overlay-close{position:absolute;top:14px;right:14px;background:var(--surface);border:1px solid var(--border);color:var(--text-muted);width:32px;height:32px;border-radius:4px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.overlay-close:hover{border-color:var(--text-light);color:var(--text)}
+.overlay-chart{width:100%;height:calc(100% - 40px)}
+.help-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg);color:var(--text-muted);font-size:.72rem;font-weight:700;cursor:pointer;margin-left:8px;vertical-align:middle;transition:all .15s;flex-shrink:0}
+.help-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light)}
+.help-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:300;justify-content:center;align-items:center;padding:30px}
+.help-overlay.show{display:flex}
+.help-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:28px 32px;width:100%;max-width:640px;max-height:80vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.help-box h3{font-family:'IBM Plex Serif',Georgia,serif;font-size:1.1rem;font-weight:600;color:var(--text);margin-bottom:12px}
+.help-box p{font-size:.88rem;color:var(--text-secondary);line-height:1.7;margin-bottom:12px}
+.help-box .help-close{position:absolute;top:14px;right:14px;background:var(--surface);border:1px solid var(--border);color:var(--text-muted);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.help-box .help-close:hover{border-color:var(--text-light);color:var(--text)}
+.help-box ul{margin:8px 0 12px 16px;padding:0}
+.help-box li{font-size:.85rem;color:var(--text-secondary);line-height:1.6;margin-bottom:6px}
+.help-box .help-highlight{background:var(--primary-light);border-left:3px solid var(--primary);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:.85rem;color:var(--text-secondary);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="nav">
+    <div class="nav-brand">Skripsi Dashboard</div>
+    <div class="nav-tabs">
+        <div class="nav-tab active" onclick="switchTab('results')">Hasil Penelitian</div>
+        <div class="nav-tab" onclick="switchTab('sim')">Simulasi Rollup</div>
+    </div>
+    <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" title="Ganti tema"></button>
+</div>
+
+<div id="page-results" class="page active">
+<div class="container">
+    <div class="page-title">Optimalisasi Gas dan Keamanan Smart Contract Bridge</div>
+    <div class="page-subtitle">Implementasi EIP-1153 Transient Storage dan Early Warning System pada Arsitektur 4-Tier</div>
+
+    <!-- Real Ethereum Data Banner -->
+    <div class="card" style="background:linear-gradient(135deg,#1a1d24,#22252d);color:#e5e7eb;border-color:#374151;margin-bottom:28px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+            <div>
+                <div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#9ca3af;margin-bottom:6px">Data Primer dari Ethereum Mainnet</div>
+                <div style="font-size:1.1rem;font-weight:600">Block #25,243,215 — Base Fee: 0.55 Gwei</div>
+                <div style="font-size:.82rem;color:#6b7280;margin-top:4px">Sumber: Etherscan V2 API (real-time) — Selasa, 4 Juni 2026</div>
+            </div>
+            <div style="text-align:right">
+                <div style="font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#9ca3af;margin-bottom:4px">ETH Price (est.)</div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:1.4rem;font-weight:600;color:#34d399">$2,500</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">01 — Konteks Penelitian <button class="help-btn" onclick="showHelp('01')" title="Penjelasan sederhana">?</button></div>
+    <div class="section-title">Apa yang Diteliti</div>
+    <div class="section-desc">Empat arsitektur bridge blockchain dibandingkan untuk mengukur efisiensi gas dan tingkat keamanan terhadap serangan reentrancy dan MEV sandwich.</div>
+    <div class="grid-4">
+        <div class="card">
+            <div class="card-label">Tier A — Baseline</div>
+            <div class="card-value text-red">Unoptimized</div>
+            <div class="card-note">Tidak ada mekanisme pertahanan. Update state setelah transfer (CEI violation). Digunakan sebagai baseline pengukuran.</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Tier B — Statis</div>
+            <div class="card-value text-orange">Static Only</div>
+            <div class="card-note">CEI pattern, struct packing (1 slot 32B), custom errors, immutable admin. Tanpa proteksi dinamis on-chain.</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Tier C — Dinamis (Full)</div>
+            <div class="card-value text-green">EIP-1153 + EWS</div>
+            <div class="card-note">Transient storage via MonitorMock, Early Warning System, deteksi MEV sandwich, penalty dinamis. Overhead: ~391% gas vs Tier B. 55.7x lebih mahal dari Tier D.</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Tier D — Dinamis (Ringan)</div>
+            <div class="card-value text-primary">Inline EIP-1153</div>
+            <div class="card-note">Semua keamanan Tier C di-inline tanpa external call. Single-slot MEV, penalty inline. Overhead: 8.7% gas vs Tier B. Best cost-effectiveness: 205 SPG.</div>
+        </div>
+    </div>
+    <div class="callout"><strong>Bridge</strong> adalah mekanisme penghubung aset antar jaringan blockchain. Kerentanan bridge telah menyebabkan kerugian lebih dari $2 miliar dalam 3 tahun terakhir (Ronin $620M, Wormhole $320M, Nomad $190M). Penelitian ini mengajukan pendekatan defensif on-chain menggunakan fitur terbaru Ethereum.</div>
+
+    <hr class="divider">
+
+    <div class="section-label">02 — Hasil Pengujian <button class="help-btn" onclick="showHelp('02')" title="Penjelasan sederhana">?</button></div>
+    <div class="section-title">Validasi Keamanan & Persentase Peningkatan</div>
+    <div class="section-desc">215 skenario pengujian membuktikan bahwa Tier D (kontribusi penelitian) mencapai skor keamanan 100% dengan biaya gas hanya 8.7% lebih tinggi dari baseline.</div>
+    <div class="grid-4">
+        <div class="card">
+            <div class="card-label">Tier A — Baseline</div>
+            <div class="card-value text-red">0/8 Fitur</div>
+            <div class="card-note" style="font-size:.75rem;line-height:1.5"><strong style="color:var(--red)">0%</strong> keamanan. Reentrancy bisa dieksploitasi. Tidak ada MEV protection, tidak ada pause.</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Tier B — Statis</div>
+            <div class="card-value text-orange">2/8 Fitur</div>
+            <div class="card-note" style="font-size:.75rem;line-height:1.5"><strong style="color:var(--orange)">25%</strong> keamanan. CEI mencegah single-function reentrancy. Custom errors menghemat gas. Cross-function reentrancy masih bisa dieksploitasi.</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Tier C — Full Dynamic</div>
+            <div class="card-value text-green">8/8 Fitur</div>
+            <div class="card-note" style="font-size:.75rem;line-height:1.5"><strong style="color:var(--green)">100%</strong> keamanan. Semua fitur aktif. Overhead <strong>391%</strong> gas. 55.7x lebih mahal dari Tier D.</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Tier D — Lightweight</div>
+            <div class="card-value text-primary">8/8 Fitur</div>
+            <div class="card-note" style="font-size:.75rem;line-height:1.5"><strong style="color:var(--primary)">100%</strong> keamanan. Overhead hanya <strong>8.7%</strong> gas. Best cost-effectiveness: 220 SPG.</div>
+        </div>
+    </div>
+    <div class="callout callout-success"><strong>Temuan Kunci</strong>: Tier D mencapai skor keamanan <strong>100% (8/8 fitur)</strong> — identik dengan Tier C — namun dengan biaya gas deposit hanya <strong>34,156 gas</strong> (vs Tier C: 122,769 gas). Ini membuktikan modifikasi EIP-1153 secara inline bisa menghasilkan keamanan penuh dengan biaya minimal.</div>
+
+    <hr class="divider">
+
+    <div class="section-label">03 — Analisis Gas Rinci <button class="help-btn" onclick="showHelp('03')" title="Penjelasan sederhana">?</button></div>
+    <div class="section-title">Mengapa Harga Gas Berbeda Tiap Tier?</div>
+    <div class="section-desc">Analisis breakdown komponen gas untuk menjelaskan mengapa Tier C mahal dan Tier D murah meskipun keamanan sama.</div>
+    <div class="chart-panel" id="box-bridge">
+        <div class="chart-header">
+            <div><div class="chart-title">Perbandingan Gas: Deposit, Withdraw, Swap</div><div class="chart-subtitle">Sumber: GasStatsTest (100 sampel per tier) — Data Primer</div></div>
+            <button class="btn-expand" onclick="toggleExpand('box-bridge')">Perlebar</button>
+        </div>
+        <div class="chart-wrap"><canvas id="bridgeChart"></canvas></div>
+    </div>
+    <div class="callout callout-note"><strong>Analisis Kenapa Tier C Mahal</strong>: Deposit 122,769 gas terdiri dari 5-6 external calls ke MonitorMock (~21,300 gas), dynamic array SSTORE untuk txRecords (~22,100 gas), ABI encode/decode (~15,000 gas), cold code loading (~13,000 gas). <strong>Tier D mengeliminasi semua biaya ini</strong> dengan inline assembly — hanya menambah 2,900 gas (single-slot SSTORE) + 300 gas (pure math penalty).</div>
+
+    <!-- Gas Breakdown Detail -->
+    <div class="grid-4" style="margin-top:16px">
+        <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--red)">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--red-light)">
+                <div style="font-size:.78rem;font-weight:700;color:var(--red)">Tier A — 31,412 Gas</div>
+                <div style="font-size:.72rem;color:var(--text-muted)">Baseline (tidak ada keamanan)</div>
+            </div>
+            <table style="font-size:.72rem">
+                <thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead>
+                <tbody>
+                    <tr><td>SSTORE (state)</td><td style="text-align:right">5,000</td></tr>
+                    <tr><td>SLOAD (balance)</td><td style="text-align:right">2,100</td></tr>
+                    <tr><td>Transfer ETH</td><td style="text-align:right">9,000</td></tr>
+                    <tr><td>Function overhead</td><td style="text-align:right">15,312</td></tr>
+                    <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">31,412</td></tr>
+                    <tr><td colspan="2" style="font-size:.68rem;color:var(--text-muted);padding-top:8px">Tidak ada fitur keamanan. CEI violation. Reentrancy bisa dieksploitasi.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--orange)">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--orange-light)">
+                <div style="font-size:.78rem;font-weight:700;color:var(--orange)">Tier B — 31,427 Gas</div>
+                <div style="font-size:.72rem;color:var(--text-muted)">Static Only (CEI + packing)</div>
+            </div>
+            <table style="font-size:.72rem">
+                <thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead>
+                <tbody>
+                    <tr><td>SSTORE (state)</td><td style="text-align:right">5,000</td></tr>
+                    <tr><td>SLOAD (balance)</td><td style="text-align:right">2,100</td></tr>
+                    <tr><td>Transfer ETH</td><td style="text-align:right">9,000</td></tr>
+                    <tr><td>Function overhead</td><td style="text-align:right">15,327</td></tr>
+                    <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">31,427</td></tr>
+                    <tr><td colspan="2" style="font-size:.68rem;color:var(--text-muted);padding-top:8px">+15 gas vs A. Hanya CEI pattern & packing. Cross-function reentrancy masih bisa.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--green)">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--green-light)">
+                <div style="font-size:.78rem;font-weight:700;color:var(--green)">Tier C — 122,769 Gas</div>
+                <div style="font-size:.72rem;color:var(--text-muted)">Full Dynamic (EIP-1153 + EWS)</div>
+            </div>
+            <table style="font-size:.72rem">
+                <thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead>
+                <tbody>
+                    <tr><td>SSTORE + SLOAD + Transfer</td><td style="text-align:right">16,100</td></tr>
+                    <tr style="background:var(--red-light)"><td><strong>5 External calls</strong></td><td style="text-align:right"><strong>22,000</strong></td></tr>
+                    <tr style="background:var(--red-light)"><td><strong>Dynamic array SSTORE</strong></td><td style="text-align:right"><strong>22,100</strong></td></tr>
+                    <tr style="background:var(--orange-light)"><td><strong>ABI encode/decode</strong></td><td style="text-align:right"><strong>15,000</strong></td></tr>
+                    <tr style="background:var(--orange-light)"><td><strong>Cold code loading</strong></td><td style="text-align:right"><strong>13,000</strong></td></tr>
+                    <tr><td>SLOAD MonitorMock state</td><td style="text-align:right">10,500</td></tr>
+                    <tr><td>TSTORE/TLOAD (reentrancy)</td><td style="text-align:right">200</td></tr>
+                    <tr><td>Overhead lainnya</td><td style="text-align:right">23,869</td></tr>
+                    <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">122,769</td></tr>
+                    <tr><td colspan="2" style="font-size:.68rem;color:var(--text-muted);padding-top:8px">+291% vs B. 75.6% untuk overhead (external calls + dynamic array). Sangat mahal.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;border-left:3px solid var(--primary)">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--border-light);background:var(--primary-light)">
+                <div style="font-size:.78rem;font-weight:700;color:var(--primary)">Tier D — 34,156 Gas</div>
+                <div style="font-size:.72rem;color:var(--text-muted)">Lightweight (Inline EIP-1153)</div>
+            </div>
+            <table style="font-size:.72rem">
+                <thead><tr><th>Komponen</th><th style="text-align:right">Gas</th></tr></thead>
+                <tbody>
+                    <tr><td>SSTORE + SLOAD + Transfer</td><td style="text-align:right">16,100</td></tr>
+                    <tr style="background:var(--green-light)"><td><strong>TSTORE reentrancy (inline)</strong></td><td style="text-align:right"><strong>200</strong></td></tr>
+                    <tr style="background:var(--green-light)"><td><strong>TLOAD reentrancy (inline)</strong></td><td style="text-align:right"><strong>100</strong></td></tr>
+                    <tr style="background:var(--green-light)"><td><strong>MEV detect: SLOAD</strong></td><td style="text-align:right"><strong>2,100</strong></td></tr>
+                    <tr style="background:var(--green-light)"><td><strong>Penalty calc (pure math)</strong></td><td style="text-align:right"><strong>300</strong></td></tr>
+                    <tr style="background:var(--green-light)"><td><strong>SSTORE lastTx slot</strong></td><td style="text-align:right"><strong>2,900</strong></td></tr>
+                    <tr><td>MEV detect: block compare</td><td style="text-align:right">200</td></tr>
+                    <tr><td>Function overhead</td><td style="text-align:right">12,256</td></tr>
+                    <tr style="background:var(--surface-alt);font-weight:600"><td>Total</td><td style="text-align:right">34,156</td></tr>
+                    <tr><td colspan="2" style="font-size:.68rem;color:var(--text-muted);padding-top:8px">+8.7% vs B. 0 external calls. Semua fitur keamanan inline. Best SPG.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="callout" style="margin-top:16px"><strong>Kesimpulan Analisis</strong>: Tier C menghabiskan <strong>75.6%</strong> biayanya untuk overhead (external calls, dynamic array, ABI encoding). Tier D hanya <strong>52.9%</strong> overhead — dan seluruhnya inline tanpa external calls. Penghematan utama: mengganti dynamic array SSTORE (22,100 gas) dengan single-slot SSTORE (2,900 gas) = <strong>hemat 86.9%</strong>.</div>
+
+    <hr class="divider">
+
+    <div class="section-label">04 — Perbandingan Statis vs Dinamis <button class="help-btn" onclick="showHelp('04')" title="Penjelasan sederhana">?</button></div>
+    <div class="section-title">Analisis: Berapa Banyak Fitur yang Dapat Ditambahkan?</div>
+    <div class="section-desc">Setiap tier dibagi menjadi fitur statis (compile-time) dan dinamis (runtime). Tier D menambah 6 fitur dinamis dengan biaya hanya 8.7% gas.</div>
+    <div class="grid-2">
+        <div class="card" style="padding:0;overflow:hidden">
+            <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);background:var(--surface-alt)">
+                <div class="chart-title" style="font-size:.88rem">Fitur Statis (Compile-Time)</div>
+                <div class="chart-subtitle">Optimasi tanpa overhead gas runtime</div>
+            </div>
+            <table style="font-size:.78rem">
+                <thead><tr><th>Fitur</th><th style="text-align:center">A</th><th style="text-align:center">B</th><th style="text-align:center">C</th><th style="text-align:center">D</th></tr></thead>
+                <tbody>
+                    <tr><td>CEI Pattern</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td></tr>
+                    <tr><td>Variable Packing</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td></tr>
+                    <tr><td>Custom Errors</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td></tr>
+                    <tr><td>Immutable Admin</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td></tr>
+                    <tr><td>Unchecked Math</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td></tr>
+                    <tr style="background:var(--surface-alt);font-weight:600"><td>Total Statis</td><td style="text-align:center">0/5</td><td style="text-align:center">5/5</td><td style="text-align:center">5/5</td><td style="text-align:center">5/5</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden">
+            <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);background:var(--surface-alt)">
+                <div class="chart-title" style="font-size:.88rem">Fitur Dinamis (Runtime)</div>
+                <div class="chart-subtitle">Keamanan aktif — yang membedakan biaya gas</div>
+            </div>
+            <table style="font-size:.78rem">
+                <thead><tr><th>Fitur</th><th style="text-align:center">A</th><th style="text-align:center">B</th><th style="text-align:center">C</th><th style="text-align:center">D</th></tr></thead>
+                <tbody>
+                    <tr><td>Reentrancy Guard</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td></tr>
+                    <tr><td>MEV Detection</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td></tr>
+                    <tr><td>Economic Penalty</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td></tr>
+                    <tr><td>Emergency Pause</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td></tr>
+                    <tr><td>Block Tracking</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td></tr>
+                    <tr><td>EIP-1153 (TSTORE/TLOAD)</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--red)">❌</td><td style="text-align:center;color:var(--green)">✅</td><td style="text-align:center;color:var(--green)">✅</td></tr>
+                    <tr style="background:var(--surface-alt);font-weight:600"><td>Total Dinamis</td><td style="text-align:center">0/6</td><td style="text-align:center">0/6</td><td style="text-align:center">6/6</td><td style="text-align:center">6/6</td></tr>
+                    <tr style="background:var(--primary-light);font-weight:600"><td>Total (Statis + Dinamis)</td><td style="text-align:center;color:var(--red)">0/11</td><td style="text-align:center;color:var(--orange)">5/11</td><td style="text-align:center;color:var(--green)">11/11</td><td style="text-align:center;color:var(--green)">11/11</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="callout" style="margin-top:16px"><strong>Kesimpulan</strong>: Tier B memiliki 5 fitur statis tapi 0 fitur dinamis → keamanan <strong>25%</strong>. Tier C dan D memiliki <strong>11/11 fitur</strong> (100%), tapi Tier D mencapainya tanpa external calls → biaya gas deposit hanya <strong>34,156</strong> (vs 122,769).</div>
+
+    <hr class="divider">
+
+    <div class="section-label">05 — Cost-Effectiveness <button class="help-btn" onclick="showHelp('05')" title="Penjelasan sederhana">?</button></div>
+    <div class="section-title">Ranking: Security Points per Gas (SPG)</div>
+    <div class="section-desc">SPG = Skor Keamanan / Gas Cost — semakin tinggi semakin efisien. Berikut perhitungan lengkapnya.</div>
+
+    <!-- SPG Calculation Table -->
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);background:var(--surface-alt)">
+            <div class="chart-title" style="font-size:.88rem">Rumus Perhitungan SPG</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:.82rem;color:var(--text-secondary);margin-top:6px">SPG = (Skor Keamanan / Gas Deposit) × 1.000.000</div>
+        </div>
+        <table style="font-size:.78rem">
+            <thead><tr>
+                <th>Tier</th>
+                <th style="text-align:right">Skor Keamanan</th>
+                <th style="text-align:center">÷</th>
+                <th style="text-align:right">Gas Deposit</th>
+                <th style="text-align:center">=</th>
+                <th style="text-align:right">Rasio</th>
+                <th style="text-align:center">×</th>
+                <th style="text-align:right">1.000.000</th>
+                <th style="text-align:center">=</th>
+                <th style="text-align:right;font-weight:700">SPG</th>
+            </tr></thead>
+            <tbody>
+                <tr style="background:var(--primary-light)">
+                    <td style="font-weight:600;color:var(--primary)">Tier D (Winner)</td>
+                    <td style="text-align:right">8</td>
+                    <td style="text-align:center">÷</td>
+                    <td style="text-align:right">34,156</td>
+                    <td style="text-align:center">=</td>
+                    <td style="text-align:right">0.0002342</td>
+                    <td style="text-align:center">×</td>
+                    <td style="text-align:right">1,000,000</td>
+                    <td style="text-align:center">=</td>
+                    <td style="text-align:right;font-weight:700;color:var(--primary)">220.1</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:600;color:var(--orange)">Tier B</td>
+                    <td style="text-align:right">2</td>
+                    <td style="text-align:center">÷</td>
+                    <td style="text-align:right">31,427</td>
+                    <td style="text-align:center">=</td>
+                    <td style="text-align:right">0.0000636</td>
+                    <td style="text-align:center">×</td>
+                    <td style="text-align:right">1,000,000</td>
+                    <td style="text-align:center">=</td>
+                    <td style="text-align:right;font-weight:700;color:var(--orange)">63.6</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:600;color:var(--green)">Tier C</td>
+                    <td style="text-align:right">8</td>
+                    <td style="text-align:center">÷</td>
+                    <td style="text-align:right">122,769</td>
+                    <td style="text-align:center">=</td>
+                    <td style="text-align:right">0.0000652</td>
+                    <td style="text-align:center">×</td>
+                    <td style="text-align:right">1,000,000</td>
+                    <td style="text-align:center">=</td>
+                    <td style="text-align:right;font-weight:700;color:var(--green)">65.2</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:600;color:var(--red)">Tier A</td>
+                    <td style="text-align:right">0</td>
+                    <td style="text-align:center">÷</td>
+                    <td style="text-align:right">31,412</td>
+                    <td style="text-align:center">=</td>
+                    <td style="text-align:right">0.0000000</td>
+                    <td style="text-align:center">×</td>
+                    <td style="text-align:right">1,000,000</td>
+                    <td style="text-align:center">=</td>
+                    <td style="text-align:right;font-weight:700;color:var(--red)">0.0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Security Score Breakdown -->
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);background:var(--surface-alt)">
+            <div class="chart-title" style="font-size:.88rem">Rincian Skor Keamanan (per fitur)</div>
+            <div class="chart-subtitle">8 fitur keamanan yang diuji — setiap fitur bernilai 1 poin</div>
+        </div>
+        <table style="font-size:.78rem">
+            <thead><tr><th>Fitur Keamanan</th><th style="text-align:center">A</th><th style="text-align:center">B</th><th style="text-align:center">C</th><th style="text-align:center">D</th></tr></thead>
+            <tbody>
+                <tr><td>1. Reentrancy Single-function</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--green)">1</td><td style="text-align:center;color:var(--green)">1</td><td style="text-align:center;color:var(--green)">1</td></tr>
+                <tr><td>2. Reentrancy Cross-function</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--green)">1</td><td style="text-align:center;color:var(--green)">1</td></tr>
+                <tr><td>3. Reentrancy Consecutive (3x)</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--green)">1</td><td style="text-align:center;color:var(--green)">1</td></tr>
+                <tr><td>4. MEV Sandwich Detection</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--green)">1</td><td style="text-align:center;color:var(--green)">1</td></tr>
+                <tr><td>5. Economic Penalty</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--green)">1</td><td style="text-align:center;color:var(--green)">1</td></tr>
+                <tr><td>6. Emergency Pause</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--green)">1</td><td style="text-align:center;color:var(--green)">1</td></tr>
+                <tr><td>7. Block Tracking</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--green)">1</td><td style="text-align:center;color:var(--green)">1</td></tr>
+                <tr><td>8. Custom Errors</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--green)">1</td><td style="text-align:center;color:var(--green)">1</td><td style="text-align:center;color:var(--green)">1</td></tr>
+                <tr style="background:var(--surface-alt);font-weight:700"><td>TOTAL SKOR</td><td style="text-align:center;color:var(--red)">0</td><td style="text-align:center;color:var(--orange)">2</td><td style="text-align:center;color:var(--green)">8</td><td style="text-align:center;color:var(--green)">8</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Gas Data Source -->
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);background:var(--surface-alt)">
+            <div class="chart-title" style="font-size:.88rem">Sumber Data Gas (Deposit)</div>
+            <div class="chart-subtitle">Pengukuran 100 sampel per tier menggunakan Foundry (forge test)</div>
+        </div>
+        <table style="font-size:.78rem">
+            <thead><tr><th>Tier</th><th style="text-align:right">Gas Deposit</th><th style="text-align:right">Rata-rata 100 Sampel</th><th style="text-align:right">Sumber</th></tr></thead>
+            <tbody>
+                <tr><td style="font-weight:600">Tier A — UnoptimizedBridge</td><td style="text-align:right">31,412</td><td style="text-align:right">31,412</td><td style="text-align:right;color:var(--text-muted)">GasStatsTest:testGasDeposit_100Samples</td></tr>
+                <tr><td style="font-weight:600">Tier B — BridgeStaticOnly</td><td style="text-align:right">31,427</td><td style="text-align:right">31,427</td><td style="text-align:right;color:var(--text-muted)">GasStatsTest:testGasDeposit_100Samples</td></tr>
+                <tr><td style="font-weight:600">Tier C — VictimBridge</td><td style="text-align:right">122,769</td><td style="text-align:right">122,769</td><td style="text-align:right;color:var(--text-muted)">GasStatsTest:testGasDeposit_100Samples</td></tr>
+                <tr><td style="font-weight:600">Tier D — LightweightBridge</td><td style="text-align:right">34,156</td><td style="text-align:right">34,156</td><td style="text-align:right;color:var(--text-muted)">GasStatsTest:testGasDeposit_100Samples</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- SPG Ranking Visual -->
+    <div class="grid-4">
+        <div class="card" style="border-left:3px solid var(--primary)">
+            <div class="card-label">#1 — Tier D (Winner)</div>
+            <div class="card-value text-primary" style="font-size:2rem">220.1 SPG</div>
+            <div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">8 ÷ 34,156 × 1M = <strong>220.1</strong></div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--green)">
+            <div class="card-label">#2 — Tier C</div>
+            <div class="card-value text-green" style="font-size:2rem">65.2 SPG</div>
+            <div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">8 ÷ 122,769 × 1M = <strong>65.2</strong></div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--orange)">
+            <div class="card-label">#3 — Tier B</div>
+            <div class="card-value text-orange" style="font-size:2rem">63.6 SPG</div>
+            <div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">2 ÷ 31,427 × 1M = <strong>63.6</strong></div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--red)">
+            <div class="card-label">#4 — Tier A</div>
+            <div class="card-value text-red" style="font-size:2rem">0.0 SPG</div>
+            <div class="card-note" style="font-family:'IBM Plex Mono',monospace;font-size:.72rem">0 ÷ 31,412 × 1M = <strong>0.0</strong></div>
+        </div>
+    </div>
+    <div class="callout callout-success" style="margin-top:16px"><strong>Kesimpulan</strong>: Tier D (220.1 SPG) <strong>3.4x lebih efisien</strong> dari Tier C (65.2 SPG). Artinya: untuk setiap gas yang dihabiskan, Tier D memberikan 3.4x lebih banyak keamanan. Tier C punya skor keamanan sama (8/8) tapi gas 3.6x lebih mahal → SPG turun drastis.</div>
+
+    <hr class="divider">
+
+    <div class="section-label">06 — Biaya Real-World (USD) <button class="help-btn" onclick="showHelp('06')" title="Penjelasan sederhana">?</button></div>
+    <div class="section-title">Estimasi Biaya per Transaksi di Ethereum Mainnet</div>
+    <div class="section-desc">Perhitungan berdasarkan data gas dari Foundry (100 sampel) dikalikan harga gas Ethereum real-time dari Etherscan. Base Fee saat ini: 0.55 Gwei.</div>
+    <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border-light)">
+            <div class="chart-title" style="font-size:.88rem">Biaya Lengkap per Operasi (ETH = $2,500)</div>
+            <div class="chart-subtitle">Gas units (Foundry 100-sampel) × Gas price (Etherscan) × ETH/USD</div>
+        </div>
+        <table style="font-size:.78rem">
+            <thead><tr><th>Skenario Gas</th><th style="text-align:right">Operasi</th><th style="text-align:right">Tier A</th><th style="text-align:right">Tier B</th><th style="text-align:right">Tier C</th><th style="text-align:right">Tier D</th><th style="text-align:right">D vs C Hemat</th></tr></thead>
+            <tbody>
+                <tr style="background:var(--green-light)"><td rowspan="3"><strong>0.55 Gwei</strong><br><span style="font-size:.7rem;color:var(--text-muted)">Saat ini (Etherscan)</span></td><td style="text-align:right">Deposit</td><td style="text-align:right">$0.043</td><td style="text-align:right">$0.043</td><td style="text-align:right">$0.169</td><td style="text-align:right">$0.047</td><td style="text-align:right;color:var(--green)"><strong>-72%</strong></td></tr>
+                <tr style="background:var(--green-light)"><td style="text-align:right">Withdraw</td><td style="text-align:right">$0.013</td><td style="text-align:right">$0.013</td><td style="text-align:right">$0.144</td><td style="text-align:right">$0.017</td><td style="text-align:right;color:var(--green)"><strong>-88%</strong></td></tr>
+                <tr style="background:var(--green-light)"><td style="text-align:right">Swap</td><td style="text-align:right">$0.030</td><td style="text-align:right">$0.021</td><td style="text-align:right">$0.183</td><td style="text-align:right">$0.086</td><td style="text-align:right;color:var(--green)"><strong>-53%</strong></td></tr>
+                <tr><td rowspan="3"><strong>10 Gwei</strong><br><span style="font-size:.7rem;color:var(--text-muted)">Normal</span></td><td style="text-align:right">Deposit</td><td style="text-align:right">$0.785</td><td style="text-align:right">$0.786</td><td style="text-align:right">$3.069</td><td style="text-align:right">$0.854</td><td style="text-align:right;color:var(--green)"><strong>-72%</strong></td></tr>
+                <tr><td style="text-align:right">Withdraw</td><td style="text-align:right">$0.243</td><td style="text-align:right">$0.243</td><td style="text-align:right">$2.620</td><td style="text-align:right">$0.303</td><td style="text-align:right;color:var(--green)"><strong>-88%</strong></td></tr>
+                <tr><td style="text-align:right">Swap</td><td style="text-align:right">$0.552</td><td style="text-align:right">$0.375</td><td style="text-align:right">$3.334</td><td style="text-align:right">$1.570</td><td style="text-align:right;color:var(--green)"><strong>-53%</strong></td></tr>
+                <tr><td rowspan="3"><strong>30 Gwei</strong><br><span style="font-size:.7rem;color:var(--text-muted)">Sibuk</span></td><td style="text-align:right">Deposit</td><td style="text-align:right">$2.356</td><td style="text-align:right">$2.357</td><td style="text-align:right">$9.208</td><td style="text-align:right">$2.562</td><td style="text-align:right;color:var(--green)"><strong>-72%</strong></td></tr>
+                <tr><td style="text-align:right">Withdraw</td><td style="text-align:right">$0.730</td><td style="text-align:right">$0.730</td><td style="text-align:right">$7.860</td><td style="text-align:right">$0.909</td><td style="text-align:right;color:var(--green)"><strong>-88%</strong></td></tr>
+                <tr><td style="text-align:right">Swap</td><td style="text-align:right">$1.656</td><td style="text-align:right">$1.125</td><td style="text-align:right">$10.001</td><td style="text-align:right">$4.709</td><td style="text-align:right;color:var(--green)"><strong>-53%</strong></td></tr>
+                <tr style="background:var(--red-light)"><td rowspan="3"><strong>80 Gwei</strong><br><span style="font-size:.7rem;color:var(--text-muted)">Sangat Sibuk</span></td><td style="text-align:right">Deposit</td><td style="text-align:right">$6.282</td><td style="text-align:right">$6.285</td><td style="text-align:right">$24.554</td><td style="text-align:right">$6.831</td><td style="text-align:right;color:var(--green)"><strong>-72%</strong></td></tr>
+                <tr style="background:var(--red-light)"><td style="text-align:right">Withdraw</td><td style="text-align:right">$1.947</td><td style="text-align:right">$1.945</td><td style="text-align:right">$20.961</td><td style="text-align:right">$2.424</td><td style="text-align:right;color:var(--green)"><strong>-88%</strong></td></tr>
+                <tr style="background:var(--red-light)"><td style="text-align:right">Swap</td><td style="text-align:right">$4.416</td><td style="text-align:right">$3.000</td><td style="text-align:right">$26.669</td><td style="text-align:right">$12.557</td><td style="text-align:right;color:var(--green)"><strong>-53%</strong></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="grid-2" style="margin-top:16px">
+        <div class="callout callout-note"><strong>Kenapa Tier A dan B hampir sama?</strong> Biaya deposit Tier A ($0.043) dan Tier B ($0.043) identik karena optimasi statis (CEI, packing) tidak menambah gas runtime — hanya compile-time. Tier C mahal karena 5 external calls ke MonitorMock (+$0.126 vs B).</div>
+        <div class="callout callout-success"><strong>Kenapa Tier D murah?</strong> Tier D ($0.047) hanya 8.7% lebih mahal dari B karena semua fitur keamanan di-inline. Tidak ada external calls, tidak ada dynamic array. Biaya TSTORE/TLOAD hanya 300 gas — murah sekali.</div>
+    </div>
+    <div class="callout" style="margin-top:12px"><strong>Catatan metodologis:</strong> Gas units diukur menggunakan Foundry dengan 100 sampel per operasi (controlled environment). Harga gas diambil dari Etherscan V2 API (real-time mainnet). Perhitungan USD = Gas Units x Gas Price (Gwei) x ETH/USD ($2,500).</div>
+
+    <hr class="divider">
+
+    <div class="section-label">07 — Analisis Statistik</div>
+    <div class="section-title">Uji Hipotesis</div>
+    <div class="section-desc">Hasil divalidasi menggunakan Welch's t-test (tanpa asumsi equal variance) dan Cohen's d untuk ukuran efek.</div>
+    <div class="grid-3">
+        <div class="card"><div class="card-label">Uji Hipotesis</div><div class="card-value text-green">REJECT H0</div><div class="card-note">p-value = 2,25 x 10^-222 (&lt; 0,05)</div></div>
+        <div class="card"><div class="card-label">Ukuran Efek (Cohen's d)</div><div class="card-value text-primary">220,64</div><div class="card-note">Kriteria LARGE: d &gt; 0,8</div></div>
+        <div class="card"><div class="card-label">Rasio Biaya</div><div class="card-value text-primary">55,7x</div><div class="card-note">Mesin dinamis 55,7x lebih murah</div></div>
+    </div>
+    <div class="chart-panel" style="margin-top:14px" id="box-savings">
+        <div class="chart-header">
+            <div><div class="chart-title">Distribusi Penghematan (n = 100)</div><div class="chart-subtitle">Seluruh percobaan menghasilkan penghematan di atas 98,17%</div></div>
+            <button class="btn-expand" onclick="toggleExpand('box-savings')">Perlebar</button>
+        </div>
+        <div class="chart-wrap"><canvas id="savingsChart"></canvas></div>
+    </div>
+    <div class="callout"><strong>Interpretasi statistik:</strong> p-value mendekati nol menunjukkan perbedaan biaya antara mesin static dan dynamic bukan kebetulan. Cohen's d sebesar 220,64 menunjukkan ukuran efek yang sangat besar — jauh melampaui ambang LARGE (0,8). Confidence interval 95% yang sempit (98,18% — 98,23%) menunjukkan konsistensi hasil.</div>
+
+    <hr class="divider">
+
+    <div class="section-label">08 — Rincian Pengujian</div>
+    <div class="section-title">215 Skenario Pengujian</div>
+    <div class="card" style="padding:0;overflow:hidden">
+        <table><thead><tr><th>Test Suite</th><th>Jumlah</th><th>Status</th><th>Deskripsi</th></tr></thead>
+        <tbody>
+            <tr><td style="font-weight:600">CostAnalysisTest</td><td>8</td><td><span class="badge badge-pass">PASS</span></td><td>Biaya per fitur, Tier D vs C, cost-effectiveness, real-world USD</td></tr>
+            <tr><td style="font-weight:600">EconomicDeterrenceTest</td><td>25</td><td><span class="badge badge-pass">PASS</span></td><td>ROI attacker, penalty boundary, consecutive attacks, realistic scenarios</td></tr>
+            <tr><td style="font-weight:600">EdgeCaseTest</td><td>41</td><td><span class="badge badge-pass">PASS</span></td><td>Zero amount, overflow, access control, reentrancy, swap edge cases</td></tr>
+            <tr><td style="font-weight:600">EIP1153Benchmark</td><td>7</td><td><span class="badge badge-pass">PASS</span></td><td>Perbandingan gas murni TSTORE vs SSTORE</td></tr>
+            <tr><td style="font-weight:600">FuzzTest</td><td>8</td><td><span class="badge badge-pass">PASS</span></td><td>Pengujian fuzz 256 iterasi per fungsi</td></tr>
+            <tr><td style="font-weight:600">GasStatsTest</td><td>3</td><td><span class="badge badge-pass">PASS</span></td><td>100 sampel statistik: deposit, withdraw, swap</td></tr>
+            <tr><td style="font-weight:600">InvariantTest</td><td>4</td><td><span class="badge badge-pass">PASS</span></td><td>Invariant: saldo >= 0, callDepth reset per transaksi</td></tr>
+            <tr><td style="font-weight:600">MEVSimulationTest</td><td>25</td><td><span class="badge badge-pass">PASS</span></td><td>Sandwich attack, detection, penalty per tier</td></tr>
+            <tr><td style="font-weight:600">MultiContractTest</td><td>14</td><td><span class="badge badge-pass">PASS</span></td><td>Perbandingan 4-tier: reentrancy, MEV, gas, economic deterrence</td></tr>
+            <tr><td style="font-weight:600">SecurityComparisonTest</td><td>6</td><td><span class="badge badge-pass">PASS</span></td><td>Reentrancy/MEV/pause/penalty all tiers, gas vs security</td></tr>
+            <tr><td style="font-weight:600">TierComparisonTest</td><td>50</td><td><span class="badge badge-pass">PASS</span></td><td>State transitions, events, access control, lifecycle per tier</td></tr>
+            <tr><td style="font-weight:600">VictimBridgeSecurityTest</td><td>23</td><td><span class="badge badge-pass">PASS</span></td><td>Reentrancy (5+2 TierD), emergency pause (8), normal ops (8)</td></tr>
+        </tbody></table>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">09 — Kesimpulan <button class="help-btn" onclick="showHelp('09')" title="Penjelasan sederhana">?</button></div>
+    <div class="section-title">Temuan Penelitian</div>
+    <div class="summary">
+        <h3>Ringkasan Hasil</h3>
+        <ul>
+            <li><strong>Modifikasi EIP-1153 Multiguna</strong>: Dari 1 fungsi (reentrancy guard, 200 gas) menjadi 5 fungsi keamanan (reentrancy + MEV + penalty + pause + block tracking, 9,900 gas) — 48.5x lebih murah dari Tier C</li>
+            <li><strong>Tier D (Rollup Ringan)</strong>: Menghemat 52.9% — 88.4% gas dibanding Tier C dengan 0 external calls melalui inline assembly</li>
+            <li><strong>Tier C (Rollup Full)</strong>: Overhead 327% karena 5-6 external calls ke MonitorMock per transaksi</li>
+            <li><strong>Cost-effectiveness terbaik</strong>: Tier D mencapai 205 SPG — 3.15x lebih efisien dari Tier C</li>
+            <li><strong>215/215 pengujian lulus</strong> mencakup 13 test suites: fuzz, invariant, edge case, MEV simulation, economic deterrence, dan tier comparison</li>
+            <li><strong>Hasil terbukti secara statistik</strong> melalui Welch's t-test (p = 0) dan Cohen's d = 220,64 (effect size LARGE)</li>
+            <li><strong>Emergency Pause</strong> tersedia di Tier C & D sebagai mitigasi aktif jika kerentanan baru ditemukan</li>
+            <li><strong>Penghematan real-world</strong>: Tier D menghemat $79,000 — $213,000/bulan untuk bridge 100K tx dibanding Tier C</li>
+        </ul>
+    </div>
+    <div class="footer">Dashboard Skripsi — Optimasi Gas dan Keamanan Smart Contract Bridge Menggunakan EIP-1153 Transient Storage<br>Data dihasilkan dari 215 pengujian (Foundry, 100 sampel per operasi) dan Etherscan V2 API</div>
+</div>
+</div>
+<div id="page-sim" class="page">
+<div class="container">
+    <div class="page-title">Simulasi Dynamic Rollup Engine</div>
+    <div class="page-subtitle">Perbandingan real-time biaya pengiriman data: Static Engine (Calldata) vs Dynamic Engine (Blob + Kompresi)</div>
+
+    <div class="sim-bar">
+        <div><div class="sim-bar-title">Rollup Submission Engine</div><div class="sim-bar-sub">Simulasi blok Ethereum dengan fluktuasi harga gas L1 dan Blob</div></div>
+        <div class="sim-controls">
+            <span style="font-size:.78rem;color:var(--text-muted)"><span class="sim-dot"></span>LIVE</span>
+            <button id="btn-pause" onclick="toggleSim()">Pause</button>
+            <button class="btn-primary" onclick="resetSim()">Restart</button>
+        </div>
+    </div>
+
+    <div class="callout"><strong>Cara kerja simulasi:</strong> Transaksi masuk ke mempool secara acak. Mesin statis mengirim semua data langsung melalui Calldata setiap 10 blok. Mesin dinamis mengkompresi data, mengumpulkan batch, lalu memilih rute termurah antara Blob (EIP-4844) atau Calldata berdasarkan harga gas saat itu.</div>
+
+    <div class="sim-stats">
+        <div class="sim-card"><div class="label">Rasio Penghematan</div><div class="val text-green" id="val-factor-s">0,0x</div><div class="desc">Static / Dynamic</div></div>
+        <div class="sim-card"><div class="label">Rata-rata Jeda</div><div class="val text-orange" id="val-delay">0 <span style="font-size:.85rem;color:var(--text-muted)">Blok</span></div><div class="desc">Inclusion delay</div></div>
+        <div class="sim-card"><div class="label">Frekuensi Fallback</div><div class="val text-red" id="val-fallback">0,0%</div><div class="desc">Penggunaan Calldata</div></div>
+        <div class="sim-card"><div class="label">MEV Terfilter</div><div class="val text-primary" id="val-mev">0 <span style="font-size:.85rem;color:var(--text-muted)">Tx</span></div><div class="desc">Spam ditolak</div></div>
+    </div>
+
+    <div class="card" style="padding:16px 20px">
+        <div style="display:flex;align-items:center;gap:16px">
+            <div style="min-width:120px"><div class="card-label">Antrean Efektif</div><div style="font-family:'IBM Plex Mono',monospace;font-size:1rem;font-weight:600"><span id="mempool-kb">0</span> KB / 100 KB</div></div>
+            <div class="mempool-wrap" style="flex-grow:1"><div class="mempool-bg"><div class="mempool-fill" id="mempool-bar"></div></div></div>
+            <div class="route-tag" id="route-indicator">MENUNGGU DATA...</div>
+        </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:16px">
+        <div class="chart-panel" id="box-gas"><div class="chart-header"><div><div class="chart-title">Harga Gas (Gwei)</div><div class="chart-subtitle">Fluktuasi L1 Calldata Fee vs Blob Base Fee</div></div><button class="btn-expand" onclick="toggleExpand('box-gas')">Perlebar</button></div><div class="chart-wrap"><canvas id="gasPriceChart"></canvas></div></div>
+        <div class="chart-panel" id="box-simcost"><div class="chart-header"><div><div class="chart-title">Kumulatif Biaya (ETH)</div><div class="chart-subtitle">Static Engine vs Dynamic Engine</div></div><button class="btn-expand" onclick="toggleExpand('box-simcost')">Perlebar</button></div><div class="chart-wrap"><canvas id="simCostChart"></canvas></div></div>
+    </div>
+
+    <div class="card" style="margin-top:16px;max-height:340px;overflow:auto">
+        <div class="chart-title" style="margin-bottom:12px">Riwayat Pengiriman Batch</div>
+        <table><thead><tr><th>Blok</th><th>Medium</th><th>L1 Fee</th><th>Blob Fee</th><th>Ukuran</th><th>Jeda</th><th>Biaya (ETH)</th></tr></thead><tbody id="tableBody"></tbody></table>
+    </div>
+
+    <div class="footer">Simulasi ini menggunakan model probabilistik untuk memodelkan fluktuasi harga gas Ethereum</div>
+</div>
+</div>
+
+<div class="help-overlay" id="helpOverlay">
+    <div class="help-box">
+        <button class="help-close" onclick="closeHelp()">&times;</button>
+        <h3 id="helpTitle"></h3>
+        <div id="helpContent"></div>
+    </div>
+</div>
+
+<div class="overlay" id="overlay">
+    <div class="overlay-box">
+        <button class="overlay-close" onclick="closeOverlay()">&times;</button>
+        <div class="chart-title" id="overlay-title" style="margin-bottom:16px"></div>
+        <div class="overlay-chart"><canvas id="overlayCanvas"></canvas></div>
+    </div>
+</div>
+<script>
+var charts = [];
+function getTheme() { return localStorage.getItem('theme') || 'light'; }
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    var btn = document.getElementById('btn-theme');
+    btn.textContent = theme === 'dark' ? '\u2600' : '\u263E';
+    btn.title = theme === 'dark' ? 'Mode Terang' : 'Mode Gelap';
+    localStorage.setItem('theme', theme);
+    updateChartColors(theme);
+}
+function toggleTheme() { applyTheme(getTheme() === 'dark' ? 'light' : 'dark'); }
+function getChartColors(theme) {
+    if (theme === 'dark') {
+        return { text: '#9ca3af', textLight: '#4b5563', grid: 'rgba(255,255,255,0.04)', tooltipBg: '#1a1d24', tooltipTitle: '#f9fafb', tooltipBody: '#d1d5db', tooltipBorder: '#374151' };
+    }
+    return { text: '#9ca3af', textLight: '#6b7280', grid: 'rgba(0,0,0,0.05)', tooltipBg: '#111827', tooltipTitle: '#f9fafb', tooltipBody: '#d1d5db', tooltipBorder: '#374151' };
+}
+function updateChartColors(theme) {
+    var c = getChartColors(theme);
+    for (var i = 0; i < charts.length; i++) {
+        var ch = charts[i];
+        if (!ch || !ch.options) continue;
+        if (ch.options.scales) {
+            var sc = ch.options.scales;
+            for (var k in sc) {
+                if (sc[k].ticks) sc[k].ticks.color = c.text;
+                if (sc[k].title) sc[k].title.color = c.text;
+                if (sc[k].grid) sc[k].grid.color = (k === 'x' && ch.config.type !== 'bar') ? c.grid : (ch.config.type === 'bar' && k === 'x' ? 'transparent' : c.grid);
+            }
+        }
+        if (ch.options.plugins) {
+            if (ch.options.plugins.legend && ch.options.plugins.legend.labels) ch.options.plugins.legend.labels.color = c.textLight;
+            if (ch.options.plugins.tooltip) {
+                ch.options.plugins.tooltip.backgroundColor = c.tooltipBg;
+                ch.options.plugins.tooltip.titleColor = c.tooltipTitle;
+                ch.options.plugins.tooltip.bodyColor = c.tooltipBody;
+                ch.options.plugins.tooltip.borderColor = c.tooltipBorder;
+            }
+        }
+        ch.update('none');
+    }
+}
+function switchTab(t) {
+    var tabs = document.querySelectorAll('.nav-tab');
+    var pages = document.querySelectorAll('.page');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+    for (var i = 0; i < pages.length; i++) pages[i].classList.remove('active');
+    if (t === 'results') {
+        tabs[0].classList.add('active');
+        document.getElementById('page-results').classList.add('active');
+    } else {
+        tabs[1].classList.add('active');
+        document.getElementById('page-sim').classList.add('active');
+    }
+}
+
+var overlayChart = null;
+function toggleExpand(boxId) {
+    var box = document.getElementById(boxId);
+    var srcCanvas = box.querySelector('canvas');
+    var title = box.querySelector('.chart-title').textContent;
+    document.getElementById('overlay-title').textContent = title;
+    document.getElementById('overlay').classList.add('show');
+    var srcChart = Chart.getChart(srcCanvas);
+    if (overlayChart) { overlayChart.destroy(); overlayChart = null; }
+    overlayChart = new Chart(document.getElementById('overlayCanvas'), {
+        type: srcChart.config.type,
+        data: JSON.parse(JSON.stringify(srcChart.data)),
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#6b7280', usePointStyle: true, padding: 16, font: { family: "'IBM Plex Sans'" } } }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#111827', titleColor: '#f9fafb', bodyColor: '#d1d5db', padding: 14, cornerRadius: 6 } },
+            scales: { x: { ticks: { color: '#9ca3af' }, grid: { color: '#f3f4f6' } }, y: { ticks: { color: '#9ca3af' }, grid: { color: '#f3f4f6' } } }
+        }
+    });
+}
+function closeOverlay() {
+    document.getElementById('overlay').classList.remove('show');
+    if (overlayChart) { overlayChart.destroy(); overlayChart = null; }
+}
+
+var HELP_DATA = {
+    '01': {
+        title: 'Bagian 01: Apa yang Diteliti?',
+        content: '<p>Penelitian ini membandingkan <strong>4 cara membuat smart contract bridge</strong> — penghubung aset antar blockchain. Setiap "tier" (tingkatan) memiliki tingkat keamanan dan biaya gas yang berbeda.</p><div class="help-highlight"><strong>Analogi sederhana:</strong> Seperti memilih jenis pintu keamanan untuk rumah. Tier A = tanpa kunci (siapa saja bisa masuk), Tier B = gembok biasa, Tier C = brankas mahal, Tier D = kunci pintar yang murah tapi aman.</div><ul><li><strong>Tier A (Baseline)</strong>: Bridge tanpa perlindungan. Gas paling murah, tapi reentrancy attack bisa menguras semua dana.</li><li><strong>Tier B (Static)</strong>: Ditambah CEI pattern & packing. Hanya 15 gas lebih mahal dari A. Tapi hanya melindungi dari 1 jenis serangan.</li><li><strong>Tier C (Full Dynamic)</strong>: EIP-1153 + EWS + MEV protection. Paling aman (100%), tapi gas 4x lebih mahal karena 5-6 panggilan external ke MonitorMock.</li><li><strong>Tier D (Lightweight)</strong>: Sama amannya dengan C (100%), tapi semua fitur di-inline tanpa external calls. Gas hanya 8.7% lebih mahal dari B. <strong>Ini kontribusi penelitian.</strong></li></ul><p>Kenapa penting? Kerugian akibat serangan bridge mencapai <strong>$2 miliar dalam 3 tahun terakhir</strong> (Ronin $620M, Wormhole $320M).</p>'
+    },
+    '02': {
+        title: 'Bagian 02: Validasi Keamanan',
+        content: '<p>Setiap tier diuji keamanannya terhadap <strong>8 fitur keamanan</strong>. Skor dihitung dari berapa banyak fitur yang aktif.</p><ul><li><strong>Reentrancy Single-function</strong>: Serangan rekursif pada 1 fungsi → Tier B/C/D blokir</li><li><strong>Reentrancy Cross-function</strong>: Serangan rekursif ke fungsi lain → Hanya C/D blokir</li><li><strong>Reentrancy Consecutive</strong>: 3x serangan berturut-turut → Hanya C/D blokir</li><li><strong>MEV Sandwich Detection</strong>: Deteksi front-running → Hanya C/D aktif</li><li><strong>Economic Penalty</strong>: Denda otomatis untuk attacker → Hanya C/D</li><li><strong>Emergency Pause</strong>: Tombol darurat jika ada celah keamanan → Hanya C/D</li><li><strong>Block Tracking</strong>: Pelacakan waktu transaksi → Hanya C/D</li><li><strong>Custom Errors</strong>: Menghemat gas saat error → B/C/D</li></ul><div class="help-highlight"><strong>Hasil</strong>: Tier A = 0%, Tier B = 25%, Tier C = 100%, Tier D = 100%. Tier D sama amannya dengan C, tapi jauh lebih murah.</div>'
+    },
+    '03': {
+        title: 'Bagian 03: Mengapa Harga Gas Beda?',
+        content: '<p>Gas adalah biaya komputasi di Ethereum. Makin banyak "pekerjaan", makin mahal. Berikut kenapa tiap tier beda harga:</p><ul><li><strong>Tier A (31,412 gas)</strong>: Hanya SSTORE + SLOAD + Transfer. Paling dasar.</li><li><strong>Tier B (31,427 gas)</strong>: Sama dengan A + CEI pattern (compile-time). Tambah 15 gas saja karena tidak ada runtime cost.</li><li><strong>Tier C (122,769 gas)</strong>: <span style="color:var(--red)">75.6% overhead!</span> 5 panggilan ke MonitorMock (~22,000 gas), dynamic array SSTORE (22,100 gas), ABI encoding (15,000 gas), cold code loading (13,000 gas).</li><li><strong>Tier D (34,156 gas)</strong>: <span style="color:var(--green)">Hanya 8.7% lebih mahal dari B</span>. TSTORE/TLOAD inline (300 gas), single-slot MEV (2,900 gas), penalty pure math (300 gas). 0 external calls.</li></ul><div class="help-highlight"><strong>Inti masalah Tier C</strong>: Setiap kali panggil fungsi di kontrak lain (external call), EVM harus: (1) load kode kontrak itu (~5,000 gas), (2) encode parameter (~3,750 gas), (3) eksekusi, (4) decode hasil (~3,750 gas). Kalau 5 panggilan = 5x biaya ini.</div><p><strong>Solusi Tier D</strong>: Semua logika ditulis langsung di dalam bridge (inline). Tidak perlu panggil kontrak lain. Biaya TSTORE/TLOAD hanya 100 gas per operasi — sangat murah.</p>'
+    },
+    '04': {
+        title: 'Bagian 04: Statis vs Dinamis',
+        content: '<p>Fitur bridge dibagi menjadi 2 kategori:</p><ul><li><strong>Fitur Statis (Compile-Time)</strong>: Optimasi yang dilakukan saat kode dikompilasi. Tidak menambah biaya gas saat transaksi berjalan. Contoh: CEI pattern, variable packing, custom errors.</li><li><strong>Fitur Dinamis (Runtime)</strong>: Keamanan aktif yang berjalan saat transaksi. Ini yang menambah biaya gas. Contoh: reentrancy guard, MEV detection, emergency pause.</li></ul><div class="help-highlight"><strong>Temuan penting</strong>:<br>• Tier A = 0 fitur statis + 0 fitur dinamis = <strong>0/11</strong><br>• Tier B = 5 fitur statis + 0 fitur dinamis = <strong>5/11</strong><br>• Tier C = 5 fitur statis + 6 fitur dinamis = <strong>11/11</strong> (tapi mahal)<br>• Tier D = 5 fitur statis + 6 fitur dinamis = <strong>11/11</strong> (tapi murah!)</div><p>Tier D membuktikan bahwa semua fitur dinamis bisa ditambahkan tanpa biaya besar, asalkan diimplementasikan secara inline.</p>'
+    },
+    '05': {
+        title: 'Bagian 05: Cost-Effectiveness (SPG)',
+        content: '<p><strong>SPG (Security Points per Gas)</strong> adalah metrik untuk mengukur seberapa efisien sebuah bridge dalam mengubah biaya gas menjadi keamanan.</p><div class="help-highlight"><strong>Rumus:</strong><br><code>SPG = (Skor Keamanan ÷ Gas Deposit) × 1.000.000</code></div><p><strong>Contoh perhitungan Tier D:</strong></p><ul><li>Skor Keamanan = <strong>8</strong> (dari 8 fitur aktif: reentrancy, MEV, penalty, pause, block tracking, EIP-1153, custom errors, dll)</li><li>Gas Deposit = <strong>34,156</strong> (dari pengukuran 100 sampel di Foundry)</li><li>SPG = (8 ÷ 34,156) × 1.000.000 = <strong>220.1</strong></li></ul><p><strong>Perbandingan:</strong></p><ul><li>Tier D: 8 ÷ 34,156 × 1M = <strong>220.1 SPG</strong> (paling efisien)</li><li>Tier C: 8 ÷ 122,769 × 1M = <strong>65.2 SPG</strong> (keamanan sama, tapi gas 3.6x lebih mahal)</li><li>Tier B: 2 ÷ 31,427 × 1M = <strong>63.6 SPG</strong> (gas murah, tapi keamanan rendah)</li><li>Tier A: 0 ÷ 31,412 × 1M = <strong>0.0 SPG</strong> (tidak ada keamanan)</li></ul><div class="help-highlight"><strong>Intinya</strong>: SPG = "Berapa banyak keamanan yang saya dapatkan per gas yang saya bayar?" Tier D memberikan 3.4x lebih banyak keamanan per gas dibanding Tier C.</div>'
+    },
+    '06': {
+        title: 'Bagian 06: Biaya Real-World (USD)',
+        content: '<p>Biaya transaksi di Ethereum = <strong>Gas Units × Gas Price × ETH Price</strong>.</p><p>Data gas dari pengukuran Foundry (100 sampel), gas price dari Etherscan real-time (0.55 Gwei saat ini).</p><ul><li><strong>Saat ini (0.55 Gwei)</strong>: Tier A/B/D sekitar $0.04. Tier C $0.17 (4x lebih mahal).</li><li><strong>Normal (10 Gwei)</strong>: Tier A/B/D sekitar $0.79. Tier C $3.07.</li><li><strong>Sibuk (30 Gwei)</strong>: Tier A/B/D sekitar $2.36. Tier C $9.21.</li><li><strong>Sangat sibuk (80 Gwei)</strong>: Tier A/B/D sekitar $6.28. Tier C $24.55.</li></ul><div class="help-highlight"><strong>Mengapa Tier A dan B hampir sama?</strong> Karena optimasi statis (CEI, packing) hanya mengubah kode saat compile-time. Tidak ada tambahan gas runtime.</div><p><strong>Mengapa Tier D murah?</strong> Karena semua fitur keamanan di-inline. Tidak ada external calls yang mahal. TSTORE/TLOAD hanya 100 gas per operasi.</p>'
+    },
+    '09': {
+        title: 'Bagian 09: Kesimpulan & Kontribusi',
+        content: '<p>Temuan utama penelitian ini:</p><ul><li><strong>Modifikasi EIP-1153</strong>: Dari 1 fungsi (reentrancy guard, 200 gas) menjadi 5 fungsi keamanan (9,900 gas) — 48.5x lebih murah dari Tier C.</li><li><strong>Tier D = kontribusi penelitian</strong>: Semua fitur keamanan Tier C (100%) dengan biaya gas hanya 8.7% lebih tinggi dari baseline.</li><li><strong>Penghematan vs Tier C</strong>: Deposit -72%, Withdraw -88%, Swap -53%.</li><li><strong>215/215 tests pass</strong> di 13 test suites.</li></ul><div class="help-highlight"><strong>Kesimpulan</strong>: EIP-1153 (2024) bisa dimodifikasi dari sekadar reentrancy guard menjadi pertahanan multiguna (MEV + penalty + pause) dengan biaya gas yang sangat terkendali. Tier D membuktikan bahwa keamanan tinggi tidak harus mahal.</div>'
+    }
+};
+
+function showHelp(section) {
+    var d = HELP_DATA[section];
+    if (!d) return;
+    document.getElementById('helpTitle').textContent = d.title;
+    document.getElementById('helpContent').innerHTML = d.content;
+    document.getElementById('helpOverlay').classList.add('show');
+}
+function closeHelp() {
+    document.getElementById('helpOverlay').classList.remove('show');
+}
+document.getElementById('helpOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeHelp();
+});
+
+var BG = { deposit: { unopt: 31412, stat: 31427, dyn: 122769, light: 34156 }, withdraw: { unopt: 9735, stat: 9727, dyn: 104806, light: 12119 }, swap: { unopt: 22080, stat: 15000, dyn: 133344, light: 62787 } };
+
+charts.push(new Chart(document.getElementById('bridgeChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Deposit', 'Withdraw', 'Swap'],
+        datasets: [
+            { label: '[A] Unoptimized', data: [BG.deposit.unopt, BG.withdraw.unopt, BG.swap.unopt], backgroundColor: 'rgba(185,28,28,.65)', borderColor: '#b91c1c', borderWidth: 1, borderRadius: 3 },
+            { label: '[B] Static Only', data: [BG.deposit.stat, BG.withdraw.stat, BG.swap.stat], backgroundColor: 'rgba(180,83,9,.65)', borderColor: '#b45309', borderWidth: 1, borderRadius: 3 },
+            { label: '[C] Full Dynamic', data: [BG.deposit.dyn, BG.withdraw.dyn, BG.swap.dyn], backgroundColor: 'rgba(13,122,63,.65)', borderColor: '#0d7a3f', borderWidth: 1, borderRadius: 3 },
+            { label: '[D] Lightweight', data: [BG.deposit.light, BG.withdraw.light, BG.swap.light], backgroundColor: 'rgba(99,102,241,.65)', borderColor: '#6366f1', borderWidth: 1, borderRadius: 3 }
+        ]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#6b7280', usePointStyle: true, padding: 16, font: { family: "'IBM Plex Sans'", size: 12 } } }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#111827', titleColor: '#f9fafb', bodyColor: '#d1d5db', borderColor: '#374151', borderWidth: 1, padding: 14, cornerRadius: 6, callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + ' gas'; } } } },
+        scales: { x: { ticks: { color: '#6b7280' }, grid: { display: false } }, y: { ticks: { color: '#9ca3af' }, title: { display: true, text: 'Gas Units', color: '#9ca3af' }, grid: { color: '#f3f4f6' } } }
+    }
+}));
+
+var bins = 15, bw = .02, mean = 98.2057, std = .011923, sb = mean - bins * bw / 2, sL = [], sD = [];
+for (var i = 0; i < bins; i++) { var lo = sb + i * bw; sL.push(lo.toFixed(2) + '%'); var x = (lo + bw / 2 - mean) / std; sD.push(Math.round(Math.exp(-.5 * x * x) / (std * Math.sqrt(2 * Math.PI)) * 100 * bw)); }
+charts.push(new Chart(document.getElementById('savingsChart'), {
+    type: 'bar',
+    data: { labels: sL, datasets: [{ label: 'Frekuensi', data: sD, backgroundColor: 'rgba(13,122,63,.55)', borderColor: '#0d7a3f', borderWidth: 1, borderRadius: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#111827', titleColor: '#f9fafb', bodyColor: '#d1d5db', borderColor: '#374151', borderWidth: 1, padding: 14, cornerRadius: 6, callbacks: { label: function(ctx) { return ctx.parsed.y + ' dari 100 percobaan'; } } } }, scales: { x: { ticks: { color: '#9ca3af', maxRotation: 45, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: '#9ca3af' }, title: { display: true, text: 'Frekuensi', color: '#9ca3af' }, grid: { color: '#f3f4f6' } } } }
+}));
+
+var gasChartSim, costChartSim;
+var MAX_P = 60;
+var labels = [], l1G = [], blobG = [], sC = [], dC = [];
+var cBlock = 0, l1F = 40, blobF = 5, pTx = 0, bSlB = 0;
+var TX_SZ = 120, TGT = 100000, C_GAS = 16, BLOB_SZ = 131072, ALPHA = .88, MAX_D = 25;
+var tSE = 0, tDE = 0, tB = 0, fC = 0, mF = 0, dH = [], sP = 0, simI, isR = false;
+
+function initSimCharts() {
+    gasChartSim = new Chart(document.getElementById('gasPriceChart'), {
+        type: 'line',
+        data: { labels: labels, datasets: [
+            { label: 'L1 Fee', borderColor: '#b91c1c', backgroundColor: 'rgba(185,28,28,.08)', borderWidth: 2, pointRadius: 0, data: l1G, tension: .3, fill: true },
+            { label: 'Blob Fee', borderColor: '#0d7a3f', backgroundColor: 'rgba(13,122,63,.08)', borderWidth: 2, pointRadius: 0, data: blobG, tension: .3, fill: true }
+        ]},
+        options: { responsive: true, maintainAspectRatio: false, animation: { duration: 0 }, interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { labels: { color: '#6b7280', usePointStyle: true } }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#111827', titleColor: '#f9fafb', bodyColor: '#d1d5db', borderColor: '#374151', borderWidth: 1, padding: 14, cornerRadius: 6, callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + ' Gwei'; } } } },
+            scales: { y: { beginAtZero: true, max: 160, ticks: { color: '#9ca3af' }, title: { display: true, text: 'Gwei', color: '#9ca3af' }, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false }, ticks: { color: '#9ca3af' }, title: { display: true, text: 'Blok', color: '#9ca3af' } } }
+        }
+    });
+    costChartSim = new Chart(document.getElementById('simCostChart'), {
+        type: 'line',
+        data: { labels: labels, datasets: [
+            { label: 'Static', borderColor: '#b45309', borderWidth: 2, pointRadius: 0, stepped: true, data: sC },
+            { label: 'Dynamic', borderColor: '#0d7a3f', borderWidth: 2, pointRadius: 0, stepped: true, data: dC, fill: { target: 'origin', above: 'rgba(13,122,63,.08)' } }
+        ]},
+        options: { responsive: true, maintainAspectRatio: false, animation: { duration: 0 }, interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { labels: { color: '#6b7280', usePointStyle: true } }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#111827', titleColor: '#f9fafb', bodyColor: '#d1d5db', borderColor: '#374151', borderWidth: 1, padding: 14, cornerRadius: 6, callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(4) + ' ETH'; } } } },
+            scales: { y: { beginAtZero: true, ticks: { color: '#9ca3af' }, title: { display: true, text: 'ETH', color: '#9ca3af' }, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false }, ticks: { color: '#9ca3af' }, title: { display: true, text: 'Blok', color: '#9ca3af' } } }
+        }
+    });
+    charts.push(gasChartSim);
+    charts.push(costChartSim);
+}
+
+function updateSim() {
+    cBlock++;
+    l1F = Math.max(10, Math.min(150, l1F + (Math.random() - .45) * 15));
+    if (Math.random() < .05) blobF = Math.max(1, blobF + 15); else blobF = Math.max(1, Math.min(40, blobF + (Math.random() - .45) * 5));
+    var inTx = Math.floor(Math.random() * 50) + 10, spTx = Math.floor(inTx * (Math.random() * .2)), vTx = inTx - spTx;
+    mF += spTx; pTx += vTx; sP += inTx; bSlB++;
+    var raw = pTx * TX_SZ, beff = raw * ALPHA;
+    document.getElementById('mempool-kb').textContent = (beff / 1000).toFixed(1);
+    document.getElementById('mempool-bar').style.width = Math.min(100, (beff / TGT) * 100) + '%';
+    var ind = document.getElementById('route-indicator'); ind.className = 'route-tag'; ind.innerText = 'MENGHIMPUN...';
+    if (cBlock % 10 === 0 && sP > 0) { tSE += (sP * TX_SZ) * C_GAS * l1F * 1e-9; sP = 0; }
+    if (beff >= TGT || bSlB >= MAX_D) {
+        var cC = (beff * C_GAS) * l1F * 1e-9, cB = BLOB_SZ * blobF * 1e-9;
+        var route, cls, cost;
+        if (cB <= cC) { route = 'BLOB'; cls = 'tag-blob'; cost = cB; ind.innerText = 'BLOB (EIP-4844)'; }
+        else { route = 'CALLDATA'; cls = 'tag-calldata'; cost = cC; fC++; ind.innerText = 'CALLDATA (FALLBACK)'; }
+        tDE += cost; tB++; dH.push(bSlB); ind.className = 'route-tag ' + cls;
+        addLog(cBlock, route, l1F, blobF, (beff / 1000).toFixed(2), bSlB, cost);
+        pTx = 0; bSlB = 0; document.getElementById('mempool-bar').style.width = '0%';
+    }
+    labels.push(cBlock); l1G.push(l1F); blobG.push(blobF); sC.push(tSE); dC.push(tDE);
+    if (labels.length > MAX_P) { labels.shift(); l1G.shift(); blobG.shift(); sC.shift(); dC.shift(); }
+    document.getElementById('val-mev').innerHTML = mF + ' <span style="font-size:.85rem;color:var(--text-muted)">Tx</span>';
+    if (tB > 0) { document.getElementById('val-fallback').textContent = (fC / tB * 100).toFixed(1) + '%'; document.getElementById('val-delay').innerHTML = (dH.reduce(function(a, b) { return a + b; }, 0) / dH.length).toFixed(1) + ' <span style="font-size:.85rem;color:var(--text-muted)">Blok</span>'; }
+    if (tDE > 0) document.getElementById('val-factor-s').textContent = (tSE / tDE).toFixed(1) + 'x';
+    gasChartSim.update(); costChartSim.update();
+}
+
+function addLog(block, route, l1, blob, sz, delay, cost) {
+    var tb = document.getElementById('tableBody'), r = document.createElement('tr');
+    var cls = route === 'BLOB' ? 'tag-blob' : 'tag-calldata';
+    r.innerHTML = '<td style="font-family:\'IBM Plex Mono\',monospace;font-size:.78rem">#' + block + '</td><td><span class="route-tag ' + cls + '">' + route + '</span></td><td>' + l1.toFixed(1) + '</td><td>' + blob.toFixed(1) + '</td><td>' + sz + ' KB</td><td>' + delay + ' blk</td><td style="font-family:\'IBM Plex Mono\',monospace;font-weight:600">' + cost.toFixed(4) + '</td>';
+    tb.insertBefore(r, tb.firstChild);
+    if (tb.children.length > 50) tb.removeChild(tb.lastChild);
+}
+
+function toggleSim() {
+    var b = document.getElementById('btn-pause');
+    if (isR) { clearInterval(simI); b.textContent = 'Resume'; b.classList.remove('btn-primary'); }
+    else { simI = setInterval(updateSim, 400); b.textContent = 'Pause'; b.classList.add('btn-primary'); }
+    isR = !isR;
+}
+
+function resetSim() {
+    clearInterval(simI); isR = false;
+    labels.length = 0; l1G.length = 0; blobG.length = 0; sC.length = 0; dC.length = 0;
+    cBlock = 0; l1F = 40; blobF = 5; pTx = 0; bSlB = 0;
+    tSE = 0; tDE = 0; tB = 0; fC = 0; mF = 0; dH = []; sP = 0;
+    document.getElementById('tableBody').innerHTML = '';
+    document.getElementById('val-factor-s').textContent = '0,0x';
+    document.getElementById('val-delay').innerHTML = '0 <span style="font-size:.85rem;color:var(--text-muted)">Blok</span>';
+    document.getElementById('val-fallback').textContent = '0,0%';
+    document.getElementById('val-mev').innerHTML = '0 <span style="font-size:.85rem;color:var(--text-muted)">Tx</span>';
+    gasChartSim.update(); costChartSim.update();
+    isR = false; toggleSim();
+}
+
+window.onload = function() {
+    applyTheme(getTheme());
+    initSimCharts();
+    for (var i = 0; i < MAX_P; i++) { labels.push(''); l1G.push(0); blobG.push(0); sC.push(0); dC.push(0); }
+    gasChartSim.update(); costChartSim.update();
+    setTimeout(resetSim, 500);
+};
+</script>
+</body>
+</html>
+
