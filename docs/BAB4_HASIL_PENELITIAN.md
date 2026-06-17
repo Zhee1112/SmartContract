@@ -16,7 +16,7 @@ Tabel berikut menyajikan data gas rata-rata dari 100 sampel untuk setiap operasi
 |---------|-------------------|-----------------|----------------------|----------------------|
 | Deposit | 31,412 | 31,427 | 122,769 | 34,156 |
 | Withdraw | 9,735 | 9,727 | 104,806 | 12,119 |
-| Swap | 22,080 | 15,000 | 133,344 | 62,787 |
+| Swap | 10,593 | 10,494 | 103,825 | 13,443 |
 | Deploy | 413,860 | 352,921 | 886,301 | 736,064 |
 
 **Temuan 1**: Tier B (Static Only) dan Tier A (Baseline) memiliki gas yang hampir identik untuk deposit dan withdraw. Hal ini menunjukkan bahwa optimasi statis saja (CEI, packing, custom errors) tidak memberikan perbedaan signifikan pada gas runtime.
@@ -40,7 +40,7 @@ Tabel berikut menyajikan data gas rata-rata dari 100 sampel untuk setiap operasi
 |---------|--------|--------|-------------|-----------|
 | Deposit | 122,769 | 34,156 | 88,613 | **72.2%** |
 | Withdraw | 104,806 | 12,119 | 92,687 | **88.4%** |
-| Swap | 133,344 | 62,787 | 70,557 | **52.9%** |
+| Swap | 103,825 | 13,443 | 90,382 | **87.1%** |
 | Deploy | 886,301 | 736,064 | 150,237 | **17.0%** |
 
 **Temuan 4**: Tier D menghemat 52.9% sampai 88.4% gas dibanding Tier C untuk operasi yang sama, tanpa mengorbankan fitur keamanan yang signifikan.

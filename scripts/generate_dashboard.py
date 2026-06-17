@@ -37,7 +37,7 @@ BRIDGE_GAS = {
     "UnoptimizedBridge": {
         "deposit": 31412,
         "withdraw": 9735,
-        "swap": 22080,
+        "swap": 10593,
         "deployment": 413860,
         "label": "[A] Baseline",
         "security_score": 0,
@@ -46,7 +46,7 @@ BRIDGE_GAS = {
     "BridgeStaticOnly": {
         "deposit": 31427,
         "withdraw": 9727,
-        "swap": 15000,
+        "swap": 10494,
         "deployment": 352921,
         "label": "[B] Static",
         "security_score": 2,
@@ -55,7 +55,7 @@ BRIDGE_GAS = {
     "VictimBridge": {
         "deposit": 122769,
         "withdraw": 104806,
-        "swap": 133344,
+        "swap": 103825,
         "deployment": 886301,
         "label": "[C] Full Dynamic",
         "security_score": 8,
@@ -64,7 +64,7 @@ BRIDGE_GAS = {
     "LightweightBridge": {
         "deposit": 34156,
         "withdraw": 12119,
-        "swap": 62787,
+        "swap": 13443,
         "deployment": 736064,
         "label": "[D] Lightweight Dynamic",
         "security_score": 8,

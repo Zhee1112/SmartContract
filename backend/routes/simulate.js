@@ -8,7 +8,7 @@ const router = express.Router();
 const GAS_DATA = {
   deposit:   { A: 31412, B: 31427, C: 122769, D: 34156 },
   withdraw:  { A: 9735,  B: 9727,  C: 104806, D: 12119 },
-  swap:      { A: 22080, B: 15000, C: 133344, D: 62787 }
+  swap:      { A: 10593, B: 10494, C: 103825, D: 13443 }
 };
 const SECURITY_SCORES = { A: 0, B: 2, C: 8, D: 8 };
 const LAMBDA = 15000, P_DETECT = 9600;

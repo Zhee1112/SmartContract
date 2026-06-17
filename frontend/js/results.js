@@ -51,7 +51,7 @@ if (document.readyState === 'loading') {
     bindHelpOverlay();
 }
 
-var BG = { deposit: { unopt: 31412, stat: 31427, dyn: 122769, light: 34156 }, withdraw: { unopt: 9735, stat: 9727, dyn: 104806, light: 12119 }, swap: { unopt: 22080, stat: 15000, dyn: 133344, light: 62787 } };
+var BG = { deposit: { unopt: 31412, stat: 31427, dyn: 122769, light: 34156 }, withdraw: { unopt: 9735, stat: 9727, dyn: 104806, light: 12119 }, swap: { unopt: 10593, stat: 10494, dyn: 103825, light: 13443 } };
 
 var BAR_BG = { A: 'rgba(185,28,28,.82)', B: 'rgba(180,83,9,.82)', C: 'rgba(13,122,63,.82)', D: 'rgba(99,102,241,.82)' };
 var BAR_BC = { A: '#b91c1c', B: '#b45309', C: '#0d7a3f', D: '#6366f1' };
@@ -93,7 +93,7 @@ if (sc) {
 }
 
 function initPolyCharts() {
-var PG = { deposit: { unopt: 31412, stat: 31427, dyn: 122769, light: 34156 }, withdraw: { unopt: 9735, stat: 9727, dyn: 104806, light: 12119 }, swap: { unopt: 22080, stat: 15000, dyn: 133344, light: 62787 } };
+var PG = { deposit: { unopt: 31412, stat: 31427, dyn: 122769, light: 34156 }, withdraw: { unopt: 9735, stat: 9727, dyn: 104806, light: 12119 }, swap: { unopt: 10593, stat: 10494, dyn: 103825, light: 13443 } };
 
 var pg1 = document.getElementById('chart-gas-poly');
 if (pg1) {
@@ -131,10 +131,10 @@ charts.push(new Chart(pg3.getContext('2d'), {
     data: {
         labels: ['Deposit', 'Withdraw', 'Swap'],
         datasets: [
-            { label: '[A] Unoptimized', data: [31412*polyGasGwei*1e-9, 9735*polyGasGwei*1e-9, 22080*polyGasGwei*1e-9], backgroundColor: BAR_BG.A, borderColor: BAR_BC.A, borderWidth: 2, borderRadius: 4 },
-            { label: '[B] Static Only', data: [31427*polyGasGwei*1e-9, 9727*polyGasGwei*1e-9, 15000*polyGasGwei*1e-9], backgroundColor: BAR_BG.B, borderColor: BAR_BC.B, borderWidth: 2, borderRadius: 4 },
-            { label: '[C] Full Dynamic', data: [122769*polyGasGwei*1e-9, 104806*polyGasGwei*1e-9, 133344*polyGasGwei*1e-9], backgroundColor: BAR_BG.C, borderColor: BAR_BC.C, borderWidth: 2, borderRadius: 4 },
-            { label: '[D] Lightweight', data: [34156*polyGasGwei*1e-9, 12119*polyGasGwei*1e-9, 62787*polyGasGwei*1e-9], backgroundColor: BAR_BG.D, borderColor: BAR_BC.D, borderWidth: 2, borderRadius: 4 }
+            { label: '[A] Unoptimized', data: [31412*polyGasGwei*1e-9, 9735*polyGasGwei*1e-9, 10593*polyGasGwei*1e-9], backgroundColor: BAR_BG.A, borderColor: BAR_BC.A, borderWidth: 2, borderRadius: 4 },
+            { label: '[B] Static Only', data: [31427*polyGasGwei*1e-9, 9727*polyGasGwei*1e-9, 10494*polyGasGwei*1e-9], backgroundColor: BAR_BG.B, borderColor: BAR_BC.B, borderWidth: 2, borderRadius: 4 },
+            { label: '[C] Full Dynamic', data: [122769*polyGasGwei*1e-9, 104806*polyGasGwei*1e-9, 103825*polyGasGwei*1e-9], backgroundColor: BAR_BG.C, borderColor: BAR_BC.C, borderWidth: 2, borderRadius: 4 },
+            { label: '[D] Lightweight', data: [34156*polyGasGwei*1e-9, 12119*polyGasGwei*1e-9, 13443*polyGasGwei*1e-9], backgroundColor: BAR_BG.D, borderColor: BAR_BC.D, borderWidth: 2, borderRadius: 4 }
         ]
     },
     options: { responsive: true, maintainAspectRatio: false, barPercentage: 0.96, categoryPercentage: 0.88, plugins: { legend: { labels: { color: '#6b7280', usePointStyle: true } }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#111827', titleColor: '#f9fafb', bodyColor: '#d1d5db', borderColor: '#374151', borderWidth: 1, padding: 14, cornerRadius: 6, callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(8) + ' MATIC'; } } } }, scales: { x: { ticks: { color: '#6b7280' }, grid: { display: false } }, y: { ticks: { color: '#9ca3af' }, title: { display: true, text: 'MATIC', color: '#9ca3af' }, grid: { color: '#f3f4f6', lineWidth: 0.5 } } } }
@@ -148,10 +148,10 @@ charts.push(new Chart(pg4.getContext('2d'), {
     data: {
         labels: ['Deposit', 'Withdraw', 'Swap'],
         datasets: [
-            { label: '[A] Unoptimized', data: [31412*polyGasGwei*1e-9*polyMatic, 9735*polyGasGwei*1e-9*polyMatic, 22080*polyGasGwei*1e-9*polyMatic], backgroundColor: BAR_BG.A, borderColor: BAR_BC.A, borderWidth: 2, borderRadius: 4 },
-            { label: '[B] Static Only', data: [31427*polyGasGwei*1e-9*polyMatic, 9727*polyGasGwei*1e-9*polyMatic, 15000*polyGasGwei*1e-9*polyMatic], backgroundColor: BAR_BG.B, borderColor: BAR_BC.B, borderWidth: 2, borderRadius: 4 },
-            { label: '[C] Full Dynamic', data: [122769*polyGasGwei*1e-9*polyMatic, 104806*polyGasGwei*1e-9*polyMatic, 133344*polyGasGwei*1e-9*polyMatic], backgroundColor: BAR_BG.C, borderColor: BAR_BC.C, borderWidth: 2, borderRadius: 4 },
-            { label: '[D] Lightweight', data: [34156*polyGasGwei*1e-9*polyMatic, 12119*polyGasGwei*1e-9*polyMatic, 62787*polyGasGwei*1e-9*polyMatic], backgroundColor: BAR_BG.D, borderColor: BAR_BC.D, borderWidth: 2, borderRadius: 4 }
+            { label: '[A] Unoptimized', data: [31412*polyGasGwei*1e-9*polyMatic, 9735*polyGasGwei*1e-9*polyMatic, 10593*polyGasGwei*1e-9*polyMatic], backgroundColor: BAR_BG.A, borderColor: BAR_BC.A, borderWidth: 2, borderRadius: 4 },
+            { label: '[B] Static Only', data: [31427*polyGasGwei*1e-9*polyMatic, 9727*polyGasGwei*1e-9*polyMatic, 10494*polyGasGwei*1e-9*polyMatic], backgroundColor: BAR_BG.B, borderColor: BAR_BC.B, borderWidth: 2, borderRadius: 4 },
+            { label: '[C] Full Dynamic', data: [122769*polyGasGwei*1e-9*polyMatic, 104806*polyGasGwei*1e-9*polyMatic, 103825*polyGasGwei*1e-9*polyMatic], backgroundColor: BAR_BG.C, borderColor: BAR_BC.C, borderWidth: 2, borderRadius: 4 },
+            { label: '[D] Lightweight', data: [34156*polyGasGwei*1e-9*polyMatic, 12119*polyGasGwei*1e-9*polyMatic, 13443*polyGasGwei*1e-9*polyMatic], backgroundColor: BAR_BG.D, borderColor: BAR_BC.D, borderWidth: 2, borderRadius: 4 }
         ]
     },
     options: { responsive: true, maintainAspectRatio: false, barPercentage: 0.96, categoryPercentage: 0.88, plugins: { legend: { labels: { color: '#6b7280', usePointStyle: true } }, tooltip: { mode: 'index', intersect: false, backgroundColor: '#111827', titleColor: '#f9fafb', bodyColor: '#d1d5db', borderColor: '#374151', borderWidth: 1, padding: 14, cornerRadius: 6, callbacks: { label: function(ctx) { return ctx.dataset.label + ': $' + ctx.parsed.y.toFixed(6); } } } }, scales: { x: { ticks: { color: '#6b7280' }, grid: { display: false } }, y: { ticks: { color: '#9ca3af' }, title: { display: true, text: 'USD', color: '#9ca3af' }, grid: { color: '#f3f4f6', lineWidth: 0.5 } } } }

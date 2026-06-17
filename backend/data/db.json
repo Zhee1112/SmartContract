@@ -88,54 +88,5 @@
       "created_at": "2026-06-09T17:59:26.245Z"
     }
   ],
-  "simulation_logs": [
-    {
-      "id": 1,
-      "user_id": 1,
-      "scenario": "sandwich_attack",
-      "input_params": "{\"amount\":10,\"attackerAmount\":5}",
-      "results": "{\"scenario\":\"Sandwich Attack\",\"results\":{\"A\":{\"gas\":22080,\"security\":\"0/8\",\"attackerPnL\":\"+4748.30 tokens\",\"victimPnL\":\"-806.05 tokens\",\"status\":\"EXPLOITED\",\"penalty\":0},\"B\":{\"gas\":15000,\"security\":\"2/8\",\"attackerPnL\":\"0 (CEI)\",\"victimPnL\":\"-806.05 tokens (no MEV detect)\",\"status\":\"PARTIAL\",\"penalty\":0},\"C\":{\"gas\":133344,\"security\":\"8/8\",\"attackerPnL\":\"-5.00 ETH (penalty)\",\"victimPnL\":\"0 (MEV detected)\",\"status\":\"PROTECTED\",\"penalty\":\"5.0000\"},\"D\":{\"gas\":62787,\"security\":\"8/8\",\"attackerPnL\":\"-5.00 ETH (penalty)\",\"victimPnL\":\"0 (MEV detected)\",\"status\":\"PROTECTED\",\"penalty\":\"5.0000\"}}}",
-      "created_at": "2026-06-09T13:53:39.795Z"
-    },
-    {
-      "id": 2,
-      "user_id": 1,
-      "scenario": "normal_swap",
-      "input_params": "{\"amount\":10}",
-      "results": "{\"scenario\":\"Normal Swap\",\"results\":{\"A\":{\"gas\":22080,\"security\":\"0/8\",\"tokensReceived\":\"9066.11\",\"penalty\":0,\"status\":\"success\"},\"B\":{\"gas\":15000,\"security\":\"2/8\",\"tokensReceived\":\"9066.11\",\"penalty\":0,\"status\":\"success\"},\"C\":{\"gas\":133344,\"security\":\"8/8\",\"tokensReceived\":\"9066.11\",\"penalty\":0,\"status\":\"success\"},\"D\":{\"gas\":62787,\"security\":\"8/8\",\"tokensReceived\":\"9066.11\",\"penalty\":0,\"status\":\"success\"}}}",
-      "created_at": "2026-06-09T15:57:11.048Z"
-    },
-    {
-      "id": 3,
-      "user_id": 1,
-      "scenario": "sandwich_attack",
-      "input_params": "{\"amount\":10,\"attackerAmount\":5}",
-      "results": "{\"scenario\":\"Sandwich Attack\",\"results\":{\"A\":{\"gas\":22080,\"security\":\"0/8\",\"attackerPnL\":\"+4748.30 tokens\",\"victimPnL\":\"-806.05 tokens\",\"status\":\"EXPLOITED\",\"penalty\":0},\"B\":{\"gas\":15000,\"security\":\"2/8\",\"attackerPnL\":\"0 (CEI)\",\"victimPnL\":\"-806.05 tokens (no MEV detect)\",\"status\":\"PARTIAL\",\"penalty\":0},\"C\":{\"gas\":133344,\"security\":\"8/8\",\"attackerPnL\":\"-5.00 ETH (penalty)\",\"victimPnL\":\"0 (MEV detected)\",\"status\":\"PROTECTED\",\"penalty\":\"5.0000\"},\"D\":{\"gas\":62787,\"security\":\"8/8\",\"attackerPnL\":\"-5.00 ETH (penalty)\",\"victimPnL\":\"0 (MEV detected)\",\"status\":\"PROTECTED\",\"penalty\":\"5.0000\"}}}",
-      "created_at": "2026-06-09T15:57:12.273Z"
-    },
-    {
-      "id": 4,
-      "user_id": 1,
-      "scenario": "reentrancy_attack",
-      "input_params": "{\"amount\":10}",
-      "results": "{\"scenario\":\"Reentrancy Attack\",\"results\":{\"A\":{\"gas\":9735,\"security\":\"0/8\",\"attackSuccess\":true,\"fundLost\":\"30 ETH\",\"status\":\"EXPLOITED\"},\"B\":{\"gas\":9727,\"security\":\"2/8\",\"attackSuccess\":false,\"fundLost\":\"0 ETH\",\"status\":\"BLOCKED\"},\"C\":{\"gas\":104806,\"security\":\"8/8\",\"attackSuccess\":false,\"fundLost\":\"0 ETH\",\"status\":\"BLOCKED\"},\"D\":{\"gas\":12119,\"security\":\"8/8\",\"attackSuccess\":false,\"fundLost\":\"0 ETH\",\"status\":\"BLOCKED\"}}}",
-      "created_at": "2026-06-09T15:57:13.750Z"
-    },
-    {
-      "id": 5,
-      "user_id": 1,
-      "scenario": "flash_loan_attack",
-      "input_params": "{\"amount\":100}",
-      "results": "{\"scenario\":\"Flash Loan Attack\",\"results\":{\"A\":{\"gas\":31412,\"security\":\"0/8\",\"manipulationSuccess\":true,\"penalty\":\"0\",\"status\":\"MANIPULATED\"},\"B\":{\"gas\":31427,\"security\":\"2/8\",\"manipulationSuccess\":true,\"penalty\":\"0\",\"status\":\"MANIPULATED\"},\"C\":{\"gas\":122769,\"security\":\"8/8\",\"manipulationSuccess\":false,\"penalty\":\"100.0000 ETH\",\"status\":\"PROTECTED\"},\"D\":{\"gas\":34156,\"security\":\"8/8\",\"manipulationSuccess\":false,\"penalty\":\"100.0000 ETH\",\"status\":\"PROTECTED\"}}}",
-      "created_at": "2026-06-09T15:57:15.798Z"
-    },
-    {
-      "id": 6,
-      "user_id": 1,
-      "scenario": "emergency_pause",
-      "input_params": "{\"amount\":10}",
-      "results": "{\"scenario\":\"Emergency Pause\",\"results\":{\"A\":{\"security\":\"0/8\",\"hasPause\":false,\"responseTime\":\"N/A\",\"status\":\"NO PROTECTION\"},\"B\":{\"security\":\"2/8\",\"hasPause\":false,\"responseTime\":\"N/A\",\"status\":\"NO PAUSE\"},\"C\":{\"security\":\"8/8\",\"hasPause\":true,\"responseTime\":\"~50ms (External)\",\"status\":\"INSTANT PAUSE\"},\"D\":{\"security\":\"8/8\",\"hasPause\":true,\"responseTime\":\"~10ms (Inline)\",\"status\":\"INSTANT PAUSE\"}}}",
-      "created_at": "2026-06-09T15:57:16.782Z"
-    }
-  ]
+  "simulation_logs": []
 }

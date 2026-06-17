@@ -3,7 +3,7 @@ var sbState = { step:1, coin:'ETH', amount:1, operation:'deposit', tier:'d', src
 var sbGasData = {
     deposit:  { a:31412, b:31427, c:122769, d:34156 },
     withdraw: { a:9735,  b:9727,  c:104806, d:12119 },
-    swap:     { a:22080, b:15000, c:133344, d:62787 }
+    swap:     { a:10593, b:10494, c:103825, d:13443 }
 };
 var sbSecScores = { a:0, b:2, c:8, d:8 };
 var sbCoinPrices = { ETH:2500, USDT:1, USDC:1, WBTC:65000, DAI:1, LINK:15, UNI:8, AAVE:100, GRT:0.15, MKR:1500 };

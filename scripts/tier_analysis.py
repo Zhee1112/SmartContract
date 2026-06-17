@@ -34,10 +34,10 @@ GAS_DATA = {
         "D": {"gas": 12119, "label": "Lightweight (Inline EIP-1153)"},
     },
     "swap": {
-        "A": {"gas": 22080, "label": "Unoptimized (Baseline)"},
-        "B": {"gas": 15000, "label": "Static Only (CEI+Packing)"},
-        "C": {"gas": 133344, "label": "Full Dynamic (EIP-1153+EWS)"},
-        "D": {"gas": 62787, "label": "Lightweight (Inline EIP-1153)"},
+        "A": {"gas": 10593, "label": "Unoptimized (Baseline)"},
+        "B": {"gas": 10494, "label": "Static Only (CEI+Packing)"},
+        "C": {"gas": 103825, "label": "Full Dynamic (EIP-1153+EWS)"},
+        "D": {"gas": 13443, "label": "Lightweight (Inline EIP-1153)"},
     },
     "deploy": {
         "A": {"gas": 413860, "label": "Unoptimized (Baseline)"},

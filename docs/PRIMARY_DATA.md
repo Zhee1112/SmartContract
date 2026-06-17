@@ -77,18 +77,18 @@
 
 | Tier | Mean | Min | Max |
 |------|------|-----|-----|
-| A (Unoptimized) | 22,080 | ~21,800 | ~22,400 |
-| B (Static Only) | 15,000 | ~14,800 | ~15,200 |
-| C (Full Dynamic) | 133,344 | ~132,000 | ~135,000 |
-| D (Lightweight) | 62,787 | ~61,000 | ~64,000 |
+| A (Unoptimized) | 10,593 | ~10,400 | ~22,100 |
+| B (Static Only) | 10,494 | ~10,400 | ~15,200 |
+| C (Full Dynamic) | 103,825 | ~103,500 | ~133,800 |
+| D (Lightweight) | 13,443 | ~12,900 | ~63,400 |
 
 ### 4.2 Rasio dari Tier B
 
 | Tier | Rasio | Keterangan |
 |------|-------|------------|
-| A/B | 1.47x | Tier A 47% lebih mahal (tanpa packing) |
-| C/B | 8.89x | Tier C 8.89x lebih mahal |
-| D/B | 4.19x | Tier D 4.19x lebih mahal |
+| A/B | 1.01x | Tier A 1% lebih mahal (tanpa packing) |
+| C/B | 9.89x | Tier C 9.89x lebih mahal |
+| D/B | 1.28x | Tier D 1.28x lebih mahal |
 
 ---
 
