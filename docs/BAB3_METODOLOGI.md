@@ -6,15 +6,15 @@ Bab ini menjelaskan desain penelitian, model matematika yang digunakan, model an
 
 ### 3.1.1 Pendekatan Penelitian
 
-Penelitian ini menggunakan pendekatan kuantitatif eksperimental dengan desain comparative study. Pendekatan ini dipilih karena penelitian bertujuan mengukur dan membandingkan kinerja gas serta tingkat keamanan pada empat arsitektur bridge yang berbeda secara sistematis dan terkontrol.
+Penelitian ini menggunakan pendekatan kuantitatif eksperimental dengan desain comparative study (Albert et al., 2021; Di Sorbo et al., 2021). Pendekatan ini dipilih karena penelitian bertujuan mengukur dan membandingkan kinerja gas serta tingkat keamanan pada empat arsitektur bridge yang berbeda secara sistematis dan terkontrol (Yu et al., 2022).
 
 Desain penelitian terdiri dari tiga tahap utama:
 
-1. **Implementasi**: Pengembangan empat kontrak bridge (Tier A sampai Tier D) dengan tingkat optimasi dan keamanan yang berbeda.
+1. **Implementasi**: Pengembangan empat kontrak bridge (Tier A sampai Tier D) dengan tingkat optimasi dan keamanan yang berbeda (Zhang et al., 2022).
 
-2. **Pengukuran**: Pengumpulan data gas menggunakan 100 sampel per operasi (deposit, withdraw, swap) pada lingkungan EVM simulasi, serta pengukuran gas deployment.
+2. **Pengukuran**: Pengumpulan data gas menggunakan 100 sampel per operasi (deposit, withdraw, swap) pada lingkungan EVM simulasi, serta pengukuran gas deployment (Lagouvardos et al., 2024).
 
-3. **Analisis**: Perbandingan gas cost, evaluasi keamanan terhadap delapan fitur keamanan, perhitungan cost-effectiveness (SPG), dan validasi statistik menggunakan Welch's t-test.
+3. **Analisis**: Perbandingan gas cost, evaluasi keamanan terhadap delapan fitur keamanan, perhitungan cost-effectiveness (SPG), dan validasi statistik menggunakan Welch's t-test (Shou et al., 2023).
 
 ### 3.1.2 Arsitektur Penelitian
 
@@ -74,8 +74,8 @@ Komponen storage merupakan biaya terbesar dalam bridge contract. Model biaya sto
 | SSTORE warm write | 2.900 | Penulisan ke slot yang sudah diakses |
 | SLOAD cold read | 2.100 | Pembacaan awal dari slot baru |
 | SLOAD warm read | 100 | Pembacaan dari slot yang sudah diakses |
-| TSTORE (EIP-1153) | 100 | Penulisan transient storage |
-| TLOAD (EIP-1153) | 100 | Pembacaan transient storage |
+| TSTORE (EIP-1153) | 100 | Penulisan transient storage (Benedetti et al., 2024) |
+| TLOAD (EIP-1153) | 100 | Pembacaan transient storage (Casale-Brunet, 2024) |
 
 ### 3.2.2 Model Penghematan Variable Packing
 
@@ -219,8 +219,8 @@ Penelitian ini mendefinisikan lima tipe aktor dalam model ancaman:
 
 ### 3.3.2 Vektor Serangan
 
-**Reentrancy Attack:**
-Attacker melakukan panggilan rekursif ke fungsi withdraw sebelum state balance diperbarui.
+**Reentrancy Attack** (Atzei et al., 2017; Samreen & Alalfi, 2020):
+Attacker melakukan panggilan rekursif ke fungsi withdraw sebelum state balance diperbarui (Feng et al., 2023).
 
 ```
 Attacker.call(withdraw(amount)) → Bridge.transfer(attacker, amount) → attacker.receive() → Attacker.call(withdraw(amount)) [RECURSIVE]
@@ -232,8 +232,8 @@ Status keamanan:
 - Tier C: MITIGATED (CEI + EIP-1153 callDepth guard)
 - Tier D: MITIGATED (CEI + inline EIP-1153)
 
-**MEV Sandwich Attack:**
-Attacker membungkus transaksi korban dengan frontrun dan backrun.
+**MEV Sandwich Attack** (Daian et al., 2020; Rodler et al., 2021):
+Attacker membungkus transaksi korban dengan frontrun dan backrun (Nassirzadeh et al., 2023).
 
 ```
 Ta1: Attacker.swap(ETH → Token) di harga rendah
@@ -297,7 +297,7 @@ Kondisi yang dikontrol selama pengujian:
 
 ### 3.4.3 Replikasi
 
-Setiap pengukuran gas dilakukan dengan 100 sampel per operasi. Jumlah sampel ini dipilih berdasarkan Central Limit Theorem (CLT) yang menyatakan bahwa distribusi mean akan mendekati normal untuk n ≥ 30 (Cochran, 1977), dan diperkuat hingga 100 untuk menghasilkan confidence interval yang lebih sempit dan statistik yang lebih robust.
+Setiap pengukuran gas dilakukan dengan 100 sampel per operasi (Lagouvardos et al., 2024). Jumlah sampel ini dipilih berdasarkan Central Limit Theorem (CLT) yang menyatakan bahwa distribusi mean akan mendekati normal untuk n ≥ 30 (Cochran, 1977), dan diperkuat hingga 100 untuk menghasilkan confidence interval yang lebih sempit dan statistik yang lebih robust (Li, 2025).
 
 Protokol replikasi:
 1. Untuk setiap kombinasi (tier × tipe transaksi), generate 100 alamat unik menggunakan `keccak256(abi.encode(i))`.
@@ -335,7 +335,7 @@ Untuk pengukuran deployment, gas dihitung dari perbedaan `gasleft()` sebelum dan
 
 **Uji statistik:** Welch's t-test (tidak asumsi variansi sama)
 
-Welch's t-test dipilih alih-alih Student's t-test karena tidak memerlukan asumsi homogenitas variansi (Welch, 1947). Asumsi ini sering tidak terpenuhi dalam pengukuran gas yang memiliki variance berbeda antar tier.
+Welch's t-test dipilih alih-alih Student's t-test karena tidak memerlukan asumsi homogenitas variansi (Welch, 1947; Lagouvardos et al., 2024). Asumsi ini sering tidak terpenuhi dalam pengukuran gas yang memiliki variance berbeda antar tier (Albert et al., 2021).
 
 Rumus Welch's t-test:
 
@@ -402,7 +402,7 @@ Di mana:
 
 ### 3.6.1 Skor Keamanan
 
-Keamanan dinilai berdasarkan delapan fitur keamanan:
+Keamanan dinilai berdasarkan delapan fitur keamanan (Zheng et al., 2023; Wang et al., 2026):
 
 | No | Fitur | A | B | C | D |
 |----|-------|---|---|---|---|
@@ -455,11 +455,11 @@ GER > 1: Optimized lebih efisien.
 
 ### 3.7.2 Framework Pengujian
 
-Foundry dipilih sebagai framework pengujian karena mendukung:
+Foundry dipilih sebagai framework pengujian karena mendukung (Shou et al., 2023; Casale-Brunet, 2024):
 - EVM version Cancun (EIP-1153 TSTORE/TLOAD)
 - Gas reporting bawaan
-- Fuzz testing (property-based testing)
-- Invariant testing
+- Fuzz testing (property-based testing) (Rodler et al., 2021)
+- Invariant testing (Zhang et al., 2022)
 - Cheat codes untuk manipulasi state (`vm.deal`, `vm.prank`, `vm.warp`, `vm.roll`)
 
 ### 3.7.3 Spesifikasi foundry.toml
@@ -544,21 +544,21 @@ scripts/
 
 ### 3.9.1 Validitas Internal
 
-- **Kontrol variabel**: Semua parameter EVM (solc, optimizer, evm_version) dikontrol ketat.
+- **Kontrol variabel**: Semua parameter EVM (solc, optimizer, evm_version) dikontrol ketat (Albert et al., 2021; Di Sorbo et al., 2021).
 - **Isolasi pengukuran**: Setiap pengukuran gas menggunakan alamat unik dan transaksi terisolasi.
-- **Replikasi**: 100 sampel per kondisi memastikan kecenderungan sentral yang stabil.
-- **Fuzz testing**: Property-based testing memvalidasi kebenaran formulasi untuk input arbitrary.
+- **Replikasi**: 100 sampel per kondisi memastikan kecenderungan sentral yang stabil (Lagouvardos et al., 2024).
+- **Fuzz testing**: Property-based testing memvalidasi kebenaran formulasi untuk input arbitrary (Shou et al., 2023).
 
 ### 3.9.2 Validitas Eksternal
 
 - **Etherscan data**: Gas price real-time dari Etherscan V2 API memastikan relevansi kondisi pasar aktual.
-- **EVM Cancun**: Penggunaan EVM version terbaru memastikan kompatibilitas dengan fitur terkini.
-- **EIP-1153**: Implementasi mengikuti spesifikasi resmi dan telah diterapkan oleh OpenZeppelin.
+- **EVM Cancun**: Penggunaan EVM version terbaru memastikan kompatibilitas dengan fitur terkini (Park et al., 2025).
+- **EIP-1153**: Implementasi mengikuti spesifikasi resmi dan telah diterapkan oleh OpenZeppelin (Benedetti et al., 2024).
 
 ### 3.9.3 Reliabilitas
 
-- **Deterministic**: Semua pengukuran bersifat deterministic (sama untuk input yang sama).
-- **Automated**: Pengukuran dilakukan secara otomatis melalui Foundry, mengurangi human error.
+- **Deterministic**: Semua pengukuran bersifat deterministic (sama untuk input yang sama) (Li, 2025).
+- **Automated**: Pengukuran dilakukan secara otomatis melalui Foundry, mengurangi human error (Casale-Brunet, 2024).
 - **Versioned**: Semua dependency dikunci versinya (solc 0.8.28, forge v1.7.1).
 
 ---

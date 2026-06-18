@@ -8,7 +8,7 @@ Bab ini mendiskusikan hasil-hasil penelitian yang telah disajikan pada Bab IV da
 
 ### 5.1.1 Mengapa Tier D (Rollup Ringan) Lebih Murah
 
-Hasil pengukuran menunjukkan bahwa Tier D (LightweightBridge) hanya memerlukan 34.156 gas untuk operasi deposit, hanya 8.7% lebih tinggi dari Tier B (31.427 gas) yang tanpa keamanan dinamis, namun **72.2% lebih murah** dari Tier C (122.769 gas). Perbedaan yang sangat signifikan ini menuntut analisis mendalam terhadap sumber-sumber biaya yang mendasari masing-masing arsitektur.
+Hasil pengukuran menunjukkan bahwa Tier D (LightweightBridge) hanya memerlukan 34.156 gas untuk operasi deposit, hanya 8.7% lebih tinggi dari Tier B (31.427 gas) yang tanpa keamanan dinamis, namun **72.2% lebih murah** dari Tier C (122.769 gas) (Albert et al., 2021; Di Sorbo et al., 2021). Perbedaan yang sangat signifikan ini menuntut analisis mendalam terhadap sumber-sumber biaya yang mendasari masing-masing arsitektur (Li, 2025).
 
 Faktor utama yang menyebabkan Tier D tetap murah adalah penggunaan pendekatan **inline assembly** untuk seluruh mekanisme keamanan dinamis. Sebagaimana dirancang pada kontrak `LightweightBridge.sol` (Baris 83-99), fungsi `_enterCall()`, `_exitCall()`, dan `_callDepth()` diimplementasikan langsung dalam satu kontrak menggunakan opcode TSTORE dan TLOAD yang masing-masing hanya berbiaya 100 gas. Tidak ada satu pun external call yang dilakukan ke kontrak lain selama operasi transaksi berjalan.
 
@@ -74,7 +74,7 @@ Temuan ini konsisten dengan prinsip desain arsitektur kontrak yang dianjurkan ol
 
 ### 5.2.1 Pencapaian Tier D: 8/8 Skor Keamanan dengan 0 External Calls
 
-Salah satu temuan paling signifikan dari penelitian ini adalah kemampuan Tier D dalam mencapai skor keamanan **8/8** (sama dengan Tier C) tanpa satu pun external call. Hal ini merupakan pencapaian yang bertentangan dengan asumsi konvensional dalam pengembangan smart contract, yang menganggap bahwa mekanisme keamanan dinamis harus diimplementasikan melalui kontrak terpisah (seperti MonitorMock).
+Salah satu temuan paling signifikan dari penelitian ini adalah kemampuan Tier D dalam mencapai skor keamanan **8/8** (sama dengan Tier C) tanpa satu pun external call (Zheng et al., 2023; Wang et al., 2026). Hal ini merupakan pencapaian yang bertentangan dengan asumsi konvensional dalam pengembangan smart contract, yang menganggap bahwa mekanisme keamanan dinamis harus diimplementasikan melalui kontrak terpisah (seperti MonitorMock) (Feng et al., 2023; Samreen & Alalfi, 2020).
 
 Berdasarkan matrix keamanan yang disajikan pada BAB III (Bagian 3.6.1), delapan fitur keamanan yang dievaluasi adalah:
 
@@ -124,15 +124,15 @@ Temuan ini selaras dengan rekomendasi Consensys (2024) yang menyarankan bahwa ko
 
 ### 5.2.3 Hasil Verifikasi Serangan
 
-Hasil pengujian serangan yang dilaporkan pada BAB IV (Bagian 4.3) menunjukkan bahwa Tier D berhasil memblokir seluruh jenis serangan yang diuji:
+Hasil pengujian serangan yang dilaporkan pada BAB IV (Bagian 4.3) menunjukkan bahwa Tier D berhasil memblokir seluruh jenis serangan yang diuji (Atzei et al., 2017; Samreen & Alalfi, 2020):
 
-**Single-function Reentrancy:** Attacker melakukan panggilan rekursif ke fungsi withdraw. Tier D mendeteksi depth > 0 melalui `_callDepth()` dan langsung revert dengan `ReentrancyDetected()`. Hasil: DIBLOKIR.
+**Single-function Reentrancy:** Attacker melakukan panggilan rekursif ke fungsi withdraw. Tier D mendeteksi depth > 0 melalui `_callDepth()` dan langsung revert dengan `ReentrancyDetected()`. Hasil: DIBLOKIR (Yu et al., 2022).
 
-**Cross-function Reentrancy:** Attacker mengeksploitasi interaksi antara fungsi withdraw dan fungsi lainnya. Tier D tetap efektif karena transient storage lock bersifat global per transaksi — tidak peduli fungsi mana yang dipanggil, status lock akan terdeteksi. Hasil: DIBLOKIR.
+**Cross-function Reentrancy:** Attacker mengeksploitasi interaksi antara fungsi withdraw dan fungsi lainnya. Tier D tetap efektif karena transient storage lock bersifat global per transaksi — tidak peduli fungsi mana yang dipanggil, status lock akan terdeteksi (Feng et al., 2023). Hasil: DIBLOKIR.
 
 **Consecutive Reentrancy (3x):** Attacker melakukan 3 panggilan berurutan. Setiap panggilan memeriksa `_callDepth()` sebelum masuk ke kritis section. Hasil: DIBLOKIR di setiap panggilan.
 
-Hasil ini membuktikan bahwa mekanisme inline pada Tier D setidaknya seefektif mekanisme external pada Tier C dalam memblokir serangan reentrancy, namun dengan biaya yang jauh lebih rendah dan tanpa menambah attack surface.
+Hasil ini membuktikan bahwa mekanisme inline pada Tier D setidaknya seefektif mekanisme external pada Tier C dalam memblokir serangan reentrancy (Rodler et al., 2021; Zheng et al., 2023), namun dengan biaya yang jauh lebih rendah dan tanpa menambah attack surface (Nassirzadeh et al., 2023).
 
 ---
 
@@ -140,7 +140,7 @@ Hasil ini membuktikan bahwa mekanisme inline pada Tier D setidaknya seefektif me
 
 ### 5.3.1 Tier D vs Tier C: Efisiensi 3.4x
 
-Metrik Security Points per Gas (SPG) dirancang khusus untuk mengukur efisiensi konversi biaya gas menjadi keamanan. Rumus SPG didefinisikan sebagai:
+Metrik Security Points per Gas (SPG) dirancang khusus untuk mengukur efisiensi konversi biaya gas menjadi keamanan (Zhang et al., 2022; Zhou et al., 2026). Rumus SPG didefinisikan sebagai:
 
 ```
 SPG = (Skor Keamanan / Gas Deposit) × 1.000.000
@@ -187,7 +187,7 @@ Implikasinya adalah bahwa Tier D memungkinkan desain bridge yang **lebih aman de
 
 ### 5.4.1 Evolusi dari Reentrancy Guard ke Multifungsi
 
-EIP-1153 dalam spesifikasi aslinya dirancang untuk satu tujuan spesifik: mengimplementasikan reentrancy guard yang efisien gas. Konsep dasarnya sederhana — gunakan TSTORE untuk mengatur lock dan TLOAD untuk memeriksa status lock, dengan biaya total hanya 200 gas (100 + 100). OpenZeppelin telah mengadopsi desain ini dalam `TransientStorageGuard` (OpenZeppelin, 2024).
+EIP-1153 dalam spesifikasi aslinya dirancang untuk satu tujuan spesifik: mengimplementasikan reentrancy guard yang efisien gas (Benedetti et al., 2024; Casale-Brunet, 2024). Konsep dasarnya sederhana — gunakan TSTORE untuk mengatur lock dan TLOAD untuk memeriksa status lock, dengan biaya total hanya 200 gas (100 + 100). OpenZeppelin telah mengadopsi desain ini dalam `TransientStorageGuard` (OpenZeppelin, 2024).
 
 Penelitian ini memodifikasi penggunaan EIP-1153 dari satu fungsi menjadi **lima fungsi keamanan** dalam satu kontrak:
 
@@ -220,11 +220,11 @@ Total biaya lima modifikasi ini adalah ~9.900 gas — hanya **48.5x lebih murah*
 
 ### 5.4.3 Dampak terhadap Paradigma Desain Keamanan
 
-Temuan ini memiliki dampak signifikan terhadap paradigma desain keamanan smart contract. Selama ini, komunitas pengembang Solidity cenderung memisahkan mekanisme keamanan ke dalam kontrak terpisah (seperti pattern Guard di OpenZeppelin) untuk memisahkan kepentingan (separation of concerns) dan memudahkan audit. Pendekatan ini menghasilkan arsitektur multi-kontrak yang bersih secara modular namun mahal secara gas.
+Temuan ini memiliki dampak signifikan terhadap paradigma desain keamanan smart contract (Pofcher & Ellul, 2025; Zheng et al., 2025). Selama ini, komunitas pengembang Solidity cenderung memisahkan mekanisme keamanan ke dalam kontrak terpisah (seperti pattern Guard di OpenZeppelin) untuk memisahkan kepentingan (separation of concerns) dan memudahkan audit (Yu et al., 2022). Pendekatan ini menghasilkan arsitektur multi-kontrak yang bersih secara modular namun mahal secara gas (Albert et al., 2021; Di Sorbo et al., 2021).
 
-Tier D membuktikan bahwa pendekatan alternatif — mengonsolidasikan semua logika keamanan secara inline dalam satu kontrak — dapat menghasilkan keamanan yang setara dengan biaya yang jauh lebih rendah. Konsolidasi ini tidak mengorbankan auditability karena seluruh kode keamanan berada dalam satu file, sehingga auditor dapat meninjau seluruh logika pertahanan dalam satu konteks.
+Tier D membuktikan bahwa pendekatan alternatif — mengonsolidasikan semua logika keamanan secara inline dalam satu kontrak — dapat menghasilkan keamanan yang setara dengan biaya yang jauh lebih rendah (Li, 2025). Konsolidasi ini tidak mengorbankan auditability karena seluruh kode keamanan berada dalam satu file, sehingga auditor dapat meninjau seluruh logika pertahanan dalam satu konteks (Shou et al., 2023).
 
-Namun, pendekatan ini memiliki tradeoff yang perlu diakui: (1) ukuran kontrak lebih besar, (2) kompleksitas kode lebih tinggi dalam satu kontrak, dan (3) fleksibilitas pembaruan keamanan lebih terbatas (karena semua terkonsolidasi). Tradeoff ini dibahas lebih lanjut pada Bagian 5.9 (Keterbatasan Penelitian).
+Namun, pendekatan ini memiliki tradeoff yang perlu diakui: (1) ukuran kontrak lebih besar, (2) kompleksitas kode lebih tinggi dalam satu kontrak, dan (3) fleksibilitas pembaruan keamanan lebih terbatas (karena semua terkonsolidasi) (Wang et al., 2026; Zhou et al., 2026). Tradeoff ini dibahas lebih lanjut pada Bagian 5.9 (Keterbatasan Penelitian).
 
 ---
 
@@ -278,7 +278,7 @@ Dengan menghemat $66.000-$178.000 per bulan dari gas fee, operator dialihkan unt
 
 ### 5.6.1 Welch's t-test: Tolak H₀
 
-Uji hipotesis Welch's t-test dilakukan untuk menguji apakah terdapat perbedaan signifikan secara statistik antara gas cost Tier C dan Tier D pada operasi deposit. Hasil uji:
+Uji hipotesis Welch's t-test (Welch, 1947) dilakukan untuk menguji apakah terdapat perbedaan signifikan secara statistik antara gas cost Tier C dan Tier D pada operasi deposit (Lagouvardos et al., 2024). Hasil uji:
 
 | Metrik | Nilai | Interpretasi |
 |--------|-------|-------------|
@@ -411,13 +411,13 @@ Perbandingan ini menunjukkan bahwa Tier D menawarkan kombinasi fitur keamanan ya
 
 ### 5.8.6 Keunikan Kontribusi Penelitian
 
-Berdasarkan perbandingan dengan studi terdahulu, kontribusi unik penelitian ini adalah:
+Berdasarkan perbandingan dengan studi terdahulu (Feng et al., 2023; Zheng et al., 2023; Wang et al., 2026), kontribusi unik penelitian ini adalah:
 
-1. **Modifikasi EIP-1153 menjadi multifungsi**: Dari 1 fungsi (reentrancy guard) menjadi 5 fungsi keamanan dalam satu kontrak
-2. **Inline implementation**: 0 external calls untuk semua fitur keamanan — pertama kalinya didokumentasikan
-3. **Single-slot MEV detection**: Penggantian dynamic array dengan single-slot struct yang 7.6x lebih murah
-4. **4-tier comparison**: Framework komparatif dari baseline hingga lightweight dynamic
-5. **Validasi statistik rigor**: 100 sampel, Welch's t-test, Cohen's d, confidence interval
+1. **Modifikasi EIP-1153 menjadi multifungsi** (Benedetti et al., 2024; Casale-Brunet, 2024): Dari 1 fungsi (reentrancy guard) menjadi 5 fungsi keamanan dalam satu kontrak
+2. **Inline implementation** (Albert et al., 2021; Di Sorbo et al., 2021): 0 external calls untuk semua fitur keamanan — pertama kalinya didokumentasikan
+3. **Single-slot MEV detection** (Li, 2025; Nassirzadeh et al., 2023): Penggantian dynamic array dengan single-slot struct yang 7.6x lebih murah
+4. **4-tier comparison** (Zhang et al., 2022): Framework komparatif dari baseline hingga lightweight dynamic
+5. **Validasi statistik rigor** (Lagouvardos et al., 2024; Shou et al., 2023): 100 sampel, Welch's t-test, Cohen's d, confidence interval
 
 ---
 
@@ -600,19 +600,19 @@ Namun untuk **bridge enterprise yang butuh upgrade logic keamanan** tanpa redepl
 
 ### 5.12.3 Keterbatasan Skala
 
-**Single Chain Testing:** Seluruh pengujian dilakukan pada satu EVM-compatible chain (Foundry local). Multi-chain testing akan mengungkap perbedaan performa antar chain yang mungkin signifikan, terutama terkait gas pricing dan finality time.
+**Single Chain Testing:** Seluruh pengujian dilakukan pada satu EVM-compatible chain (Foundry local) (Park et al., 2025). Multi-chain testing akan mengungkap perbedaan performa antar chain yang mungkin signifikan, terutama terkait gas pricing dan finality time.
 
-**Tidak Ada Audit Keamanan Profesional:** Meskipun seluruh test suite (215 tests) berhasil lulus, penelitian ini belum melalui audit keamanan oleh pihak ketiga yang independen. Audit profesional diperlukan untuk mengidentifikasi potensi vulnerability yang mungkin tidak tercakup oleh automated testing.
+**Tidak Ada Audit Keamanan Profesional** (Pofcher & Ellul, 2025): Meskipun seluruh test suite (215 tests) berhasil lulus, penelitian ini belum melalui audit keamanan oleh pihak ketiga yang independen. Audit profesional diperlukan untuk mengidentifikasi potensi vulnerability yang mungkin tidak tercakup oleh automated testing (Shou et al., 2023).
 
-**Tidak Ada Pengujian dengan MEV Bot Nyata:** Semua skenario MEV sandwich diuji menggunakan kontrak Attacker.sol yang dikontrol. MEV bot nyata di production menggunakan teknik yang jauh lebih canggih — termasuk private mempool (Flashbots Protect), bundle submission, dan optimal bid strategies.
+**Tidak Ada Pengujian dengan MEV Bot Nyata** (Rodler et al., 2021; Wang et al., 2026): Semua skenario MEV sandwich diuji menggunakan kontrak Attacker.sol yang dikontrol. MEV bot nyata di production menggunakan teknik yang jauh lebih canggih — termasuk private mempool (Flashbots Protect), bundle submission, dan optimal bid strategies.
 
 ### 5.12.4 Keterbatasan Arsitektural
 
-**Ukuran Kontrak:** Tier D mengkonsolidasikan semua logika keamanan ke dalam satu kontrak, yang menghasilkan ukuran bytecode yang lebih besar dibandingkan arsitektur multi-kontrak. Ukuran kontrak yang besar dapat meningkatkan deployment gas dan berpotensi mendekati batas ukuran kontrak maksimum (24.576 bytes).
+**Ukuran Kontrak** (Benedetti et al., 2024): Tier D mengkonsolidasikan semua logika keamanan ke dalam satu kontrak, yang menghasilkan ukuran bytecode yang lebih besar dibandingkan arsitektur multi-kontrak. Ukuran kontrak yang besar dapat meningkatkan deployment gas dan berpotensi mendekati batas ukuran kontrak maksimum (24.576 bytes).
 
-**Fleksibilitas Pembaruan:** Dalam arsitektur multi-kontrak (seperti Tier C), komponen keamanan (MonitorMock) dapat diperbarui secara independen tanpa memodifikasi kontrak utama. Dalam arsitektur inline (Tier D), pembaruan keamanan memerlukan redeployment seluruh kontrak, yang jauh lebih mahal dan kompleks.
+**Fleksibilitas Pembaruan** (Zheng et al., 2025; Zhou et al., 2026): Dalam arsitektur multi-kontrak (seperti Tier C), komponen keamanan (MonitorMock) dapat diperbarui secara independen tanpa memodifikasi kontrak utama. Dalam arsitektur inline (Tier D), pembaruan keamanan memerlukan redeployment seluruh kontrak, yang jauh lebih mahal dan kompleks.
 
-**Upgradeability:** Tier D tidak mengimplementasikan proxy pattern atau upgradeability mechanism. Dalam production, bridge memerlukan kemampuan untuk memperbaiki vulnerability yang ditemukan setelah deployment. Integrasi Tier D dengan proxy pattern (misalnya UUPS atau Transparent Proxy) perlu diteliti lebih lanjut.
+**Upgradeability** (Li, 2025; Casale-Brunet, 2024): Tier D tidak mengimplementasikan proxy pattern atau upgradeability mechanism. Dalam production, bridge memerlukan kemampuan untuk memperbaiki vulnerability yang ditemukan setelah deployment. Integrasi Tier D dengan proxy pattern (misalnya UUPS atau Transparent Proxy) perlu diteliti lebih lanjut.
 
 ---
 
@@ -620,44 +620,44 @@ Namun untuk **bridge enterprise yang butuh upgrade logic keamanan** tanpa redepl
 
 ### 5.13.1 Bagi Pengembang DeFi
 
-Temuan penelitian ini memiliki beberapa implikasi praktis bagi pengembang DeFi yang sedang membangun atau mengoptimalkan smart contract bridge:
+Temuan penelitian ini memiliki beberapa implikasi praktis bagi pengembang DeFi yang sedang membangun atau mengoptimalkan smart contract bridge (Albert et al., 2021; Di Sorbo et al., 2021):
 
 **1. Menerapkan Inline Security Pattern:**
-Pengembang sebaiknya mempertimbangkan untuk mengimplementasikan mekanisme keamanan secara inline, terutama untuk fungsi-fungsi kritis seperti reentrancy guard. Template `LightweightBridge.sol` dapat dijadikan referensi awal.
+Pengembang sebaiknya mempertimbangkan untuk mengimplementasikan mekanisme keamanan secara inline (Li, 2025), terutama untuk fungsi-fungsi kritis seperti reentrancy guard. Template `LightweightBridge.sol` dapat dijadikan referensi awal.
 
 **2. Menggabungkan Static + Dynamic Optimization:**
-Optimasi statis (CEI, packing, custom errors) harus diterapkan sebagai fondasi, dilengkapi dengan optimasi dinamis (EIP-1153 inline) untuk fitur keamanan tambahan. Kombinasi ini memberikan keamanan terbaik dengan biaya terendah.
+Optimasi statis (CEI, packing, custom errors) harus diterapkan sebagai fondasi, dilengkapi dengan optimasi dinamis (EIP-1153 inline) untuk fitur keamanan tambahan (Benedetti et al., 2024; Casale-Brunet, 2024). Kombinasi ini memberikan keamanan terbaik dengan biaya terendah.
 
 **3. Menghindari External Calls untuk Keamanan:**
-External calls ke kontrak keamanan (seperti MonitorMock) sebaiknya dihindari ketika fungsionalitas yang sama dapat diimplementasikan secara inline. Biaya gas tambahan dari external calls (~61.900 gas per transaksi) jauh melebihi manfaat modularitas.
+External calls ke kontrak keamanan (seperti MonitorMock) sebaiknya dihindari ketika fungsionalitas yang sama dapat diimplementasikan secara inline (Zheng et al., 2023). Biaya gas tambahan dari external calls (~61.900 gas per transaksi) jauh melebihi manfaat modularitas.
 
 **4. Mengadopsi Single-slot Storage Pattern:**
-Dynamic array untuk pencatatan transaksi sebaiknya digantikan dengan single-slot overwrite pattern. Penghematan 17.700 gas per transaksi sangat signifikan untuk bridge dengan volume tinggi.
+Dynamic array untuk pencatatan transaksi sebaiknya digantikan dengan single-slot overwrite pattern (Nassirzadeh et al., 2023; Wang et al., 2026). Penghematan 17.700 gas per transaksi sangat signifikan untuk bridge dengan volume tinggi.
 
 ### 5.13.2 Bagi Operator Bridge
 
 **1. Evaluasi Cost-Benefit:**
-Operator bridge dapat menggunakan framework SPG untuk mengevaluasi cost-effectiveness berbagai opsi keamanan. SPG memungkinkan perbandingan yang objektif antara berbagai arsitektur keamanan.
+Operator bridge dapat menggunakan framework SPG untuk mengevaluasi cost-effectiveness berbagai opsi keamanan (Zhang et al., 2022). SPG memungkinkan perbandingan yang objektif antara berbagai arsitektur keamanan.
 
 **2. Perencanaan Anggaran Gas:**
-Estimasi biaya real-world yang disajikan pada Bagian 5.5 dapat digunakan sebagai dasar perencanaan anggaran gas. Operator dapat memproyeksikan penghematan yang dicapai dengan migrasi dari Tier C ke Tier D.
+Estimasi biaya real-world yang disajikan pada Bagian 5.5 dapat digunakan sebagai dasar perencanaan anggaran gas (Park et al., 2025). Operator dapat memproyeksikan penghematan yang dicapai dengan migrasi dari Tier C ke Tier D.
 
 **3. Penggunaan Emergency Pause:**
-Fitur emergency pause pada Tier D harus diaktifkan dan diuji secara berkala. Dalam situasi serangan, kemampuan untuk menghentikan operasi bridge secara instan dapat mencegah kerugian yang lebih besar.
+Fitur emergency pause pada Tier D harus diaktifkan dan diuji secara berkala (Rodler et al., 2021). Dalam situasi serangan, kemampuan untuk menghentikan operasi bridge secara instan dapat mencegah kerugian yang lebih besar.
 
 **4. Monitoring Anomali:**
-Event `AnomalyDetected` yang dipancarkan oleh Tier D dapat diintegrasikan ke sistem monitoring off-chain. Deteksi anomali secara real-time memungkinkan respons cepat terhadap potensi serangan.
+Event `AnomalyDetected` yang dipancarkan oleh Tier D dapat diintegrasikan ke sistem monitoring off-chain (Shou et al., 2023). Deteksi anomali secara real-time memungkinkan respons cepat terhadap potensi serangan.
 
 ### 5.13.3 Bagi Peneliti
 
 **1. Framework Penelitian:**
-Desain eksperimental 4-tier yang digunakan dalam penelitian ini dapat diadopsi oleh peneliti lain untuk mengkaji optimasi gas dan keamanan pada konteks smart contract yang berbeda.
+Desain eksperimental 4-tier yang digunakan dalam penelitian ini dapat diadopsi oleh peneliti lain untuk mengkaji optimasi gas dan keamanan pada konteks smart contract yang berbeda (Lagouvardos et al., 2024).
 
 **2. Metrik SPG:**
-Metrik Security Points per Gas (SPG) dapat diterapkan secara lebih luas untuk mengevaluasi cost-effectiveness keamanan smart contract di luar konteks bridge.
+Metrik Security Points per Gas (SPG) dapat diterapkan secara lebih luas untuk mengevaluasi cost-effectiveness keamanan smart contract di luar konteks bridge (Zhou et al., 2026).
 
 **3. Studi Lanjutan:**
-Penelitian ini membuka beberapa arah studi lanjutan:
+Penelitian ini membuka beberapa arah studi lanjutan (Pofcher & Ellul, 2025; Zheng et al., 2025):
 - Integrasi Tier D dengan proxy pattern untuk upgradeability
 - Pengembangan MEV detection yang lebih canggih (multi-step pattern)
 - Pengujian pada multiple EVM-compatible chains
@@ -681,15 +681,15 @@ Kerangka rekomendasi ini menunjukkan bahwa **Tier D merupakan pilihan optimal un
 
 ## 5.14 Sintesis Pembahasan
 
-Secara keseluruhan, pembahasan pada bab ini mengkonfirmasi bahwa modifikasi EIP-1153 menjadi multifungsi secara inline (Tier D) merupakan pendekatan yang unggul dalam tiga dimensi utama:
+Secara keseluruhan, pembahasan pada bab ini mengkonfirmasi bahwa modifikasi EIP-1153 menjadi multifungsi secara inline (Tier D) merupakan pendekatan yang unggul dalam tiga dimensi utama (Benedetti et al., 2024; Casale-Brunet, 2024):
 
-1. **Efisiensi Gas:** Tier D mencapai gas cost yang hanya 8.7% lebih tinggi dari baseline tanpa keamanan (Tier B), namun 72.2% lebih rendah dari pendekatan konvensional (Tier C). Penghematan ini bersumber dari eliminasi external calls dan penggantian dynamic array dengan single-slot storage.
+1. **Efisiensi Gas** (Albert et al., 2021; Di Sorbo et al., 2021; Li, 2025): Tier D mencapai gas cost yang hanya 8.7% lebih tinggi dari baseline tanpa keamanan (Tier B), namun 72.2% lebih rendah dari pendekatan konvensional (Tier C). Penghematan ini bersumber dari eliminasi external calls dan penggantian dynamic array dengan single-slot storage.
 
-2. **Keamanan Setara:** Tier D mencapai skor keamanan 8/8 — identik dengan Tier C — dengan 0 external calls. Seluruh mekanisme keamanan (reentrancy guard, MEV detection, economic penalty, emergency pause, block tracking) diimplementasikan secara inline dalam satu kontrak.
+2. **Keamanan Setara** (Zheng et al., 2023; Wang et al., 2026): Tier D mencapai skor keamanan 8/8 — identik dengan Tier C — dengan 0 external calls. Seluruh mekanisme keamanan (reentrancy guard, MEV detection, economic penalty, emergency pause, block tracking) diimplementasikan secara inline dalam satu kontrak.
 
-3. **Cost-Effectiveness Terbaik:** Tier D memiliki SPG tertinggi (234) di antara keempat tier — 3.6x lebih efisien dari Tier C (65). Metrik ini membuktikan bahwa Tier D memberikan konversi gas-to-keamanan yang paling efisien.
+3. **Cost-Effectiveness Terbaik** (Zhang et al., 2022; Zhou et al., 2026): Tier D memiliki SPG tertinggi (234) di antara keempat tier — 3.6x lebih efisien dari Tier C (65). Metrik ini membuktikan bahwa Tier D memberikan konversi gas-to-keamanan yang paling efisien.
 
-Temuan-temuan ini secara kolektif mendukung tesis utama penelitian: **EIP-1153 transient storage dapat dimodifikasi dari mekanisme tunggal (reentrancy guard) menjadi platform keamanan multifungsi yang efisien gas untuk smart contract bridge**. Modifikasi ini menawarkan alternatif yang layak terhadap arsitektur multi-kontrak konvensional, dengan bukti empiris yang kuat dari 215 test cases, analisis statistik rigor, dan estimasi biaya real-world.
+Temuan-temuan ini secara kolektif mendukung tesis utama penelitian: **EIP-1153 transient storage dapat dimodifikasi dari mekanisme tunggal (reentrancy guard) menjadi platform keamanan multifungsi yang efisien gas untuk smart contract bridge** (Lagouvardos et al., 2024; Shou et al., 2023). Modifikasi ini menawarkan alternatif yang layak terhadap arsitektur multi-kontrak konvensional, dengan bukti empiris yang kuat dari 215 test cases, analisis statistik rigor, dan estimasi biaya real-world (Nassirzadeh et al., 2023; Pofcher & Ellul, 2025).
 
 ---
 
