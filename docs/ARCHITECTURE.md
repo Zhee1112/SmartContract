@@ -1,6 +1,6 @@
 # Arsitektur Sistem
 
-Dokumentasi arsitektur untuk skripsi "Optimalisasi Gas dan Keamanan Smart Contract Bridge Menggunakan EIP-1153 Transient Storage dan Early Warning System".
+Dokumentasi arsitektur untuk skripsi "Optimalisasi Gas dan Keamanan Smart Contract Bridge Berbasis EIP-1153 Transient Storage pada Arsitektur 4-Tier".
 
 ---
 

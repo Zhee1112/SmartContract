@@ -1,26 +1,28 @@
-# Optimasi Gas dan Keamanan Smart Contract Bridge Menggunakan EIP-1153 Transient Storage dan Early Warning System
+# Optimalisasi Gas dan Keamanan Smart Contract Bridge Berbasis EIP-1153 Transient Storage pada Arsitektur 4-Tier
 
-## Arsitektur 3-Tier
+## Arsitektur 4-Tier
 
 ```
 [Tier A] UnoptimizedBridge    -> Baseline, tidak dioptimasi, rentan reentrancy
 [Tier B] BridgeStaticOnly     -> Optimasi statis (struct packing, CEI, custom errors, immutable)
 [Tier C] VictimBridge         -> Optimasi statis + dinamis (EIP-1153 TSTORE + EWS MonitorMock)
+[Tier D] LightweightBridge    -> Optimasi inline (EIP-1153 tanpa external calls)
 ```
 
 ## Fitur Utama
 
-| Fitur | Tier A | Tier B | Tier C |
-|-------|--------|--------|--------|
-| Variable Packing | - | ✅ | ✅ |
-| Pola CEI | - | ✅ | ✅ |
-| Unchecked Arithmetic | - | ✅ | ✅ |
-| Custom Errors | - | ✅ | ✅ |
-| Immutable Admin | - | ✅ | ✅ |
-| EIP-1153 TSTORE/TLOAD | - | - | ✅ |
-| Early Warning System | - | - | ✅ |
-| Deteksi MEV Sandwich | - | - | ✅ |
-| Penalti Ekonomi Dinamis | - | - | ✅ |
+| Fitur | Tier A | Tier B | Tier C | Tier D |
+|-------|--------|--------|--------|--------|
+| Variable Packing | - | ✅ | ✅ | ✅ |
+| Pola CEI | - | ✅ | ✅ | ✅ |
+| Unchecked Arithmetic | - | ✅ | ✅ | ✅ |
+| Custom Errors | - | ✅ | ✅ | ✅ |
+| Immutable Admin | - | ✅ | ✅ | ✅ |
+| EIP-1153 TSTORE/TLOAD | - | - | ✅ | ✅ (inline) |
+| Early Warning System | - | - | ✅ | ✅ (inline) |
+| Deteksi MEV Sandwich | - | - | ✅ | ✅ |
+| Penalti Ekonomi Dinamis | - | - | ✅ | ✅ |
+| Emergency Pause | - | - | ✅ | ✅ |
 
 ## Setup
 

@@ -1,6 +1,6 @@
 # Ringkasan Komprehensif Penelitian
 
-## Optimasi Gas dan Keamanan Smart Contract Bridge
+## Optimalisasi Gas dan Keamanan Smart Contract Bridge Berbasis EIP-1153 Transient Storage pada Arsitektur 4-Tier
 ### Implementasi EIP-1153 Transient Storage pada Arsitektur 4-Tier
 
 ---
