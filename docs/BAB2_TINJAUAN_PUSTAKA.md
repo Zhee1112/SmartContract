@@ -128,7 +128,7 @@ Zheng et al. (jurnal_18) dalam penelitiannya mengenai GasAgent, sebuah *multi-ag
 
 ### 2.4.1 Spesifikasi dan Latar Belakang
 
-EIP-1153 (*Transient Storage Opcodes*) merupakan *Ethereum Improvement Proposal* yang memperkenalkan dua *opcode* baru: TSTORE (*Transient Store*) dan TLOAD (*Transient Load*). Proposal ini diaktifkan melalui *fork Cancun* pada Maret 2024, bersamaan dengan EIP-4844 dan beberapa peningkatan lainnya (EIP-1153, 2021). Paradigm (2023) dalam analisis mendalamnya mengenai EIP-1153 menjelaskan bahwa desain *transient storage* terinspirasi dari kebutuhan akan mekanisme penyimpanan sementara yang efisien gas untuk kasus penggunaan seperti *reentrancy guard* dan *cross-function state tracking*.
+EIP-1153 (*Transient Storage Opcodes*) merupakan *Ethereum Improvement Proposal* yang memperkenalkan dua *opcode* baru: TSTORE (*Transient Store*) dan TLOAD (*Transient Load*). Proposal ini diaktifkan melalui *fork Cancun* pada Maret 2024, bersamaan dengan EIP-4844 dan beberapa peningkatan lainnya (EIP-1153, 2021). Solidity Blog (2024) dalam dokumentasi resminya menjelaskan bahwa desain *transient storage* terinspirasi dari kebutuhan akan mekanisme penyimpanan sementara yang efisien gas untuk kasus penggunaan seperti *reentrancy guard* dan *cross-function state tracking*.
 
 *Transient storage* merupakan mekanisme penyimpanan sementara yang berbeda dari *storage* permanen (SSTORE/SLOAD) dalam tiga aspek kritis:
 
@@ -167,7 +167,7 @@ Penghematan ini bersifat eksponensial untuk *bridge* dengan volume transaksi tin
 
 ### 2.4.3 Aplikasi dalam Smart Contract Security
 
-OpenZeppelin telah mengadopsi EIP-1153 untuk implementasi `TransientStorageGuard` yang menggantikan `ReentrancyGuard` konvensional (OpenZeppelin, 2024). Guard ini menggunakan TSTORE untuk melacak status *reentrancy*, yang direset secara otomatis di akhir transaksi tanpa memerlukan fungsi `_unlock()` eksplisit.
+Zhang, A. & Debono (2024) dalam studi dampak EIP-1153 terhadap ekosistem Ethereum menemukan bahwa dari sekitar 250 kontrak yang menggunakan *transient storage*, lebih dari 60 di antaranya merupakan kontrak yang di-*deploy* lintas *chain*. Temuan ini menunjukkan adopsi yang luas meskipun penggunaan *transient storage* masih terbatas pada penggunaan *inline assembly* karena dukungan *compiler* yang baru mulai tersedia.
 
 Solady, *library* Solidity yang dikembangkan oleh Vector Finance, juga menyediakan `TransientStorageLock` yang mengimplementasikan mekanisme serupa (Solady, 2023). Kedua implementasi ini membuktikan bahwa EIP-1153 telah diterima secara luas dalam ekosistem Solidity sebagai standar baru untuk *reentrancy guard*.
 
@@ -445,7 +445,13 @@ Integrasi kelima pilar ini menghasilkan arsitektur *bridge* yang tidak hanya ama
 
 [15] Ethereum Foundation. (2024). "Blob Fee Market Documentation." ethereum.org.
 
-[16] EIP-1153. (2021). "Transient Storage Opcodes." Ethereum Improvement Proposals.
+[16] EIP-1153. (2021). "Transient Storage Opcodes." Ethereum Improvement Proposals. https://eips.ethereum.org/EIPS/eip-1153.
+
+[17] Solidity Blog. (2024). "Transient Storage in Solidity." Solidity Programming Language. https://soliditylang.org/blog/2024/01/26/transient-storage/.
+
+[18] Ethereum Magicians. (2018). "EIP-1153: Transient Storage Opcodes." Fellowship of Ethereum Magicians. https://ethereum-magicians.org/t/eip-1153-transient-storage-opcodes/553.
+
+[19] Zhang, A. & Debono, M. (2024). "Transient Storage in the wild: An impact study on EIP-1153." Dedaub. https://dedaub.com/blog/transient-storage-in-the-wild-an-impact-study-on-eip-1153/.
 
 [17] EIP-1967. (2020). "Standard Proxy Storage Slots." Ethereum Improvement Proposals.
 
