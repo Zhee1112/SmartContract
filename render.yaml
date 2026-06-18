@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: optimalisasi-smart-contract
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: node backend/server.js
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 10000
