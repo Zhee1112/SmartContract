@@ -24,9 +24,9 @@
 - **[9]** Ethereum Improvement Proposals. "CEI Pattern Guidelines." - Rekomendasi resmi.
 
 ### 2.3 Case Studies (Real-World Attacks)
-- **[10]** Chainalysis (2022). "Ronin Bridge Exploit Analysis." - $620M reentrancy attack.
-- **[11]** Trail of Bits (2022). "Wormhole Bridge Security Report." - $320M exploit analysis.
-- **[12]** Rekt.news. "Top DeFi Hacks 2020-2024." - Database serangan DeFi.
+- **[10]** Zheng et al. (2023). "Turn the Rudder: A Beacon of Reentrancy Detection for Smart Contracts on Ethereum." - Statistik serangan reentrancy real-world.
+- **[11]** Shou et al. (2023). "ItyFuzz: On-chain Auditing of DeFi Projects." - Analisis eksploitasi Nomad Bridge ($190M).
+- **[12]** Trail of Bits (2022). "Wormhole Bridge Security Report." - Analisis eksploitasi $320M.
 
 ---
 
