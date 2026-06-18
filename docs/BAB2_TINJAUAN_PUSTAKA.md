@@ -217,7 +217,7 @@ Di mana `Δv` adalah jumlah transaksi korban dan `x` adalah jumlah *frontrun* pe
 
 Dalam konteks *bridge*, *sandwich attack* memiliki dampak yang lebih luas dibandingkan DEX biasa. Pengguna *bridge* tidak hanya kehilangan nilai akibat *slippage*, tetapi juga menghadapi risiko keamanan yang lebih serius. Data dari Flashbots (2021) menunjukkan bahwa MEV bot telah mengumpulkan keuntungan lebih dari $600 juta dalam bentuk ETH dari ekosistem DeFi sejak 2020.
 
-Barbereau et al. (2023) dalam analisisnya terhadap struktur pasar DeFi menunjukkan bahwa *sandwich attack* menjadi ancaman struktural yang tidak dapat dihilangkan sepenuhnya melalui mekanisme konsensus. Solusi mitigasi memerlukan pendekatan pada lapisan aplikasi, termasuk: (1) *encrypted mempool* yang mengenkripsi transaksi sampai dieksekusi, (2) *commit-reveal scheme* yang menunda pengungkapan detail transaksi, dan (3) *on-chain monitoring* yang mendeteksi pola serangan secara real-time.
+Qin et al. (2021) dalam analisisnya terhadap nilai yang dapat diekstraksi dari blockchain menunjukkan bahwa *sandwich attack* menjadi ancaman struktural yang tidak dapat dihilangkan sepenuhnya melalui mekanisme konsensus. Solusi mitigasi memerlukan pendekatan pada lapisan aplikasi, termasuk: (1) *encrypted mempool* yang mengenkripsi transaksi sampai dieksekusi, (2) *commit-reveal scheme* yang menunda pengungkapan detail transaksi, dan (3) *on-chain monitoring* yang mendeteksi pola serangan secara real-time.
 
 ### 2.5.4 Strategi Mitigasi MEV
 
@@ -403,7 +403,7 @@ Berdasarkan tinjauan pustaka yang telah diuraikan, kerangka konseptual penelitia
 
 2. **EIP-1153 Transient Storage** (Bagian 2.4): Mekanisme TSTORE/TLOAD untuk *reentrancy guard* yang efisien dan pelacakan status transaksi (Paradigm, 2023; OpenZeppelin, 2024).
 
-3. **MEV Protection On-Chain** (Bagian 2.5): Deteksi pola *sandwich attack* dan penerapan penalti ekonomi melalui EWS (Daian et al., 2020; Barbereau et al., 2023).
+3. **MEV Protection On-Chain** (Bagian 2.5): Deteksi pola *sandwich attack* dan penerapan penalti ekonomi melalui EWS (Daian et al., 2020; Qin et al., 2021).
 
 4. **Dynamic Rollup Submission** (Bagian 2.9): *Routing* dynamic antara *blob* dan *calldata* berdasarkan harga gas *real-time* (Park et al.; Ethereum Foundation, 2024).
 
@@ -423,7 +423,7 @@ Integrasi kelima pilar ini menghasilkan arsitektur *bridge* yang tidak hanya ama
 
 [4] Samreen, N.F. & Alalfi, M.H. (2020). "Reentrancy Vulnerability Identification in Ethereum Smart Contracts." *IEEE International Conference on Software Maintenance and Evolution*.
 
-[5] Barbereau, T. et al. (2023). "Decentralised Finance's Unregulated Market Structure." *Journal of Risk and Financial Management*.
+[5] Qin, K. et al. (2021). "Quantifying Blockchain Extractable Value: How dark is the forest?" *arXiv preprint*.
 
 [6] Benedetti, A., Henry, T., & Tucci-Piergiovanni, S. "A Comparative Gas Cost Analysis of Proxy and Diamond Patterns in EVM Blockchains for Trusted Smart Contract Engineering."
 

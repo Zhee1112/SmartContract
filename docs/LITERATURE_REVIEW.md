@@ -80,7 +80,7 @@
 
 ### 5.2 Sandwich Attacks
 - **[31]** Qin, K. et al. (2021). "Quantifying Blockchain Extractable Value." - Kuantifikasi MEV.
-- **[32]** Barbereau, T. et al. (2023). "Decentralised Finance's Unregulated Market Structure." - Analisis sandwich attack.
+- **[32]** Qin, K. et al. (2021). "Quantifying Blockchain Extractable Value: How dark is the forest?" - Analisis MEV dan sandwich attack.
 
 ### 5.3 MEV Mitigation
 - **[33]** Flashbots. "MEV-Share: MEV Redistribution." - Mitigasi MEV.
