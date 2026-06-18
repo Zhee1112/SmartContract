@@ -219,7 +219,7 @@ Penelitian ini mendefinisikan lima tipe aktor dalam model ancaman:
 
 ### 3.3.2 Vektor Serangan
 
-**Reentrancy Attack** (Atzei et al., 2017; Samreen & Alalfi, 2020):
+**Reentrancy Attack** (Samreen & Alalfi, 2020; Zheng et al., 2023):
 Attacker melakukan panggilan rekursif ke fungsi withdraw sebelum state balance diperbarui (Feng et al., 2023).
 
 ```
@@ -583,4 +583,4 @@ scripts/
 
 [9] Trail of Bits. "Smart Contract Security Assessment Methodology."
 
-[10] Atzei, N. et al. (2017). "A Survey of Formal Verification Methods for Smart Contracts." arXiv preprint.
+[10] Samreen, N.F. & Alalfi, M.H. (2020). "Reentrancy Vulnerability Identification in Ethereum Smart Contracts." IEEE International Conference on Software Maintenance and Evolution.

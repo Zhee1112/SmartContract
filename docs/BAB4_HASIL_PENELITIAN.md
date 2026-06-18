@@ -51,7 +51,7 @@ Tabel berikut menyajikan data gas rata-rata dari 100 sampel untuk setiap operasi
 
 ### 4.3.1 Serangan Reentrancy
 
-Serangan reentrancy diuji menggunakan metodologi yang dikembangkan oleh Atzei et al. (2017) dan Samreen & Alalfi (2020):
+Serangan reentrancy diuji menggunakan metodologi yang dikembangkan oleh Samreen & Alalfi (2020) dan Zheng et al. (2023):
 
 | Serangan | Tier A | Tier B | Tier C | Tier D |
 |----------|--------|--------|--------|--------|

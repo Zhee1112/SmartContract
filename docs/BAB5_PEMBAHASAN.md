@@ -124,7 +124,7 @@ Temuan ini selaras dengan rekomendasi Consensys (2024) yang menyarankan bahwa ko
 
 ### 5.2.3 Hasil Verifikasi Serangan
 
-Hasil pengujian serangan yang dilaporkan pada BAB IV (Bagian 4.3) menunjukkan bahwa Tier D berhasil memblokir seluruh jenis serangan yang diuji (Atzei et al., 2017; Samreen & Alalfi, 2020):
+Hasil pengujian serangan yang dilaporkan pada BAB IV (Bagian 4.3) menunjukkan bahwa Tier D berhasil memblokir seluruh jenis serangan yang diuji (Samreen & Alalfi, 2020; Zheng et al., 2023):
 
 **Single-function Reentrancy:** Attacker melakukan panggilan rekursif ke fungsi withdraw. Tier D mendeteksi depth > 0 melalui `_callDepth()` dan langsung revert dengan `ReentrancyDetected()`. Hasil: DIBLOKIR (Yu et al., 2022).
 
@@ -696,7 +696,7 @@ Temuan-temuan ini secara kolektif mendukung tesis utama penelitian: **EIP-1153 t
 ## Referensi Bab 5
 
 1. Albert, P. et al. (2021). "Gas Profiling of Smart Contracts." IEEE Transactions on Software Engineering.
-2. Atzei, N. et al. (2017). "A Survey of Formal Verification Methods for Smart Contracts." European Symposium on Research in Computer Security (ESORICS).
+2. Samreen, N.F. & Alalfi, M.H. (2020). "Reentrancy Vulnerability Identification in Ethereum Smart Contracts." IEEE International Conference on Software Maintenance and Evolution.
 3. Benedetti, M. et al. (2024). "Gas Cost Analysis of EIP-1153 Transient Storage." arXiv preprint.
 4. Casale-Brunet, S. (2024). "Secure-by-Design Smart Contracts." IEEE Conference on Software Maintenance and Evolution.
 5. Cohen, J. (1988). "Statistical Power Analysis for the Behavioral Sciences." Lawrence Erlbaum Associates.

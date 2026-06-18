@@ -15,7 +15,7 @@
 ## 2. Smart Contract Security
 
 ### 2.1 Reentrancy Attacks
-- **[5]** Atzei, N. et al. (2017). "Formal Analysis of Ethereum Smart Contracts." - Analisis formal keamanan Ethereum, termasuk reentrancy.
+- **[5]** Samreen, N.F. & Alalfi, M.H. (2020). "Reentrancy Vulnerability Identification in Ethereum Smart Contracts." - Deteksi reentrancy dengan static dan dynamic analysis.
 - **[6]** OpenZeppelin. "ReentrancyGuard Documentation." - Standar industri untuk pencegahan reentrancy.
 - **[7]** SWC Registry. "SWC-107: Reentrancy." - Klasifikasi resmi reentrancy vulnerability.
 
@@ -204,7 +204,7 @@
 ### Wajib Dikutip (Minimum 20)
 1. [21] EIP-1153 — Core contribution
 2. [42] EIP-4844 — Core contribution
-3. [5] Atzei et al. — Formal analysis
+3. [5] Samreen & Alalfi — Reentrancy detection
 4. [6] OpenZeppelin — ReentrancyGuard
 5. [29] Daian et al. — MEV fundamentals
 6. [30] Flashbots — MEV research

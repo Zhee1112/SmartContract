@@ -37,7 +37,7 @@ Model ini relevan dengan penelitian karena setiap instruksi yang dieksekusi memi
 
 ### 2.2.1 Reentrancy Attack
 
-*Reentrancy attack* merupakan salah satu celah keamanan paling kritis dalam *smart contract*, di mana penyerang melakukan panggilan rekursif ke fungsi *withdraw* sebelum *state balance* diperbarui (Atzei et al., 2017). Serangan ini pertama kali didokumentasikan secara luas melalui insiden The DAO pada tahun 2016, yang mengakibatkan kerugian sebesar $60 juta ETH.
+*Reentrancy attack* merupakan salah satu celah keamanan paling kritis dalam *smart contract*, di mana penyerang melakukan panggilan rekursif ke fungsi *withdraw* sebelum *state balance* diperbarui (Samreen & Alalfi, 2020). Serangan ini pertama kali didokumentasikan secara luas melalui insiden The DAO pada tahun 2016, yang mengakibatkan kerugian sebesar $60 juta ETH (Zheng et al., 2023).
 
 Feng et al. dalam tinjauan komprehensifnya mengenai pencarian *bug* pada *smart contract* mengidentifikasi *reentrancy* sebagai salah satu dari beberapa kerentanan kritis yang paling sering ditemukan dalam kontrak Solidity. Temuan mereka menunjukkan bahwa deteksi kerentanan memerlukan pendekatan gabungan antara analisis statis dan eksekusi simbolis untuk mencapai cakupan yang komprehensif.
 
@@ -421,7 +421,7 @@ Integrasi kelima pilar ini menghasilkan arsitektur *bridge* yang tidak hanya ama
 
 [3] Antonopoulos, G. et al. (2018). "Mastering Ethereum." O'Reilly Media.
 
-[4] Atzei, N. et al. (2017). "Formal Analysis of Ethereum Smart Contracts." *European Symposium on Research in Computer Security (ESORICS)*.
+[4] Samreen, N.F. & Alalfi, M.H. (2020). "Reentrancy Vulnerability Identification in Ethereum Smart Contracts." *IEEE International Conference on Software Maintenance and Evolution*.
 
 [5] Barbereau, T. et al. (2023). "Decentralised Finance's Unregulated Market Structure." *Journal of Risk and Financial Management*.
 
