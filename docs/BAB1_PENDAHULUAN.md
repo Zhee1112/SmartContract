@@ -46,7 +46,7 @@ Berdasarkan rumusan masalah di atas, tujuan penelitian ini adalah:
 
 1. **Kontribusi ilmu pengetahuan** dalam bidang optimasi gas smart contract menggunakan EIP-1153 transient storage, khususnya untuk arsitektur bridge yang memerlukan tingkat keamanan tinggi.
 
-2. **Bukti empiris** tentang tradeoff antara biaya gas dan tingkat keamanan pada arsitektur bridge 3-tier, memberikan landasan empiris bagi pengambil keputusan dalam desain bridge.
+2. **Bukti empiris** tentang tradeoff antara biaya gas dan tingkat keamanan pada arsitektur bridge 4-tier, memberikan landasan empiris bagi pengambil keputusan dalam desain bridge.
 
 3. **Framework analisis statistik** untuk perbandingan kinerja bridge yang dapat diadopsi oleh peneliti lain, termasuk metodologi pengukuran gas menggunakan 100 sampel per operasi dan analisis significance testing.
 
