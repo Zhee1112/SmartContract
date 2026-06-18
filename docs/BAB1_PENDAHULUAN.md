@@ -6,7 +6,7 @@ Pertumbuhan Decentralized Finance (DeFi) pada jaringan Ethereum telah menciptaka
 
 Data dari Zheng et al. (2023) menunjukkan bahwa serangan reentrancy telah menyebabkan kerugian jutaan dolar dalam ekosistem DeFi, termasuk serangan DAO senilai $150 juta dan berbagai serangan lainnya yang tercatat hingga tahun 2022. Eksploitasi bridge juga mengalami peningkatan signifikan, termasuk serangan terhadap Ronin Bridge ($620 juta), Wormhole Bridge ($320 juta), dan Nomad Bridge ($190 juta) (Shou et al., 2023). Pola serangan yang paling dominan adalah reentrancy attack, di mana penyerang melakukan panggilan rekursif ke fungsi withdraw sebelum state balance diperbarui (Samreen & Alalfi, 2020). Feng et al. dalam tinjauannya mengenai pencarian bug pada smart contract mengidentifikasi reentrancy sebagai salah satu kerentanan paling kritis yang paling sering ditemukan dalam kontrak Solidity. Selain itu, Maximal Extractable Value (MEV) sandwich attack menjadi ancaman serius bagi pengguna bridge, di mana bot MEV memanfaatkan urutan transaksi dalam mempool untuk mendapatkan keuntungan dari selisih harga (Daian et al., 2020; Qin et al., 2021).
 
-Permasalahan mendasar dalam desain bridge adalah tradeoff antara biaya gas dan tingkat keamanan (Li, 2025; Nassirzadeh et al., 2023). Bridge yang menggunakan mekanisme pertahanan lengkap seperti reentrancy guard konvensional (OpenZeppelin ReentrancyGuard) membutuhkan biaya gas yang signifikan, yaitu sekitar 22.900 gas per transaksi untuk operasi SSTORE cold + warm (OpenZeppelin, 2023). Biaya ini menjadi beban berat bagi bridge dengan volume transaksi tinggi, mengurangi profitabilitas dan skalabilitas operasional (Albert et al., 2021; Di Sorbo et al., 2021).
+Permasalahan mendasar dalam desain bridge adalah tradeoff antara biaya gas dan tingkat keamanan (Li, 2025; Nassirzadeh et al., 2023). Bridge yang menggunakan mekanisme pertahanan lengkap seperti reentrancy guard konvensional (OpenZeppelin ReentrancyGuard) membutuhkan biaya gas yang signifikan, yaitu sekitar 22.900 gas per transaksi untuk operasi SSTORE cold + warm (OpenZeppelin, 2023). Biaya ini menjadi beban berat bagi bridge dengan volume transaksi tinggi, mengurangi profitabilitas dan skalabilitas operasional (Benedetti et al., 2024; Di Sorbo et al., 2021).
 
 Pada bulan April 2024, Ethereum mengalami fork Cancun yang mengaktifkan EIP-1153: Transient Storage Opcodes (EIP-1153, 2021). Fitur ini memperkenalkan opcodes TSTORE dan TLOAD yang memungkinkan penyimpanan sementara dengan biaya hanya 100 gas per operasi, jauh lebih rendah dibandingkan SSTORE cold (20.000 gas) atau SSTORE warm (2.900 gas). Keunggulan kritis EIP-1153 adalah mekanisme auto-reset yang mengembalikan transient storage ke nol secara otomatis di setiap akhir transaksi, sehingga tidak memerlukan biaya reset manual (Benedetti et al., 2024). Fitur ini sangat cocok untuk implementasi reentrancy guard yang efisien gas (Casale-Brunet, 2024).
 
@@ -32,7 +32,7 @@ Berdasarkan latar belakang yang telah diuraikan, penelitian ini merumuskan masal
 
 Berdasarkan rumusan masalah di atas, tujuan penelitian ini adalah:
 
-1. Mengimplementasikan optimasi gas statis (variable packing, CEI pattern, unchecked arithmetic, custom errors) dan dinamis (EIP-1153 TSTORE/TLOAD) pada smart contract bridge (Albert et al., 2021; Di Sorbo et al., 2021), serta mengukur penghematan gas yang dicapai dibandingkan baseline tanpa optimasi (Yu et al., 2022).
+1. Mengimplementasikan optimasi gas statis (variable packing, CEI pattern, unchecked arithmetic, custom errors) dan dinamis (EIP-1153 TSTORE/TLOAD) pada smart contract bridge (Benedetti et al., 2024; Di Sorbo et al., 2021), serta mengukur penghematan gas yang dicapai dibandingkan baseline tanpa optimasi (Wang et al., 2024).
 
 2. Mendesain dan mengimplementasikan Early Warning System (EWS) yang menggunakan transient storage untuk melacak call depth, mendeteksi pola MEV sandwich attack (Ta1 → Tv), dan menerapkan penalti ekonomi dinamis berdasarkan formula λ × P_detect × amount (Nassirzadeh et al., 2023; Li, 2025).
 
@@ -46,7 +46,7 @@ Berdasarkan rumusan masalah di atas, tujuan penelitian ini adalah:
 
 1. **Kontribusi ilmu pengetahuan** dalam bidang optimasi gas smart contract menggunakan EIP-1153 transient storage (Benedetti et al., 2024), khususnya untuk arsitektur bridge yang memerlukan tingkat keamanan tinggi (Casale-Brunet, 2024).
 
-2. **Bukti empiris** tentang tradeoff antara biaya gas dan tingkat keamanan pada arsitektur bridge 4-tier (Albert et al., 2021; Di Sorbo et al., 2021), memberikan landasan empiris bagi pengambil keputusan dalam desain bridge.
+2. **Bukti empiris** tentang tradeoff antara biaya gas dan tingkat keamanan pada arsitektur bridge 4-tier (Benedetti et al., 2024; Di Sorbo et al., 2021), memberikan landasan empiris bagi pengambil keputusan dalam desain bridge.
 
 3. **Framework analisis statistik** untuk perbandingan kinerja bridge yang dapat diadopsi oleh peneliti lain (Lagouvardos et al., 2024), termasuk metodologi pengukuran gas menggunakan 100 sampel per operasi dan analisis significance testing.
 

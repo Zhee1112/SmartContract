@@ -39,7 +39,7 @@ Model ini relevan dengan penelitian karena setiap instruksi yang dieksekusi memi
 
 *Reentrancy attack* merupakan salah satu celah keamanan paling kritis dalam *smart contract*, di mana penyerang melakukan panggilan rekursif ke fungsi *withdraw* sebelum *state balance* diperbarui (Samreen & Alalfi, 2020). Serangan ini pertama kali didokumentasikan secara luas melalui insiden The DAO pada tahun 2016, yang mengakibatkan kerugian sebesar $60 juta ETH (Zheng et al., 2023).
 
-Feng et al. dalam tinjauan komprehensifnya mengenai pencarian *bug* pada *smart contract* mengidentifikasi *reentrancy* sebagai salah satu dari beberapa kerentanan kritis yang paling sering ditemukan dalam kontrak Solidity. Temuan mereka menunjukkan bahwa deteksi kerentanan memerlukan pendekatan gabungan antara analisis statis dan eksekusi simbolis untuk mencapai cakupan yang komprehensif.
+Zheng et al. dalam penelitiannya mengenai deteksi reentrancy pada smart contract menunjukkan bahwa *reentrancy* merupakan salah satu kerentanan paling kritis yang menyebabkan kerugian jutaan dolar. Temuan mereka menunjukkan bahwa deteksi kerentanan memerlukan pendekatan gabungan antara analisis statis dan eksekusi dinamis untuk mencapai cakupan yang komprehensif.
 
 Secara formal, *reentrancy attack* dapat didefinisikan sebagai berikut:
 
@@ -104,7 +104,7 @@ Benedetti et al. dalam analisis biaya gas pada pola *proxy* dan *diamond* menunj
 
 Solidity 0.8.x secara default menerapkan pemeriksaan *overflow/underflow* pada setiap operasi aritmatika. Meskipun ini meningkatkan keamanan, pemeriksaan tersebut menambah biaya gas sekitar 20-50 gas per operasi. Pada situasi di mana *overflow* dapat dipastikan tidak terjadi — misalnya setelah validasi input yang memastikan nilai positif — blok `unchecked` dapat digunakan untuk menghilangkan pemeriksaan ini (Solidity Documentation, 2023).
 
-Albert et al. dalam penelitiannya mengenai pencegahan kerentanan *out-of-gas* melalui analisis sumber daya statis menunjukkan bahwa optimasi gas yang agresif tanpa pertimbangan batas *gas limit* justru dapat menciptakan kerentanan baru. Oleh karena itu, penggunaan blok `unchecked` harus dibatasi pada konteks di mana keamanan aritmatika sudah dijamin melalui mekanisme lain.
+Benedetti et al. dalam penelitiannya mengenai biaya gas pada smart contract menunjukkan bahwa optimasi gas yang agresif tanpa pertimbangan batas *gas limit* justru dapat menciptakan kerentanan baru. Oleh karena itu, penggunaan blok `unchecked` harus dibatasi pada konteks di mana keamanan aritmatika sudah dijamin melalui mekanisme lain.
 
 Pada penelitian ini, blok `unchecked` diterapkan pada *increment balance* dalam fungsi `deposit` dan *decrement balance* dalam fungsi `withdraw`. Penghematan gas yang dihasilkan sekitar 20 gas per operasi, yang secara kumulatif menjadi signifikan untuk *bridge* dengan volume transaksi tinggi.
 
@@ -419,7 +419,7 @@ Integrasi kelima pilar ini menghasilkan arsitektur *bridge* yang tidak hanya ama
 
 [2] Albert, E. et al. "Running on Fumes: Preventing Out-of-Gas Vulnerabilities in Ethereum Smart Contracts using Static Resource Analysis." *Proceedings of the ACM on Programming Languages*.
 
-[3] Antonopoulos, G. et al. (2018). "Mastering Ethereum." O'Reilly Media.
+[3] Benedetti, M. et al. (2024). "Gas Cost Analysis of EIP-1153 Transient Storage." arXiv preprint.
 
 [4] Samreen, N.F. & Alalfi, M.H. (2020). "Reentrancy Vulnerability Identification in Ethereum Smart Contracts." *IEEE International Conference on Software Maintenance and Evolution*.
 
@@ -453,7 +453,7 @@ Integrasi kelima pilar ini menghasilkan arsitektur *bridge* yang tidak hanya ama
 
 [19] Ethereum StackExchange. (2023). "Storage Layout in Solidity." Stack Exchange.
 
-[20] Feng, X., Wang, Q., Zhu, X., & Wen, S. "Bug Searching in Smart Contract." *Swinburne University of Technology*.
+[20] Zheng, Z. et al. (2023). "Turn the Rudder: A Beacon of Reentrancy Detection for Smart Contracts on Ethereum." *IEEE Transactions on Software Engineering*.
 
 [21] Flashbots. (2021). "MEV Research." flashbots.net.
 

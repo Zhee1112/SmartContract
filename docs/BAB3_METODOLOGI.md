@@ -6,7 +6,7 @@ Bab ini menjelaskan desain penelitian, model matematika yang digunakan, model an
 
 ### 3.1.1 Pendekatan Penelitian
 
-Penelitian ini menggunakan pendekatan kuantitatif eksperimental dengan desain comparative study (Albert et al., 2021; Di Sorbo et al., 2021). Pendekatan ini dipilih karena penelitian bertujuan mengukur dan membandingkan kinerja gas serta tingkat keamanan pada empat arsitektur bridge yang berbeda secara sistematis dan terkontrol (Yu et al., 2022).
+Penelitian ini menggunakan pendekatan kuantitatif eksperimental dengan desain comparative study (Benedetti et al., 2024; Di Sorbo et al., 2021). Pendekatan ini dipilih karena penelitian bertujuan mengukur dan membandingkan kinerja gas serta tingkat keamanan pada empat arsitektur bridge yang berbeda secara sistematis dan terkontrol (Wang et al., 2024).
 
 Desain penelitian terdiri dari tiga tahap utama:
 
@@ -335,7 +335,7 @@ Untuk pengukuran deployment, gas dihitung dari perbedaan `gasleft()` sebelum dan
 
 **Uji statistik:** Welch's t-test (tidak asumsi variansi sama)
 
-Welch's t-test dipilih alih-alih Student's t-test karena tidak memerlukan asumsi homogenitas variansi (Welch, 1947; Lagouvardos et al., 2024). Asumsi ini sering tidak terpenuhi dalam pengukuran gas yang memiliki variance berbeda antar tier (Albert et al., 2021).
+Welch's t-test dipilih alih-alih Student's t-test karena tidak memerlukan asumsi homogenitas variansi (Welch, 1947; Lagouvardos et al., 2024). Asumsi ini sering tidak terpenuhi dalam pengukuran gas yang memiliki variance berbeda antar tier (Benedetti et al., 2024).
 
 Rumus Welch's t-test:
 
@@ -544,7 +544,7 @@ scripts/
 
 ### 3.9.1 Validitas Internal
 
-- **Kontrol variabel**: Semua parameter EVM (solc, optimizer, evm_version) dikontrol ketat (Albert et al., 2021; Di Sorbo et al., 2021).
+- **Kontrol variabel**: Semua parameter EVM (solc, optimizer, evm_version) dikontrol ketat (Benedetti et al., 2024; Di Sorbo et al., 2021).
 - **Isolasi pengukuran**: Setiap pengukuran gas menggunakan alamat unik dan transaksi terisolasi.
 - **Replikasi**: 100 sampel per kondisi memastikan kecenderungan sentral yang stabil (Lagouvardos et al., 2024).
 - **Fuzz testing**: Property-based testing memvalidasi kebenaran formulasi untuk input arbitrary (Shou et al., 2023).

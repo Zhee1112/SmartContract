@@ -10,7 +10,7 @@ Penelitian ini mengembangkan empat tier arsitektur bridge untuk membuktikan bahw
 
 ### 4.2.1 Gas per Operasi Bridge
 
-Tabel berikut menyajikan data gas rata-rata dari 100 sampel untuk setiap operasi bridge pada keempat tier (Albert et al., 2021; Di Sorbo et al., 2021):
+Tabel berikut menyajikan data gas rata-rata dari 100 sampel untuk setiap operasi bridge pada keempat tier (Benedetti et al., 2024; Di Sorbo et al., 2021):
 
 | Operasi | Tier A (Baseline) | Tier B (Static) | Tier C (Rollup Full) | Tier D (Rollup Ringan) |
 |---------|-------------------|-----------------|----------------------|----------------------|
@@ -60,7 +60,7 @@ Serangan reentrancy diuji menggunakan metodologi yang dikembangkan oleh Samreen 
 | Consecutive (3x) | BERHASIL | BERHASIL | DIBLOKIR | DIBLOKIR |
 | Profit attacker | +5 ETH | 0 ETH | 0 ETH | 0 ETH |
 
-**Temuan 5**: Tier B hanya melindungi dari reentrancy single-function melalui CEI (Feng et al., 2023). Cross-function reentrancy masih bisa mengeksploitasi Tier B karena tidak ada runtime guard (Yu et al., 2022).
+**Temuan 5**: Tier B hanya melindungi dari reentrancy single-function melalui CEI (Zheng et al., 2023). Cross-function reentrancy masih bisa mengeksploitasi Tier B karena tidak ada runtime guard (Wang et al., 2024).
 
 **Temuan 6**: Tier C dan Tier D berhasil memblokir semua jenis reentrancy berkat EIP-1153 transient storage (Zheng et al., 2023; Wang et al., 2026).
 
@@ -96,7 +96,7 @@ Deteksi MEV sandwich attack diimplementasikan menggunakan pendekatan yang dikemb
 
 ### 4.4.1 Security Points per Gas (SPG)
 
-Metrik SPG dikembangkan untuk mengukur cost-effectiveness keamanan (Zhang et al., 2022):
+Metrik SPG dikembangkan untuk mengukur cost-effectiveness keamanan (Rodler et al., 2023):
 
 | Tier | Skor Keamanan | Gas (Deposit) | SPG (×1,000,000) | Ranking |
 |------|--------------|---------------|-------------------|---------|
@@ -191,11 +191,11 @@ Estimasi biaya real-world menggunakan data gas price dari Etherscan (Park et al.
 
 1. **Modifikasi EIP-1153 efektif** (Benedetti et al., 2024; Casale-Brunet, 2024): Tier D berhasil mengimplementasikan 5 fungsi keamanan (reentrancy guard, MEV detection, economic penalty, emergency pause, block tracking) dengan biaya hanya 9,900 gas — 48.5x lebih murah dari Tier C.
 
-2. **Inline vs External Calls**: Mengganti external calls ke MonitorMock dengan inline assembly menghemat 52.9% sampai 88.4% gas per transaksi (Albert et al., 2021; Di Sorbo et al., 2021).
+2. **Inline vs External Calls**: Mengganti external calls ke MonitorMock dengan inline assembly menghemat 52.9% sampai 88.4% gas per transaksi (Benedetti et al., 2024; Di Sorbo et al., 2021).
 
 3. **Single-slot MEV Detection**: Mengganti dynamic array `txRecords[]` (22,100 gas per push) dengan single-slot `LastTx` struct (2,900 gas per write) menghemat 86.9% biaya storage (Li, 2025).
 
-4. **Cost-effectiveness terbaik** (Zhang et al., 2022): Tier D memiliki 205 Security Points per Gas — 3.15x lebih efisien dari Tier C.
+4. **Cost-effectiveness terbaik** (Rodler et al., 2023): Tier D memiliki 205 Security Points per Gas — 3.15x lebih efisien dari Tier C.
 
 5. **Peningkatan keamanan signifikan** (Zheng et al., 2023; Wang et al., 2026): Tier D meningkatkan keamanan 75% dari Tier B (4/8 → 7/8) dengan biaya hanya 8.7% lebih tinggi.
 
@@ -204,9 +204,9 @@ Estimasi biaya real-world menggunakan data gas price dari Etherscan (Park et al.
 | Kontribusi | Bukti Empiris | Referensi |
 |-----------|---------------|-----------|
 | Modifikasi EIP-1153 menjadi multiguna | 5 fungsi keamanan dalam 1 kontrak (9,900 gas) | Benedetti et al., 2024 |
-| Inline vs External calls | Tier D 11x lebih murah dari Tier C | Albert et al., 2021; Di Sorbo et al., 2021 |
+| Inline vs External calls | Tier D 11x lebih murah dari Tier C | Benedetti et al., 2024; Di Sorbo et al., 2021 |
 | Single-slot MEV detection | 1 slot vs dynamic array = hemat 17,700 gas | Li, 2025; Nassirzadeh et al., 2023 |
-| Cost-effectiveness terbaik | 205 SPG (ranking 1 dari 4 tier) | Zhang et al., 2022; Zhou et al., 2026 |
+| Cost-effectiveness terbaik | 205 SPG (ranking 1 dari 4 tier) | Rodler et al., 2023; Zhou et al., 2026 |
 | Peningkatan keamanan | +75% dari Tier B, +87.5% dari Tier A | Zheng et al., 2023; Wang et al., 2026 |
 
 ---
