@@ -329,11 +329,11 @@ Untuk pengukuran deployment, gas dihitung dari perbedaan `gasleft()` sebelum dan
 
 ### 3.5.1 Uji Hipotesis
 
-**H₀ (Null Hypothesis):** Tidak ada perbedaan signifikan gas cost antara bridge statis dan bridge dinamis.
+**H₀ (Null Hypothesis):** Tidak ada perbedaan bermakna gas cost antara bridge statis dan bridge dinamis.
 
-**H₁ (Alternative):** Bridge dinamis (EWS + EIP-1153) memiliki gas cost yang berbeda secara signifikan dibandingkan bridge statis.
+**H₁ (Alternative):** Bridge dinamis (EWS + EIP-1153) memiliki gas cost yang berbeda dari bridge statis.
 
-**Uji statistik:** Welch's t-test (tidak asumsi variansi sama)
+**Uji statistik:** Welch's t-test (tidak memerlukan asumsi variansi sama)
 
 Welch's t-test dipilih alih-alih Student's t-test karena tidak memerlukan asumsi homogenitas variansi (Welch, 1947; Lagouvardos et al., 2024). Asumsi ini sering tidak terpenuhi dalam pengukuran gas yang memiliki variance berbeda antar tier (Benedetti et al., 2024).
 

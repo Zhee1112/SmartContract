@@ -1,6 +1,6 @@
 # BAB 5: PEMBAHASAN
 
-Bab ini mendiskusikan hasil-hasil penelitian yang telah disajikan pada Bab IV dalam konteks teori, literatur terdahulu, dan implikasi praktis. Pembahasan disusun secara berjenjang, dimulai dari analisis gas cost, evaluasi keamanan, cost-effectiveness, modifikasi EIP-1153, estimasi biaya real-world, validasi statistik, perbandingan static vs dynamic, perbandingan dengan studi terdahulu, keterbatasan penelitian, hingga implikasi praktis bagi pengembang DeFi dan operator bridge.
+Bab ini mendiskusikan hasil-hasil penelitian dari Bab IV dengan menghubungkannya terhadap teori, literatur terdahulu, dan implikasi praktis. Pembahasan disusun secara berjenjang: dimulai dari analisis gas cost, evaluasi keamanan, cost-effectiveness, modifikasi EIP-1153, estimasi biaya real-world, validasi statistik, perbandingan static vs dynamic, perbandingan dengan studi terdahulu, keterbatasan penelitian, hingga implikasi praktis bagi pengembang DeFi dan operator bridge.
 
 ---
 
@@ -8,9 +8,9 @@ Bab ini mendiskusikan hasil-hasil penelitian yang telah disajikan pada Bab IV da
 
 ### 5.1.1 Mengapa Tier D (Rollup Ringan) Lebih Murah
 
-Hasil pengukuran menunjukkan bahwa Tier D (LightweightBridge) hanya memerlukan 34.156 gas untuk operasi deposit, hanya 8.7% lebih tinggi dari Tier B (31.427 gas) yang tanpa keamanan dinamis, namun **72.2% lebih murah** dari Tier C (122.769 gas) (Benedetti et al., 2024; Di Sorbo et al., 2021). Perbedaan yang sangat signifikan ini menuntut analisis mendalam terhadap sumber-sumber biaya yang mendasari masing-masing arsitektur (Li, 2025).
+Hasil pengukuran memperlihatkan bahwa Tier D (LightweightBridge) hanya memerlukan 34.156 gas untuk operasi deposit — angka ini hanya 8.7% lebih tinggi dari Tier B (31.427 gas) yang sama sekali tanpa keamanan dinamis, tetapi **72.2% lebih murah** dari Tier C (122.769 gas) (Benedetti et al., 2024; Di Sorbo et al., 2021). Perbedaan yang amat besar ini menuntut analisis mendalam terhadap sumber-sumber biaya di balik masing-masing arsitektur (Li, 2025).
 
-Faktor utama yang menyebabkan Tier D tetap murah adalah penggunaan pendekatan **inline assembly** untuk seluruh mekanisme keamanan dinamis. Sebagaimana dirancang pada kontrak `LightweightBridge.sol` (Baris 83-99), fungsi `_enterCall()`, `_exitCall()`, dan `_callDepth()` diimplementasikan langsung dalam satu kontrak menggunakan opcode TSTORE dan TLOAD yang masing-masing hanya berbiaya 100 gas. Tidak ada satu pun external call yang dilakukan ke kontrak lain selama operasi transaksi berjalan.
+Faktor utama yang menjaga Tier D tetap murah terletak pada penggunaan **inline assembly** untuk seluruh mekanisme keamanan dinamis. Seperti yang dirancang pada kontrak `LightweightBridge.sol` (Baris 83-99), fungsi `_enterCall()`, `_exitCall()`, dan `_callDepth()` diimplementasikan langsung dalam satu kontrak menggunakan opcode TSTORE dan TLOAD yang masing-masing hanya berbiaya 100 gas. Tidak ada satu pun external call ke kontrak lain selama operasi transaksi berjalan.
 
 Secara rinci, komponen keamanan inline pada Tier D memiliki rincian biaya sebagai berikut:
 
@@ -22,7 +22,7 @@ Secara rinci, komponen keamanan inline pada Tier D memiliki rincian biaya sebaga
 | Transaction recording | SSTORE × 2 (warm write) | 5.800 |
 | **Total overhead keamanan** | | **~10.800** |
 
-Jumlah ini sangat kompak dan terlokalisasi dalam satu kontrak. Tidak ada komponen yang memerlukan akses storage silang kontrak (cross-contract storage access), yang merupakan salah satu sumber biaya terbesar dalam arsitektur konvensional.
+Jumlah ini sangat kompak dan terlokalisasi dalam satu kontrak. Tidak ada komponen yang memerlukan akses storage silang kontrak (*cross-contract storage access*), yang merupakan salah satu sumber biaya terbesar dalam arsitektur konvensional.
 
 ### 5.1.2 Mengapa Tier C (Rollup Full) Lebih Mahal
 
@@ -34,7 +34,7 @@ Sebaliknya, Tier C (VictimBridge) memerlukan 122.769 gas untuk deposit — **3.9
 4. `monitor.calculatePenalty()` — menghitung penalti ekonomi
 5. `monitor.exitCall()` — melepaskan reentrancy lock
 
-Setiap external call ini memerlukan biaya yang signifikan karena mekanisme CALL opcode pada EVM:
+Setiap external call ini menanggung biaya yang berat karena mekanisme CALL opcode pada EVM:
 
 | Sumber Biaya | Tier C (External) | Tier D (Inline) | Selisih |
 |--------------|-------------------|-----------------|---------|
@@ -47,7 +47,7 @@ Setiap external call ini memerlukan biaya yang signifikan karena mekanisme CALL 
 | Inline SLOAD (warm) | 0 | ~4.400 | +4.400 |
 | **Total overhead** | **~74.100** | **~12.200** | **-61.900** |
 
-Temuan ini mengkonfirmasi hipotesis bahwa **60% biaya tambahan Tier C berasal dari external calls ke MonitorMock**. Komponen terbesar adalah dynamic array `txRecords[]` yang memerlukan SSTORE sebesar 22.100 gas per push (karena setiap push menulis ke slot baru yang bersifat cold). Dalam kontras, Tier D menggunakan single-slot `LastTx` struct yang hanya memerlukan 2.900 gas untuk setiap overwrite (warm write ke slot yang sama).
+Temuan ini memperkuat hipotesis bahwa **60% biaya tambahan Tier C berasal dari external calls ke MonitorMock**. Komponen terbesar adalah dynamic array `txRecords[]` yang memerlukan SSTORE sebesar 22.100 gas per push — setiap push menulis ke slot baru bersifat cold. Sebagai perbandingan, Tier D menggunakan single-slot `LastTx` struct yang hanya memerlukan 2.900 gas untuk setiap overwrite (warm write ke slot yang sama).
 
 ### 5.1.3 Analisis Rasio Gas antar Tier
 
@@ -60,13 +60,13 @@ Analisis rasio gas memperkuat temuan di atas:
 | B → D | 1.09x – 1.25x | Modifikasi inline hanya menambah sedikit gas |
 | C → D | 0.08x – 0.12x | Inline 8x – 11x lebih murah dari external calls |
 
-Rasio ini menunjukkan pola yang konsisten di seluruh operasi bridge. Untuk operasi withdraw, disparitas bahkan lebih mencolok: Tier C memerlukan 104.806 gas sementara Tier D hanya 12.119 gas — rasio 10.77x. Hal ini terjadi karena withdraw melibatkan lebih banyak interaksi storage (pembacaan balance, penulisan balance, transfer ETH), dan setiap interaksi tersebut pada Tier C harus dilengkapi dengan external calls ke MonitorMock.
+Pola ini konsisten di seluruh operasi bridge. Untuk operasi withdraw, disparitas bahkan lebih mencolok: Tier C memerlukan 104.806 gas sementara Tier D hanya 12.119 gas — rasio 10.77x. Withdraw melibatkan lebih banyak interaksi storage (pembacaan balance, penulisan balance, transfer ETH), dan setiap interaksi tersebut pada Tier C harus disertai dengan external calls ke MonitorMock.
 
 ### 5.1.4 Implikasi terhadap Skala Operasional
 
-Perbedaan gas yang sangat signifikan ini memiliki implikasi besar terhadap skalabilitas operasional bridge. Pada volume transaksi tinggi — misalnya 100.000 transaksi per bulan — akumulasi perbedaan gas menjadi sangat substansial. Tier C akan mengkonsumsi sekitar 12,28 miliar gas per bulan, sedangkan Tier D hanya 3,42 miliar gas — selisih 8,86 miliar gas. Pada harga gas 30 Gwei, selisih ini setara dengan sekitar $79.000 per bulan (berdasarkan estimasi pada BAB IV).
+Perbedaan gas yang luar biasa ini berdampak besar terhadap skalabilitas operasional bridge. Pada volume transaksi tinggi — misalnya 100.000 transaksi per bulan — akumulasi perbedaan gas menjadi sangat substansial. Tier C akan mengkonsumsi sekitar 12,28 miliar gas per bulan, sedangkan Tier D hanya 3,42 miliar gas — selisih 8,86 miliar gas. Pada harga gas 30 Gwei, selisih ini setara dengan sekitar $79.000 per bulan (berdasarkan estimasi pada BAB IV).
 
-Temuan ini konsisten dengan prinsip desain arsitektur kontrak yang dianjurkan oleh Trail of Bits (2024): meminimalkan external calls ketika fungsionalitas yang sama dapat diimplementasikan secara inline. External calls tidak hanya menambah biaya gas, tetapi juga memperluas attack surface dan menambah kompleksitas audit keamanan.
+Temuan ini sejalan dengan prinsip desain arsitektur kontrak yang dianjurkan oleh Trail of Bits (2024): meminimalkan external calls ketika fungsionalitas yang sama dapat diimplementasikan secara inline. External calls tidak hanya menambah biaya gas, tetapi juga memperluas *attack surface* dan menambah kompleksitas audit keamanan.
 
 ---
 
@@ -74,7 +74,7 @@ Temuan ini konsisten dengan prinsip desain arsitektur kontrak yang dianjurkan ol
 
 ### 5.2.1 Pencapaian Tier D: 8/8 Skor Keamanan dengan 0 External Calls
 
-Salah satu temuan paling signifikan dari penelitian ini adalah kemampuan Tier D dalam mencapai skor keamanan **8/8** (sama dengan Tier C) tanpa satu pun external call (Zheng et al., 2023; Wang et al., 2026). Hal ini merupakan pencapaian yang bertentangan dengan asumsi konvensional dalam pengembangan smart contract, yang menganggap bahwa mekanisme keamanan dinamis harus diimplementasikan melalui kontrak terpisah (seperti MonitorMock) (Wang et al., 2024; Samreen & Alalfi, 2020).
+Salah satu temuan paling menonjol dari penelitian ini adalah kemampuan Tier D dalam mencapai skor keamanan **8/8** (sama dengan Tier C) tanpa satu pun external call (Zheng et al., 2023; Wang et al., 2026). Pencapaian ini bertentangan dengan asumsi konvensional dalam pengembangan smart contract yang menganggap mekanisme keamanan dinamis harus diimplementasikan melalui kontrak terpisah seperti MonitorMock (Wang et al., 2024; Samreen & Alalfi, 2020).
 
 Berdasarkan matrix keamanan yang disajikan pada BAB III (Bagian 3.6.1), delapan fitur keamanan yang dievaluasi adalah:
 
@@ -90,17 +90,17 @@ Berdasarkan matrix keamanan yang disajikan pada BAB III (Bagian 3.6.1), delapan 
 | 8 | Custom Errors | ✗ | ✓ | ✓ | ✓ |
 | **Total** | | **0/8** | **2/8** | **8/8** | **8/8** |
 
-Tier D mencapai skor 8/8 ini melalui implementasi yang sepenuhnya berbeda dari Tier C:
+Tier D mencapai skor 8/8 melalui implementasi yang sepenuhnya berbeda dari Tier C.
 
-**Reentrancy Guard (Fitur 1-3):** Tier D menggunakan TSTORE/TLOAD inline pada slot konstan `REENTRANCY_SLOT = 1` (LightweightBridge.sol, Baris 83-99). Mekanisme `_enterCall()`, `_callDepth()`, dan `_exitCall()` memastikan bahwa setiap panggilan rekursif akan terdeteksi dan diblokir. Berbeda dari CEI pattern pada Tier B yang hanya melindungi single-function reentrancy, mekanisme transient storage ini secara efektif memblokir cross-function dan consecutive reentrancy karena status lock bersifat global per transaksi dan direset secara otomatis.
+**Reentrancy Guard (Fitur 1-3):** Tier D menggunakan TSTORE/TLOAD inline pada slot konstan `REENTRANCY_SLOT = 1` (LightweightBridge.sol, Baris 83-99). Mekanisme `_enterCall()`, `_callDepth()`, dan `_exitCall()` memastikan panggilan rekursif terdeteksi dan diblokir. Berbeda dari CEI pattern pada Tier B yang hanya melindungi single-function reentrancy, mekanisme transient storage ini memblokir cross-function dan consecutive reentrancy karena status lock bersifat global per transaksi dan direset secara otomatis.
 
-**MEV Detection (Fitur 4):** Tier D menggunakan struct `LastTx` yang terdiri dari `sender` (address, 20 byte) dan `txType` (uint8, 1 byte), yang dikemas dalam satu slot 32-byte (LightweightBridge.sol, Baris 49-52). Deteksi sandwich dilakukan oleh fungsi `_checkAnomaly()` (Baris 101-107) yang memeriksa apakah terdapat pola frontrun → victim dalam satu blok yang sama. Pendekatan single-slot ini menggantikan dynamic array `txRecords[]` pada Tier C tanpa mengorbankan fungsionalitas deteksi.
+**MEV Detection (Fitur 4):** Tier D menggunakan struct `LastTx` yang terdiri dari `sender` (address, 20 byte) dan `txType` (uint8, 1 byte), dikemas dalam satu slot 32-byte (LightweightBridge.sol, Baris 49-52). Deteksi sandwich dilakukan oleh fungsi `_checkAnomaly()` (Baris 101-107) yang memeriksa pola frontrun → victim dalam satu blok yang sama. Pendekatan single-slot ini menggantikan dynamic array `txRecords[]` pada Tier C tanpa mengorbankan fungsionalitas deteksi.
 
-**Economic Penalty (Fitur 5):** Fungsi `_calculatePenalty()` (LightweightBridge.sol, Baris 123-127) mengimplementasikan formula penalti secara murni menggunakan aritmatika inline: `(amount * LAMBDA * anomalyScore) / 100000000`. Tidak ada storage yang dibutuhkan untuk menghitung penalti — seluruh komputasi dilakukan di memory dan stack. Hasilnya adalah biaya hanya 300 gas, dibandingkan 2.800 gas yang diperlukan oleh `monitor.calculatePenalty()` pada Tier C.
+**Economic Penalty (Fitur 5):** Fungsi `_calculatePenalty()` (LightweightBridge.sol, Baris 123-127) mengimplementasikan formula penalti secara murni menggunakan aritmatika inline: `(amount * LAMBDA * anomalyScore) / 100000000`. Seluruh komputasi dilakukan di memory dan stack tanpa memerlukan storage. Biayanya hanya 300 gas — dibandingkan 2.800 gas yang diperlukan oleh `monitor.calculatePenalty()` pada Tier C.
 
-**Emergency Pause (Fitur 6):** Flag `paused` (LightweightBridge.sol, Baris 61) diimplementasikan sebagai SSTORE biasa dengan biaya 2.900 gas untuk warm write. Fungsi `pause()` dan `unpause()` (Baris 213-225) memastikan bahwa admin dapat menghentikan seluruh operasi bridge secara instan.
+**Emergency Pause (Fitur 6):** Flag `paused` (LightweightBridge.sol, Baris 61) diimplementasikan sebagai SSTORE biasa dengan biaya 2.900 gas untuk warm write. Fungsi `pause()` dan `unpause()` (Baris 213-225) memungkinkan admin menghentikan seluruh operasi bridge secara instan.
 
-**Block Tracking (Fitur 7):** Variabel `lastTxBlock` (LightweightBridge.sol, Baris 58) mencatat nomor blok dari transaksi terakhir, memungkinkan deteksi lintas blok yang akurat. Pada Baris 102, `_checkAnomaly()` membandingkan `lastTxBlock == block.number` untuk memastikan bahwa deteksi sandwich hanya berlaku dalam satu blok yang sama.
+**Block Tracking (Fitur 7):** Variabel `lastTxBlock` (LightweightBridge.sol, Baris 58) mencatat nomor blok dari transaksi terakhir, memungkinkan deteksi lintas blok yang akurat. Pada Baris 102, `_checkAnomaly()` membandingkan `lastTxBlock == block.number` untuk memastikan deteksi sandwich hanya berlaku dalam satu blok yang sama.
 
 **Custom Errors (Fitur 8):** Seperti Tier B, Tier D menggunakan custom errors (Baris 27-35) yang menghemat sekitar 50 gas per revert dibandingkan require dengan string message.
 
@@ -118,21 +118,21 @@ Meskipun mencapai skor keamanan yang identik (8/8), Tier C dan Tier D menggunaka
 | Gas overhead keamanan | ~74.100 | ~10.800 |
 | Attack surface | Lebih luas (2 kontrak) | Lebih sempit (1 kontrak) |
 
-Perbedaan kritis yang perlu diperhatikan adalah dari perspektif **attack surface**. Tier C mengharuskan dua kontrak berinteraksi — VictimBridge dan MonitorMock. Setiap interaksi ini membuka peluang exploitasi baru: (1) reentrancy antar kontrak, (2) manipulation return value dari MonitorMock, (3) griefing attack melalui penolakan layanan pada MonitorMock, dan (4) front-running pada transaksi yang memanggil MonitorMock. Tier D menghilangkan seluruh risiko ini dengan mengonsolidasikan semua logika ke dalam satu kontrak.
+Perbedaan kritis terletak pada perspektif *attack surface*. Tier C mengharuskan dua kontrak berinteraksi — VictimBridge dan MonitorMock. Setiap interaksi membuka peluang exploitasi baru: (1) reentrancy antar kontrak, (2) manipulasi return value dari MonitorMock, (3) griefing attack melalui penolakan layanan pada MonitorMock, dan (4) front-running pada transaksi yang memanggil MonitorMock. Tier D menghilangkan seluruh risiko ini dengan mengonsolidasikan semua logika ke dalam satu kontrak.
 
-Temuan ini selaras dengan rekomendasi Consensys (2024) yang menyarankan bahwa kontrak bridge sebaiknya meminimalkan jumlah dependencies eksternal untuk mengurangi kompleksitas dan meningkatkan auditability.
+Rekomendasi Consensys (2024) selaras dengan temuan ini — kontrak bridge sebaiknya meminimalkan jumlah dependencies eksternal untuk mengurangi kompleksitas dan meningkatkan auditability.
 
 ### 5.2.3 Hasil Verifikasi Serangan
 
-Hasil pengujian serangan yang dilaporkan pada BAB IV (Bagian 4.3) menunjukkan bahwa Tier D berhasil memblokir seluruh jenis serangan yang diuji (Samreen & Alalfi, 2020; Zheng et al., 2023):
+Hasil pengujian serangan pada BAB IV (Bagian 4.3) memperlihatkan bahwa Tier D berhasil memblokir seluruh jenis serangan yang diuji (Samreen & Alalfi, 2020; Zheng et al., 2023):
 
 **Single-function Reentrancy:** Attacker melakukan panggilan rekursif ke fungsi withdraw. Tier D mendeteksi depth > 0 melalui `_callDepth()` dan langsung revert dengan `ReentrancyDetected()`. Hasil: DIBLOKIR (Wang et al., 2024).
 
-**Cross-function Reentrancy:** Attacker mengeksploitasi interaksi antara fungsi withdraw dan fungsi lainnya. Tier D tetap efektif karena transient storage lock bersifat global per transaksi — tidak peduli fungsi mana yang dipanggil, status lock akan terdeteksi (Wang et al., 2024). Hasil: DIBLOKIR.
+**Cross-function Reentrancy:** Attacker mengeksploitasi interaksi antara fungsi withdraw dan fungsi lainnya. Tier D tetap efektif karena transient storage lock bersifat global per transaksi — status lock akan terdeteksi tanpa peduli fungsi mana yang dipanggil (Wang et al., 2024). Hasil: DIBLOKIR.
 
-**Consecutive Reentrancy (3x):** Attacker melakukan 3 panggilan berurutan. Setiap panggilan memeriksa `_callDepth()` sebelum masuk ke kritis section. Hasil: DIBLOKIR di setiap panggilan.
+**Consecutive Reentrancy (3x):** Attacker melakukan 3 panggilan berurutan. Setiap panggilan memeriksa `_callDepth()` sebelum masuk ke bagian kritis. Hasil: DIBLOKIR di setiap panggilan.
 
-Hasil ini membuktikan bahwa mekanisme inline pada Tier D setidaknya seefektif mekanisme external pada Tier C dalam memblokir serangan reentrancy (Rodler et al., 2021; Zheng et al., 2023), namun dengan biaya yang jauh lebih rendah dan tanpa menambah attack surface (Nassirzadeh et al., 2023).
+Bukti ini memperkuat klaim bahwa mekanisme inline pada Tier D setidaknya seefektif mekanisme external pada Tier C dalam memblokir serangan reentrancy (Rodler et al., 2021; Zheng et al., 2023), namun dengan biaya yang jauh lebih rendah dan tanpa memperluas attack surface (Nassirzadeh et al., 2023).
 
 ---
 
@@ -157,11 +157,11 @@ Berdasarkan data pengukuran:
 
 **Tier D memiliki SPG sebesar 220,1 — 3,4x lebih efisien dari Tier C (65,2 SPG).**
 
-Artinya, untuk setiap satu juta gas yang dihabiskan, Tier D memberikan 220,1 unit keamanan, sedangkan Tier C hanya memberikan 65,2 unit keamanan. Disparitas ini terutama disebabkan oleh biaya gas yang jauh lebih rendah pada Tier D (34.156 vs 122.769) dengan skor keamanan yang sama (8/8).
+Artinya, untuk setiap satu juta gas yang dihabiskan, Tier D memberikan 220,1 unit keamanan, sedangkan Tier C hanya 65,2 unit. Disparitas ini terutama disebabkan oleh biaya gas yang jauh lebih rendah pada Tier D (34.156 vs 122.769) dengan skor keamanan yang sama (8/8).
 
 ### 5.3.2 Analisis Biaya per Fitur Keamanan Tambahan
 
-Analisis biaya per fitur keamanan tambahan memberikan wawasan yang lebih mendalam tentang efisiensi setiap transisi arsitektur:
+Analisis biaya per fitur keamanan tambahan memberikan wawasan yang lebih dalam tentang efisiensi setiap transisi arsitektur:
 
 | Transisi | Fitur Tambahan | Gas Tambahan | Biaya per Fitur |
 |----------|---------------|-------------|-----------------|
@@ -169,17 +169,17 @@ Analisis biaya per fitur keamanan tambahan memberikan wawasan yang lebih mendala
 | B → D | 3 fitur (reentrancy guard, MEV detection, economic penalty) | +2.729 | 909.7 gas/fitur |
 | D → C | 0 fitur tambahan (identik 8/8) | +88.613 | ∞ (tanpa penambahan fitur) |
 
-Temuan yang sangat menarik adalah bahwa transisi B → D hanya memerlukan 909.7 gas per fitur keamanan tambahan — biaya yang sangat rendah untuk tiga fitur keamanan kritis (reentrancy guard, MEV detection, economic penalty). Sebaliknya, transisi D → C tidak menambah fitur keamanan apapun (keduanya 8/8) namun memerlukan tambahan 88.613 gas. Seluruh tambahan biaya ini berasal dari arsitektural overhead — spesifiknya, penggunaan external calls alih-alih inline implementation.
+Transisi B → D hanya memerlukan 909.7 gas per fitur keamanan tambahan — biaya yang sangat rendah untuk tiga fitur keamanan kritis. Sebaliknya, transisi D → C tidak menambah fitur keamanan apapun (keduanya 8/8) namun memerlukan tambahan 88.613 gas. Seluruh tambahan biaya ini berasal dari arsitektural overhead — spesifiknya, penggunaan external calls alih-alih inline implementation.
 
 Perbandingan ini mengungkapkan sebuah ironi desain: **Tier C membayar 97.4x lebih mahal untuk fitur yang sama dengan Tier D**. Satu-satunya perbedaan fungsional antara Tier C dan Tier D adalah metode implementasi (external vs inline), bukan jumlah fitur.
 
 ### 5.3.3 Relevansi SPG sebagai Metrik
 
-Metrik SPG memiliki relevansi praktis yang signifikan bagi pengambil keputusan dalam desain bridge. Dalam dunia nyata, operator bridge harus membuat tradeoff antara biaya operasional dan tingkat keamanan. SPG menyediakan kerangka kuantitatif untuk mengevaluasi tradeoff ini.
+Metrik SPG memiliki relevansi praktis yang berarti bagi pengambil keputusan dalam desain bridge. Operator bridge harus membuat tradeoff antara biaya operasional dan tingkat keamanan. SPG menyediakan kerangka kuantitatif untuk mengevaluasi tradeoff ini.
 
-Bayangkan seorang pengembang bridge yang memiliki budget gas tetap — misalnya 50.000 gas per transaksi untuk komponen keamanan. Dengan Tier C, budget ini hanya cukup untuk satu fitur keamanan penuh (reentrancy guard + MEV detection) dengan sisa yang terbatas. Namun dengan Tier D, budget yang sama dapat mencakup semua lima fungsi keamanan (reentrancy guard, MEV detection, economic penalty, emergency pause, block tracking) dengan sisa yang cukup untuk operasi utama bridge.
+Bayangkan seorang pengembang bridge yang memiliki budget gas tetap — misalnya 50.000 gas per transaksi untuk komponen keamanan. Dengan Tier C, budget ini hanya cukup untuk satu fitur keamanan penuh (reentrancy guard + MEV detection) dengan sisa yang terbatas. Namun dengan Tier D, budget yang sama dapat mencakup semua lima fungsi keamanan dengan sisa yang cukup untuk operasi utama bridge.
 
-Implikasinya adalah bahwa Tier D memungkinkan desain bridge yang **lebih aman dengan biaya lebih rendah** — sebuah kombinasi yang sebelumnya dianggap kontradiktif dalam literatur optimasi gas.
+Implikasinya, Tier D memungkinkan desain bridge yang **lebih aman dengan biaya lebih rendah** — sebuah kombinasi yang sebelumnya dianggap kontradiktif dalam literatur optimasi gas.
 
 ---
 
@@ -205,10 +205,10 @@ Modifikasi ini merepresentasikan pergeseran paradigma: dari EIP-1153 sebagai **m
 Implementasi ini identik dengan spesifikasi asli EIP-1153. Fungsi `_enterCall()` menulis nilai 1 ke slot `REENTRANCY_SLOT`, `_callDepth()` membaca nilai dari slot tersebut, dan `_exitCall()` menulis nilai 0 untuk mereset. Auto-reset otomatis terjadi di akhir transaksi, sehingga tidak diperlukan fungsi `_unlock()` eksplisit seperti pada SSTORE-based ReentrancyGuard.
 
 **Modifikasi 2: Single-slot MEV Detection (4.400 gas)**
-Ini adalah modifikasi paling inovatif. Alih-alih menggunakan dynamic array `txRecords[]` yang memerlukan SSTORE cold per push (22.100 gas), Tier D menggunakan struct `LastTx` yang dikemas dalam satu slot. Setiap transaksi baru menimpa (overwrite) data sebelumnya, sehingga hanya memerlukan SSTORE warm (2.900 gas). Deteksi dilakukan dengan membandingkan `lastTxBlock == block.number` dan memeriksa tipe transaksi sebelumnya — cukup untuk mendeteksi pola sandwich Ta1 → Tv dalam satu blok.
+Ini adalah modifikasi paling inovatif. Alih-alih menggunakan dynamic array `txRecords[]` yang memerlukan SSTORE cold per push (22.100 gas), Tier D menggunakan struct `LastTx` yang dikemas dalam satu slot. Setiap transaksi baru menimpa data sebelumnya, sehingga hanya memerlukan SSTORE warm (2.900 gas). Deteksi dilakukan dengan membandingkan `lastTxBlock == block.number` dan memeriksa tipe transaksi sebelumnya — cukup untuk mendeteksi pola sandwich Ta1 → Tv dalam satu blok.
 
 **Modifikasi 3: Block Number Tracking (2.100 gas)**
-Variabel `lastTxBlock` disimpan sebagai SSTORE biasa dan dibaca dengan SLOAD warm. Fungsinya adalah memastikan bahwa deteksi MEV hanya berlaku dalam konteks blok yang sama. Tanpa tracking ini, transaksi yang terpisah beberapa blok akan salah terdeteksi sebagai sandwich.
+Variabel `lastTxBlock` disimpan sebagai SSTORE biasa dan dibaca dengan SLOAD warm. Fungsinya adalah memastikan deteksi MEV hanya berlaku dalam blok yang sama. Tanpa tracking ini, transaksi yang terpisah beberapa blok akan salah terdeteksi sebagai sandwich.
 
 **Modifikasi 4: Inline Penalty Calculation (300 gas)**
 Formula penalti `(amount * LAMBDA * anomalyScore) / 1e8` diimplementasikan sebagai pure function yang tidak memerlukan akses storage. Seluruh komputasi terjadi di stack EVM, sehingga biayanya minimal — hanya aritmatika dasar.
@@ -216,15 +216,15 @@ Formula penalti `(amount * LAMBDA * anomalyScore) / 1e8` diimplementasikan sebag
 **Modifikasi 5: Emergency Pause (2.900 gas)**
 Flag `paused` diimplementasikan sebagai SSTORE biasa. Biaya ini identik antara Tier C dan Tier D karena emergency pause tidak melibatkan external calls.
 
-Total biaya lima modifikasi ini adalah ~9.900 gas — hanya **48.5x lebih murah** dari Tier C yang mengimplementasikan fungsi yang sama melalui external calls ke MonitorMock.
+Total biaya lima modifikasi ini adalah ~9.900 gas — **48.5x lebih murah** dari Tier C yang mengimplementasikan fungsi yang sama melalui external calls ke MonitorMock.
 
 ### 5.4.3 Dampak terhadap Paradigma Desain Keamanan
 
-Temuan ini memiliki dampak signifikan terhadap paradigma desain keamanan smart contract (Pofcher & Ellul, 2025; Zheng et al., 2025). Selama ini, komunitas pengembang Solidity cenderung memisahkan mekanisme keamanan ke dalam kontrak terpisah (seperti pattern Guard di OpenZeppelin) untuk memisahkan kepentingan (separation of concerns) dan memudahkan audit (Wang et al., 2024). Pendekatan ini menghasilkan arsitektur multi-kontrak yang bersih secara modular namun mahal secara gas (Benedetti et al., 2024; Di Sorbo et al., 2021).
+Temuan ini memberikan dampak berpengaruh terhadap paradigma desain keamanan smart contract (Pofcher & Ellul, 2025; Zheng et al., 2025). Selama ini, komunitas pengembang Solidity cenderung memisahkan mekanisme keamanan ke dalam kontrak terpisah (seperti pattern Guard di OpenZeppelin) untuk memisahkan kepentingan (*separation of concerns*) dan memudahkan audit (Wang et al., 2024). Pendekatan ini menghasilkan arsitektur multi-kontrak yang bersih secara modular namun mahal secara gas (Benedetti et al., 2024; Di Sorbo et al., 2021).
 
 Tier D membuktikan bahwa pendekatan alternatif — mengonsolidasikan semua logika keamanan secara inline dalam satu kontrak — dapat menghasilkan keamanan yang setara dengan biaya yang jauh lebih rendah (Li, 2025). Konsolidasi ini tidak mengorbankan auditability karena seluruh kode keamanan berada dalam satu file, sehingga auditor dapat meninjau seluruh logika pertahanan dalam satu konteks (Shou et al., 2023).
 
-Namun, pendekatan ini memiliki tradeoff yang perlu diakui: (1) ukuran kontrak lebih besar, (2) kompleksitas kode lebih tinggi dalam satu kontrak, dan (3) fleksibilitas pembaruan keamanan lebih terbatas (karena semua terkonsolidasi) (Wang et al., 2026; Zhou et al., 2026). Tradeoff ini dibahas lebih lanjut pada Bagian 5.9 (Keterbatasan Penelitian).
+Namun, pendekatan ini memiliki tradeoff yang perlu diakui: (1) ukuran kontrak lebih besar, (2) kompleksitas kode lebih tinggi dalam satu kontrak, dan (3) fleksibilitas pembaruan keamanan lebih terbatas karena semua terkonsolidasi (Wang et al., 2026; Zhou et al., 2026). Tradeoff ini dibahas lebih lanjut pada Bagian 5.9 (Keterbatasan Penelitian).
 
 ---
 
@@ -241,7 +241,7 @@ Berdasarkan data gas price dari Etherscan V2 API (base fee: 0.677 Gwei) dan harg
 | 80 Gwei | $0.63 | $0.63 | $2.46 | $0.68 |
 | 150 Gwei | $1.18 | $1.18 | $4.60 | $1.28 |
 
-Perbedaan biaya ini tampak kecil untuk transaksi individual — hanya $0.17 per transaksi antara Tier C dan Tier D pada 30 Gwei. Namun, dampaknya menjadi sangat signifikan pada skala operasional bridge.
+Perbedaan biaya ini tampak kecil untuk transaksi individual — hanya $0.17 per transaksi antara Tier C dan Tier D pada 30 Gwei. Namun, dampaknya menjadi sangat besar pada skala operasional bridge.
 
 ### 5.5.2 Dampak terhadap Volume Transaksi Tinggi
 
@@ -256,21 +256,21 @@ Pada kondisi gas price normal (30 Gwei), Tier D menghemat $66.000 per bulan. Pad
 
 ### 5.5.3 Analisis Sensitivitas terhadap Harga Gas
 
-Fluktuasi harga gas Ethereum sangat dinamis. Berdasarkan data historis dari Dune Analytics (2024), base fee Ethereum dapat berfluktuasi dari 5 Gwei (kondisi normal) hingga 200+ Gwei (kondisi congested, misalnya saat token launch besar). Analisis sensitivitas menunjukkan bahwa:
+Fluktuasi harga gas Ethereum sangat dinamis. Berdasarkan data historis dari Dune Analytics (2024), base fee Ethereum dapat berfluktuasi dari 5 Gwei (kondisi normal) hingga 200+ Gwei (kondisi congested, misalnya saat token launch besar). Analisis sensitivitas memperlihatkan:
 
 - Pada **gas price rendah (5-10 Gwei)**: Perbedaan biaya Tier C vs Tier D relatif kecil ($0.10-$0.17 per tx). Namun, untuk bridge dengan volume sangat tinggi (1 juta tx/bulan), penghematan tetap mencapai $100.000-$170.000/bulan.
 
-- Pada **gas price normal (20-40 Gwei)**: Perbedaan menjadi signifikan ($0.34-$0.68 per tx). Bridge dengan volume 100K tx/bulan menghemat $34.000-$68.000/bulan.
+- Pada **gas price normal (20-40 Gwei)**: Perbedaan mulai terasa ($0.34-$0.68 per tx). Bridge dengan volume 100K tx/bulan menghemat $34.000-$68.000/bulan.
 
-- Pada **gas price tinggi (80-200 Gwei)**: Perbedaan menjadi sangat substansial ($1.37-$3.44 per tx). Penghematan untuk 100K tx/bulan mencapai $137.000-$344.000/bulan.
+- Pada **gas price tinggi (80-200 Gwei)**: Perbedaan menjadi sangat besar ($1.37-$3.44 per tx). Penghematan untuk 100K tx/bulan mencapai $137.000-$344.000/bulan.
 
-Temuan ini menunjukkan bahwa **semakin tinggi harga gas, semakin besar keuntungan Tier D dibandingkan Tier C**. Hal ini menjadikan Tier D semakin relevan dalam kondisi pasar yang volatil, di mana harga gas dapat melonjak secara tiba-tiba.
+Semakin tinggi harga gas, semakin besar keuntungan Tier D dibandingkan Tier C. Hal ini menjadikan Tier D semakin relevan dalam kondisi pasar yang volatil, di mana harga gas dapat melonjak secara tiba-tiba.
 
 ### 5.5.4 Perbandingan dengan Biaya Infrastruktur Lain
 
-Dalam konteks biaya operasional bridge yang lebih luas, gas fee hanyalah salah satu komponen. Komponen lain meliputi: biaya infrastruktur server (untuk monitoring off-chain), biaya audit keamanan, biaya asuransi, dan biaya likuiditas. Namun, gas fee merupakan komponen yang paling sering dikeluarkan (recurring cost), berbeda dari biaya audit yang bersifat periodik.
+Pada gambaran biaya operasional bridge yang lebih luas, gas fee hanyalah salah satu komponen. Komponen lain meliputi: biaya infrastruktur server (untuk monitoring off-chain), biaya audit keamanan, biaya asuransi, dan biaya likuiditas. Gas fee merupakan komponen yang paling sering dikeluarkan (*recurring cost*), berbeda dari biaya audit yang bersifat periodik.
 
-Dengan menghemat $66.000-$178.000 per bulan dari gas fee, operator dialihkan untuk mengalokasikan sumber daya ke komponen lain yang meningkatkan keamanan — misalnya audit keamanan berkala, bug bounty program, atau monitoring infrastruktur. Dengan demikian, efisiensi gas Tier D secara tidak langsung berkontribusi terhadap peningkatan keamanan holistik bridge.
+Dengan menghemat $66.000-$178.000 per bulan dari gas fee, operator dapat mengalokasikan sumber daya ke komponen lain yang meningkatkan keamanan — misalnya audit keamanan berkala, bug bounty program, atau monitoring infrastruktur. Efisiensi gas Tier D secara tidak langsung berkontribusi terhadap peningkatan keamanan holistik bridge.
 
 ---
 
@@ -288,17 +288,17 @@ Uji hipotesis Welch's t-test (Welch, 1947) dilakukan untuk menguji apakah terdap
 
 **H₀ (Null Hypothesis):** Tidak ada perbedaan signifikan gas cost antara Tier C dan Tier D.
 
-**Keputusan:** H₀ ditolak dengan tingkat keyakinan yang sangat tinggi (p ≈ 0). Artinya, perbedaan gas antara Tier C (122.769) dan Tier D (34.156) bukan merupakan kebetulan statistik, melainkan merupakan perbedaan nyata yang konsisten di seluruh 100 sampel.
+**Keputusan:** H₀ ditolak dengan tingkat keyakinan yang sangat tinggi (p ≈ 0). Perbedaan gas antara Tier C (122.769) dan Tier D (34.156) bukan merupakan kebetulan statistik, melainkan perbedaan nyata yang konsisten di seluruh 100 sampel.
 
-Tingkat signifikasi ini sangat kuat — p-value sekecil 2,25 × 10⁻²²² jauh melampaui threshold α = 0,05 yang lazim digunakan dalam penelitian. Bahkan dengan threshold yang sangat ketat sekalipun (α = 0,001), H₀ tetap ditolak. Hal ini memberikan bukti statistik yang sangat kuat bahwa modifikasi inline EIP-1153 pada Tier D menghasilkan penghematan gas yang nyata dan konsisten.
+Tingkat signifikasi ini sangat kuat — p-value sekecil 2,25 × 10⁻²²² jauh melampaui threshold α = 0,05 yang lazim digunakan dalam penelitian. Bahkan dengan threshold yang sangat ketat sekalipun (α = 0,001), H₀ tetap ditolak. Bukti statistik ini memperkuat keyakinan bahwa modifikasi inline EIP-1153 pada Tier D menghasilkan penghematan gas yang nyata dan konsisten.
 
 ### 5.6.2 Confidence Interval 95%: Presisi Tinggi
 
-Confidence interval 95% untuk rasio penghematan gas Tier D vs Tier C adalah [98.18%, 98.23%]. Interval yang sangat sempit ini (lebar hanya 0.05%) menunjukkan:
+Confidence interval 95% untuk rasio penghematan gas Tier D vs Tier C adalah [98.18%, 98.23%]. Interval yang sangat sempit ini (lebar hanya 0.05%) memperlihatkan:
 
 1. **Presisi pengukuran yang sangat tinggi:** Estimasi penghematan gas sangat presis, dengan margin of error yang sangat kecil.
 
-2. **Konsistensi data:** Variansi antar sampel sangat kecil, menunjukkan bahwa pengukuran gas bersifat highly reproducible dalam lingkungan EVM yang terkontrol.
+2. **Konsistensi data:** Variansi antar sampel sangat kecil, menunjukkan bahwa pengukuran gas bersifat *highly reproducible* dalam lingkungan EVM yang terkontrol.
 
 3. **Keandalan temuan:** Confidence interval yang sempit memperkuat keyakinan bahwa penghematan gas Tier D dibandingkan Tier C bersifat konsisten dan dapat direplikasi.
 
@@ -313,15 +313,15 @@ Cohen's d sebesar 220.64 menunjukkan effect size yang **sangat jauh di atas** th
 | 0,5 – 0,8 | Medium | |
 | ≥ 0,8 | Large | **220,64** |
 
-Cohen's d sebesar 220.64 berarti bahwa mean gas Tier C berjarak 220.64 standard deviation di atas mean gas Tier D. Dalam konteks distribusi normal, perbedaan sebesar ini menunjukkan bahwa kedua distribusi gas **tidak tumpang tindih sama sekali** — seluruh sampel Tier C memiliki gas yang lebih tinggi dari seluruh sampel Tier D. Ini merupakan bukti empiris yang sangat kuat bahwa arsitektur inline (Tier D) secara fundamental lebih efisien dari arsitektur external (Tier C).
+Cohen's d sebesar 220.64 berarti bahwa mean gas Tier C berjarak 220.64 standard deviation di atas mean gas Tier D. Dalam distribusi normal, perbedaan sebesar ini mengindikasikan bahwa kedua distribusi gas **tidak tumpang tindih sama sekali** — seluruh sampel Tier C memiliki gas yang lebih tinggi dari seluruh sampel Tier D. Ini merupakan bukti empiris yang sangat kuat bahwa arsitektur inline (Tier D) secara fundamental lebih efisien dari arsitektur external (Tier C).
 
 ### 5.6.4 Validitas Metodologi Statistik
 
 Penggunaan Welch's t-test (bukan Student's t-test) merupakan keputusan metodologis yang tepat karena dua alasan:
 
-1. **Asumsi homogenitas variansi tidak terpenuhi:** Variansi gas Tier C (~2.100²) jauh lebih besar dari variansi gas Tier D (~3.200² untuk deposit). Welch's t-test tidak memerlukan asumsi variansi sama, sehingga lebih robust.
+1. **Asumsi homogenitas variansi tidak terpenuhi:** Variansi gas Tier C (~2.100²) jauh lebih besar dari variansi gas Tier D (~3.200² untuk deposit). Welch's t-test tidak memerlukan asumsi variansa sama, sehingga lebih robust.
 
-2. **Ukuran sampel besar (n=100):** Dengan 100 sampel per tier, Central Limit Theorem memastikan bahwa distribusi mean mendekati normal, yang merupakan prasyarat utama t-test. Penggunaan 100 sampel (melampaui minimum 30 yang disarankan Cochran, 1977) menghasilkan power testing yang tinggi.
+2. **Ukuran sampel besar (n=100):** Dengan 100 sampel per tier, Central Limit Theorem memastikan distribusi mean mendekati normal, prasyarat utama t-test. Penggunaan 100 sampel (melampaui minimum 30 yang disarankan Cochran, 1977) menghasilkan power testing yang tinggi.
 
 ---
 
@@ -329,7 +329,7 @@ Penggunaan Welch's t-test (bukan Student's t-test) merupakan keputusan metodolog
 
 ### 5.7.1 Mengapa Keduanya Diperlukan
 
-Hasil penelitian menunjukkan bahwa **optimasi statis dan dinamis saling melengkapi, bukan saling menggantikan**. Tier B (hanya statis) mencapai gas rendah (31.427) namun hanya 2/8 skor keamanan. Tier D (statis + dinamis inline) mencapai gas yang hampir identik (34.156, hanya 8.7% lebih tinggi) namun 8/8 skor keamanan. Perbedaan biaya hanya 2.729 gas untuk peningkatan keamanan sebesar 100%.
+Hasil penelitian memperlihatkan bahwa **optimasi statis dan dinamis saling melengkapi, bukan saling menggantikan**. Tier B (hanya statis) mencapai gas rendah (31.427) namun hanya 2/8 skor keamanan. Tier D (statis + dinamis inline) mencapai gas yang hampir identik (34.156, hanya 8.7% lebih tinggi) namun 8/8 skor keamanan. Perbedaan biaya hanya 2.729 gas untuk peningkatan keamanan sebesar 100%.
 
 Optimasi statis berkontribusi terhadap:
 - **Variable packing**: Mengurangi jumlah slot storage (hemat 20.000 gas per slot)
@@ -349,7 +349,7 @@ Serangan yang **tidak** dapat diblokir oleh Tier B meliputi:
 - **MEV sandwich attack**: Bot MEV memanfaatkan urutan transaksi
 - **Emergency response**: Tidak ada mekanisme pause saat serangan terdeteksi
 
-Dalam konteks bridge production yang menyimpan dana pengguna dalam jumlah besar, 25% keamanan merupakan tingkat yang **tidak dapat diterima**. Data dari Zheng et al. (2023) dan Shou et al. (2023) menunjukkan bahwa kerugian akibat eksploitasi bridge telah mencapai miliaran dolar — termasuk Ronin ($620 juta), Wormhole ($320 juta), dan Nomad ($190 juta) — sebagian besar disebabkan oleh kelemahan yang tidak dapat diatasi oleh optimasi statis saja.
+Pada bridge production yang menyimpan dana pengguna dalam jumlah besar, 25% keamanan merupakan tingkat yang **tidak dapat diterima**. Data dari Zheng et al. (2023) dan Shou et al. (2023) mengungkapkan bahwa kerugian akibat eksploitasi bridge telah mencapai miliaran dolar — termasuk Ronin ($620 juta), Wormhole ($320 juta), dan Nomad ($190 juta) — sebagian besar disebabkan oleh kelemahan yang tidak dapat diatasi oleh optimasi statis saja.
 
 ### 5.7.3 Tier D: Keseimbangan Optimal
 
@@ -376,9 +376,9 @@ Level 2 (Tier D) merupakan rekomendasi utama karena menawarkan keamanan penuh (8
 
 ### 5.8.1 Hop Protocol
 
-Hop Protocol (2024) mengimplementasikan bridge antar-rollup dengan mekanisme liquidity pool dan bonder. Dari perspektif keamanan, Hop menggunakan validator set dan fraud proof, namun **tidak mengimplementasikan reentrancy guard berbasis EIP-1153** maupun on-chain MEV detection. Mekanisme keamanan Hop bergantung pada Bonded Liquidity Provider yang menyerahkan jaminan — sebuah pendekatan ekonomis alih-aliah teknis.
+Hop Protocol (2024) mengimplementasikan bridge antar-rollup dengan mekanisme liquidity pool dan bonder. Dari perspektif keamanan, Hop menggunakan validator set dan fraud proof, namun **tidak mengimplementasikan reentrancy guard berbasis EIP-1153** maupun on-chain MEV detection. Mekanisme keamanan Hop bergantung pada Bonded Liquidity Provider yang menyerahkan jaminan — pendekatan ekonomis alih-alih teknis.
 
-Perbandingan dengan penelitian ini menunjukkan bahwa Hop dan Tier D mengambil pendekatan yang berbeda namun komplementer. Hop berfokus pada keamanan ekonomis (bond), sementara Tier D berfokus pada keamanan teknis (reentrancy guard + MEV detection). Idealnya, kedua pendekatan dapat digabungkan: bridge dengan bond (seperti Hop) yang juga mengimplementasikan EIP-1153 inline (seperti Tier D) akan memiliki pertahanan berlapis (defense-in-depth) yang lebih kuat.
+Perbandingan dengan penelitian ini memperlihatkan bahwa Hop dan Tier D mengambil pendekatan yang berbeda namun komplementer. Hop berfokus pada keamanan ekonomis (bond), sementara Tier D berfokus pada keamanan teknis (reentrancy guard + MEV detection). Idealnya, kedua pendekatan dapat digabungkan: bridge dengan bond (seperti Hop) yang juga mengimplementasikan EIP-1153 inline (seperti Tier D) akan memiliki pertahanan berlapis (*defense-in-depth*) yang lebih kuat.
 
 ### 5.8.2 Stargate Finance (LayerZero)
 
@@ -392,7 +392,7 @@ Ronin Bridge (2022) mengalami eksploitasi senilai $620 juta yang melibatkan komp
 
 ### 5.8.4 Wormhole Bridge
 
-Wormhole Bridge (2022) kehilangan $320 juta akibat bypass verifikasi signature. Eksploitasi ini memanfaatkan celah dalam verifikasi header block, yang memungkinkan penyerang mencetak token tanpa jaminan. Meskipun serangan ini spesifik terhadap arsitektur Wormhole (signature verification), analisis keamanan Trail of Bits (2022) menunjukkan bahwa **tidak adanya reentrancy guard** pada beberapa fungsi Wormhole memperparah dampak eksploitasi — penyerang dapat mengeksekusi serangan secara rekursif untuk memperbesar keuntungan.
+Wormhole Bridge (2022) kehilangan $320 juta akibat bypass verifikasi signature. Eksploitasi ini memanfaatkan celah dalam verifikasi header block, yang memungkinkan penyerang mencetak token tanpa jaminan. Meskipun serangan ini spesifik terhadap arsitektur Wormhole (signature verification), analisis keamanan Trail of Bits (2022) memperlihatkan bahwa **tidak adanya reentrancy guard** pada beberapa fungsi Wormhole memperparah dampak eksploitasi — penyerang dapat mengeksekusi serangan secara rekursif untuk memperbesar keuntungan.
 
 Tier D mengatasi kerentanan ini secara fundamental: EIP-1153 reentrancy guard memastikan bahwa setiap fungsi kritis hanya dapat dieksekusi sekali per transaksi, sehingga bahkan jika celah verifikasi ditemukan, penyerang tidak dapat mengeksploitasi secara rekursif.
 
@@ -407,11 +407,11 @@ Tier D mengatasi kerentanan ini secara fundamental: EIP-1153 reentrancy guard me
 | External Calls | Multiple | Multiple | Multiple | Multiple | **0** |
 | Economic Penalty | Bond | Rate limiting | Tidak | Tidak | **On-chain formula** |
 
-Perbandingan ini menunjukkan bahwa Tier D menawarkan kombinasi fitur keamanan yang belum tersedia pada bridge existing: EIP-1153 inline, on-chain MEV detection, dan economic penalty — semuanya dengan 0 external calls.
+Perbandingan ini memperlihatkan bahwa Tier D menawarkan kombinasi fitur keamanan yang belum tersedia pada bridge existing: EIP-1153 inline, on-chain MEV detection, dan economic penalty — semuanya dengan 0 external calls.
 
 ### 5.8.6 Keunikan Kontribusi Penelitian
 
-Berdasarkan perbandingan dengan studi terdahulu (Wang et al., 2024; Zheng et al., 2023; Wang et al., 2026), kontribusi unik penelitian ini adalah:
+Berdasarkan perbandingan dengan studi terdahulu (Wang et al., 2024; Zheng et al., 2023; Wang et al., 2026), kontribusi unik penelitian ini terletak pada:
 
 1. **Modifikasi EIP-1153 menjadi multifungsi** (Benedetti et al., 2024; Casale-Brunet, 2024): Dari 1 fungsi (reentrancy guard) menjadi 5 fungsi keamanan dalam satu kontrak
 2. **Inline implementation** (Benedetti et al., 2024; Di Sorbo et al., 2021): 0 external calls untuk semua fitur keamanan — pertama kalinya didokumentasikan
@@ -423,7 +423,7 @@ Berdasarkan perbandingan dengan studi terdahulu (Wang et al., 2024; Zheng et al.
 
 ## 5.9 Analisis Ukuran Bytecode
 
-Ukuran bytecode memiliki dampak signifikan terhadap biaya deployment, code loading cost, dan verifikasi kontrak di EVM. Berikut hasil pengukuran menggunakan `forge inspect`:
+Ukuran bytecode berdampak pada biaya deployment, code loading cost, dan verifikasi kontrak di EVM. Berikut hasil pengukuran menggunakan `forge inspect`:
 
 | Tier | Contract | Bytecode Size | % dari Limit 24KB |
 |------|----------|:-------------:|:-----------------:|
@@ -574,7 +574,7 @@ _enterCall();
 ### 5.11.4 Kesimpulan
 
 Untuk use case **bridge dengan keamanan tinggi + biaya rendah** (yang diteliti), **inline lebih unggul** karena:
-1. Gas savings signifikan (72-88%)
+1. Gas savings yang mencolok (72-88%)
 2. Tidak ada reentrancy risk dari external calls
 3. Satu kontrak = satu deployment = lebih simpel
 
@@ -586,9 +586,9 @@ Namun untuk **bridge enterprise yang butuh upgrade logic keamanan** tanpa redepl
 
 ### 5.12.1 Keterbatasan Metodologis
 
-**Lingkungan Pengujian Terkontrol:** Semua hasil pengukuran diperoleh dari environment Foundry yang terisolasi. Kondisi jaringan Ethereum yang sesungguhnya memiliki kompleksitas yang jauh lebih tinggi — termasuk fluktuasi gas price secara real-time, kompetisi mempool, dan variabilitas performa validator. Hasil pengukuran gas diharapkan representatif, namun selisih antara environment test dan production mungkin signifikan untuk metrik seperti latency dan throughput.
+**Lingkungan Pengujian Terkontrol:** Semua hasil pengukuran diperoleh dari environment Foundry yang terisolasi. Kondisi jaringan Ethereum yang sesungguhnya memiliki kompleksitas yang jauh lebih tinggi — termasuk fluktuasi gas price secara real-time, kompetisi mempool, dan variabilitas performa validator. Hasil pengukuran gas diharapkan representatif, namun selisih antara environment test dan production mungkin berarti untuk metrik seperti latency dan throughput.
 
-**Jumlah Sampel:** Meskipun 100 sampel per operasi sudah melampaui minimum yang disarankan (30 menurut CLT), jumlah ini mungkin belum cukup untuk menangkap variasi ekstrem yang jarang terjadi. Sampel tambahan (misalnya 1.000) akan menghasilkan statistik yang lebih robust, terutama untuk analisis variance dan distribusi ekor (tail distribution).
+**Jumlah Sampel:** Meskipun 100 sampel per operasi sudah melampaui minimum yang disarankan (30 menurut CLT), jumlah ini mungkin belum cukup untuk menangkap variasi ekstrem yang jarang terjadi. Sampel tambahan (misalnya 1.000) akan menghasilkan statistik yang lebih robust, terutama untuk analisis variance dan distribusi ekor (*tail distribution*).
 
 ### 5.12.2 Keterbatasan Fitur Keamanan
 
@@ -632,7 +632,7 @@ Optimasi statis (CEI, packing, custom errors) harus diterapkan sebagai fondasi, 
 External calls ke kontrak keamanan (seperti MonitorMock) sebaiknya dihindari ketika fungsionalitas yang sama dapat diimplementasikan secara inline (Zheng et al., 2023). Biaya gas tambahan dari external calls (~61.900 gas per transaksi) jauh melebihi manfaat modularitas.
 
 **4. Mengadopsi Single-slot Storage Pattern:**
-Dynamic array untuk pencatatan transaksi sebaiknya digantikan dengan single-slot overwrite pattern (Nassirzadeh et al., 2023; Wang et al., 2026). Penghematan 17.700 gas per transaksi sangat signifikan untuk bridge dengan volume tinggi.
+Dynamic array untuk pencatatan transaksi sebaiknya digantikan dengan single-slot overwrite pattern (Nassirzadeh et al., 2023; Wang et al., 2026). Penghematan 17.700 gas per transaksi sangat berarti untuk bridge dengan volume tinggi.
 
 ### 5.13.2 Bagi Operator Bridge
 
@@ -665,7 +665,7 @@ Penelitian ini membuka beberapa arah studi lanjutan (Pofcher & Ellul, 2025; Zhen
 
 ### 5.13.4 Kerangka Rekomendasi
 
-Berdasarkan seluruh temuan penelitian, berikut adalah kerangka rekomendasi untuk pengembangan bridge:
+Seluruh temuan penelitian ini mengarah pada kerangka rekomendasi berikut untuk pengembangan bridge:
 
 | Kriteria | Rekomendasi |
 |----------|------------|
@@ -687,7 +687,7 @@ Secara keseluruhan, pembahasan pada bab ini mengkonfirmasi bahwa modifikasi EIP-
 
 2. **Keamanan Setara** (Zheng et al., 2023; Wang et al., 2026): Tier D mencapai skor keamanan 8/8 — identik dengan Tier C — dengan 0 external calls. Seluruh mekanisme keamanan (reentrancy guard, MEV detection, economic penalty, emergency pause, block tracking) diimplementasikan secara inline dalam satu kontrak.
 
-3. **Cost-Effectiveness Terbaik** (Rodler et al., 2023; Zhou et al., 2026): Tier D memiliki SPG tertinggi (234) di antara keempat tier — 3.6x lebih efisien dari Tier C (65). Metrik ini membuktikan bahwa Tier D memberikan konversi gas-to-keamanan yang paling efisien.
+3. **Cost-Effectiveness Terbaik** (Rodler et al., 2023; Zhou et al., 2026): Tier D memiliki SPG tertinggi (234) di antara keempat tier — 3.6x lebih efisien dari Tier C (65). Metrik ini memperkuat bahwa Tier D memberikan konversi gas-to-keamanan yang paling efisien.
 
 Temuan-temuan ini secara kolektif mendukung tesis utama penelitian: **EIP-1153 transient storage dapat dimodifikasi dari mekanisme tunggal (reentrancy guard) menjadi platform keamanan multifungsi yang efisien gas untuk smart contract bridge** (Lagouvardos et al., 2024; Shou et al., 2023). Modifikasi ini menawarkan alternatif yang layak terhadap arsitektur multi-kontrak konvensional, dengan bukti empiris yang kuat dari 215 test cases, analisis statistik rigor, dan estimasi biaya real-world (Nassirzadeh et al., 2023; Pofcher & Ellul, 2025).
 
@@ -717,4 +717,4 @@ Temuan-temuan ini secara kolektif mendukung tesis utama penelitian: **EIP-1153 t
 20. Zhang, Y. et al. (2022). "Smart Contract Test Generation." IEEE Transactions on Software Engineering.
 21. Zheng, Z. et al. (2023). "Turn the Rudder: A Beacon of Reentrancy Detection for Smart Contracts on Ethereum." IEEE Transactions on Software Engineering.
 22. Zhou, H. et al. (2026). "Compositional Generalization for Smart Contracts." arXiv preprint.
-19. Welch, B. L. (1947). "The Generalization of 'Student's' Problem When Several Different Population Variances are Involved." Biometrika.
+23. Welch, B. L. (1947). "The Generalization of 'Student's' Problem When Several Different Population Variances are Involved." Biometrika.

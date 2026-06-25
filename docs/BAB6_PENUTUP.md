@@ -6,13 +6,13 @@ Penelitian ini telah mengkaji optimasi gas smart contract bridge menggunakan mod
 
 ### 6.1.1 Optimasi Gas EIP-1153 Transient Storage
 
-Modifikasi EIP-1153 pada Tier D terbukti secara empiris mampu mengimplementasikan lima fungsi keamanan (reentrancy guard, MEV sandwich detection, economic penalty, emergency pause, dan block number tracking) dengan biaya gas tambahan hanya 9.900 gas. Jumlah ini representasikan 48,5 kali lipat lebih murah dibandingkan implementasi konvensional pada Tier C yang memerlukan sekitar 74.100 gas melalui mekanisme external calls ke MonitorMock (lihat BAB 4, Bagian 4.5).
+Modifikasi EIP-1153 pada Tier D terbukti secara empiris mampu mengimplementasikan lima fungsi keamanan (reentrancy guard, MEV sandwich detection, economic penalty, emergency pause, dan block number tracking) dengan biaya gas tambahan hanya 9.900 gas. Jumlah ini 48,5 kali lipat lebih murah dibandingkan implementasi konvensional pada Tier C yang memerlukan sekitar 74.100 gas melalui mekanisme external calls ke MonitorMock (lihat BAB 4, Bagian 4.5).
 
-Modifikasi ini dilakukan dengan mengganti pola arsitektural yang bergantung pada panggilan eksternal (CALL opcode) ke kontrak terpisah menjadi implementasi inline menggunakan inline assembly. Konsekuensinya, Tier D mengeliminasi seluruh overhead yang terkait dengan external calls, meliputi: CALL opcode overhead (500 gas untuk 5 panggilan), ABI encode/decode (~15.000 gas), code loading (~13.000 gas), dan cold SLOAD di kontrak MonitorMock (~10.500 gas). Penghematan bersih yang dihasilkan mencapai sekitar 62.400 gas per transaksi (lihat BAB 4, Bagian 4.4).
+Modifikasi ini dilakukan dengan mengganti pola arsitektural yang bergantung pada panggilan eksternal (CALL opcode) ke kontrak terpisah menjadi implementasi inline menggunakan inline assembly. Konsekuensinya, Tier D mengeliminasi seluruh overhead yang terkait dengan external calls: CALL opcode overhead (500 gas untuk 5 panggilan), ABI encode/decode (~15.000 gas), code loading (~13.000 gas), dan cold SLOAD di kontrak MonitorMock (~10.500 gas). Penghematan bersih yang dihasilkan mencapai sekitar 62.400 gas per transaksi (lihat BAB 4, Bagian 4.4).
 
 ### 6.1.2 Pencapaian Keamanan pada Biaya Minimum
 
-Temuan kritis penelitian ini adalah bahwa Tier D berhasil mempertahankan tingkat keamanan yang identik dengan Tier C tanpa pengorbanan biaya gas yang berarti. Tier D mencapai skor keamanan 8 dari 8 fitur keamanan yang dievaluasi — sama dengan Tier C yang mencapai 8/8 (lihat BAB 4, Bagian 4.3).
+Temuan kritis penelitian ini adalah bahwa Tier D berhasil mempertahankan tingkat keamanan yang identik dengan Tier C tanpa pengorbanan biaya gas yang berarti. Tier D mencapai skor keamanan 8 dari 8 fitur keamanan yang dievaluasi—sama dengan Tier C (lihat BAB 4, Bagian 4.3).
 
 Rincian pencapaian keamanan Tier D adalah sebagai berikut:
 
@@ -26,7 +26,7 @@ Peningkatan keamanan Tier D dibandingkan Tier B (optimasi statis) adalah sebesar
 
 ### 6.1.3 Efisiensi Biaya (Cost-Effectiveness)
 
-Metrik Security Points per Gas (SPG) membuktikan bahwa Tier D mencapai efisiensi biaya-keamanan terbaik di antara seluruh tier yang dievaluasi. Dengan skor SPG sebesar 220,1, Tier D 3,4 kali lebih efisien dibandingkan Tier C yang memiliki SPG 65,2 (lihat BAB 4, Bagian 4.4.1). Perbandingan lengkap SPG keempat tier adalah sebagai berikut:
+Metrik Security Points per Gas (SPG) membuktikan bahwa Tier D mencapai efisiensi biaya-keamanan terbaik di antara seluruh tier yang dievaluasi. Dengan skor SPG sebesar 220,1, Tier D 3,4 kali lebih efisien dibandingkan Tier C yang memiliki SPG 65,2 (lihat BAB 4, Bagian 4.4.1).
 
 | Tier | Skor Keamanan | Gas (Deposit) | SPG (× 1.000.000) | Ranking |
 |------|--------------|---------------|---------------------|---------|
@@ -35,7 +35,7 @@ Metrik Security Points per Gas (SPG) membuktikan bahwa Tier D mencapai efisiensi
 | C | 8/8 | 122.769 | 65,2 | 2 |
 | **D** | **8/8** | **34.156** | **220,1** | **1** |
 
-Analisis biaya per fitur keamanan tambahan memperkuat temuan ini. Transisi dari Tier B ke Tier D (penambahan 6 fitur keamanan) hanya memerlukan 454,8 gas per fitur. Sebaliknya, transisi dari Tier D ke Tier C (tanpa penambahan fitur, keduanya 8/8) memerlukan 88.613 gas tambahan — seluruhnya berasal dari overhead arsitektural external calls (lihat BAB 4, Bagian 4.4.2).
+Analisis biaya per fitur keamanan tambahan memperkuat temuan ini. Transisi dari Tier B ke Tier D (penambahan 6 fitur keamanan) hanya memerlukan 454,8 gas per fitur. Sebaliknya, transisi dari Tier D ke Tier C (tanpa penambahan fitur, keduanya 8/8) memerlukan 88.613 gas tambahan—seluruhnya berasal dari overhead arsitektural external calls (lihat BAB 4, Bagian 4.4.2).
 
 ### 6.1.4 Penghematan Gas Tier D vs Tier C
 
@@ -48,14 +48,14 @@ Penghematan gas yang dicapai Tier D dibandingkan Tier C bersifat konsisten di se
 | Swap | 133.344 | 62.787 | 70.557 | 52,9% |
 | Deploy | 886.301 | 736.064 | 150.237 | 17,0% |
 
-Sementara itu, overhead gas Tier D dibandingkan Tier B (baseline tanpa keamanan dinamis) hanya 8,7% untuk deposit — bukti bahwa implementasi inline EIP-1153 menjaga biaya gas tetap rendah (lihat BAB 4, Bagian 4.2.3).
+Sementara itu, overhead gas Tier D dibandingkan Tier B (baseline tanpa keamanan dinamis) hanya 8,7% untuk deposit—bukti bahwa implementasi inline EIP-1153 menjaga biaya gas tetap rendah (lihat BAB 4, Bagian 4.2.3).
 
 ### 6.1.5 Validasi Statistik
 
-Hasil pengukuran gas antara Tier C dan Tier D divalidasi secara statistik menggunakan Welch's t-test dengan 100 sampel per operasi. Hasil uji menunjukkan:
+Hasil pengukuran gas antara Tier C dan Tier D divalidasi secara statistik menggunakan Welch's t-test dengan 100 sampel per operasi. Hasil uji memperlihatkan:
 
 - t-statistic: 1.680,67
-- p-value: 2,25 × 10⁻²²² (sangat signifikan, jauh di bawah α = 0,05)
+- p-value: 2,25 × 10⁻²²² (sangat mencolok, jauh di bawah α = 0,05)
 - Cohen's d: 220,64 (effect size LARGE, melebihi ambang 0,8 secara drastis)
 - Confidence Interval 95%: [98,18%, 98,23%] (sangat sempit, menunjukkan konsistensi yang tinggi)
 - Cost Ratio: 55,7x (Tier C 55,7 kali lebih mahal dari Tier D)
@@ -64,11 +64,11 @@ Seluruh 215 test cases yang terdiri dari 13 test suites berhasil dilalui tanpa k
 
 ### 6.1.6 Relevansi Biaya Real-World
 
-Estimasi biaya transaksi pada kondisi pasar aktual (ETH = $3.000, gas price 0,677 Gwei) menunjukkan bahwa biaya deposit pada Tier D adalah sebesar $0,058, dibandingkan $0,208 pada Tier C. Untuk bridge dengan volume 100.000 transaksi per bulan, Tier D menghemat antara $79.000 sampai $213.000 per bulan dibandingkan Tier C, tergantung pada kondisi gas price (lihat BAB 4, Bagian 4.7).
+Estimasi biaya transaksi pada kondisi pasar aktual (ETH = $3.000, gas price 0,677 Gwei) memperlihatkan bahwa biaya deposit pada Tier D adalah sebesar $0,058, dibandingkan $0,208 pada Tier C. Untuk bridge dengan volume 100.000 transaksi per bulan, Tier D menghemat antara $79.000 sampai $213.000 per bulan dibandingkan Tier C, tergantung pada kondisi gas price (lihat BAB 4, Bagian 4.7).
 
 ### 6.1.7 Kesimpulan Umum
 
-Berdasarkan seluruh temuan di atas, penelitian ini menyimpulkan bahwa modifikasi EIP-1153 transient storage dari fungsi tunggal (reentrancy guard, 200 gas) menjadi multi-fungsi keamanan (9.900 gas) merupakan pendekatan yang efektif dan efisien untuk mengoptimalkan smart contract bridge. Pendekatan ini menyelesaikan tradeoff kritis antara biaya gas dan keamanan yang selama ini menjadi tantangan utama dalam desain bridge, tanpa mengorbankan fitur keamanan yang signifikan.
+Berdasarkan seluruh temuan di atas, penelitian ini menyimpulkan bahwa modifikasi EIP-1153 transient storage dari fungsi tunggal (reentrancy guard, 200 gas) menjadi multi-fungsi keamanan (9.900 gas) merupakan pendekatan yang efektif dan efisien untuk mengoptimalkan smart contract bridge. Pendekatan ini menyelesaikan tradeoff kritis antara biaya gas dan keamanan yang selama ini menjadi tantangan utama dalam desain bridge.
 
 ## 6.2 Kontribusi Penelitian
 
@@ -78,9 +78,9 @@ Penelitian ini memberikan kontribusi terhadap pengembangan ilmu pengetahuan dan 
 
 **Pertama**, penelitian ini memperluas pemahaman tentang fleksibilitas EIP-1153 transient storage di luar fungsi aslinya sebagai reentrancy guard. Modifikasi dari satu fungsi menjadi lima fungsi keamanan (reentrancy guard, MEV detection, economic penalty, block tracking, dan emergency pause) membuktikan bahwa TSTORE/TLOAD dapat dimanfaatkan sebagai infrastruktur keamanan multiguna yang jauh lebih efisien dibandingkan pola arsitektural konvensional berbasis external calls.
 
-**Kedua**, penelitian ini mengembangkan kerangka perbandingan empat tier (A/B/C/D) yang sistematis untuk mengevaluasi tradeoff antara optimasi gas statis, keamanan dinamis, dan biaya operasional. Kerangka ini memberikan landasan empiris bagi pengambil keputusan dalam desain arsitektur bridge yang menyeimbangkan efisiensi biaya dengan tingkat keamanan.
+**Kedua**, penelitian ini mengembangkan kerangka perbandingan empat tier (A/B/C/D) yang sistematis untuk mengevaluasi tradeoff antara optimasi gas statis, keamanan dinamis, dan biaya operasional. Kerangka ini memberikan landasan empiris bagi pengambil keputusan dalam desain arsitektur bridge.
 
-**Ketiga**, penelitian ini memperkenalkan metrik Security Points per Gas (SPG) sebagai instrumen pengukuran cost-effectiveness yang dapat diadopsi secara luas dalam penelitian optimasi gas smart contract. Metrik ini memungkinkan perbandingan objektif antar arsitektur yang memiliki profil gas dan keamanan yang berbeda.
+**Ketiga**, penelitian ini memperkenalkan metrik Security Points per Gas (SPG) sebagai instrumen pengukuran cost-effectiveness yang dapat diadopsi secara luas dalam penelitian optimasi gas smart contract.
 
 ### 6.2.2 Kontribusi Praktis
 
@@ -88,11 +88,11 @@ Penelitian ini memberikan kontribusi terhadap pengembangan ilmu pengetahuan dan 
 
 **Kedua**, arsitektur Tier D membuktikan bahwa pola inline assembly untuk keamanan on-chain (reentrancy guard + MEV detection + economic penalty) dapat menghemat 72-88% gas dibandingkan pola external calls konvensional, dengan overhead hanya 8,7% dari baseline tanpa keamanan dinamis.
 
-**Ketiga**, hasil benchmark gas yang komprehensif terhadap empat tier arsitektur bridge memberikan data empiris yang berguna bagi operator bridge dalam mengoptimalkan biaya operasional, khususnya dalam konteks estimasi penghematan bulanan sebesar $79.000 sampai $213.000 untuk volume 100.000 transaksi per bulan.
+**Ketiga**, hasil benchmark gas yang komprehensif terhadap empat tier arsitektur bridge memberikan data empiris yang berguna bagi operator bridge dalam mengoptimalkan biaya operasional—khususnya dalam konteks estimasi penghematan bulanan sebesar $79.000 sampai $213.000 untuk volume 100.000 transaksi per bulan.
 
 ## 6.3 Keterbatasan Penelitian
 
-Meskipun penelitian ini telah memberikan kontribusi yang signifikan, terdapat beberapa keterbatasan yang perlu diakui dan menjadi pertimbangan bagi pengembangan penelitian lebih lanjut.
+Meskipun penelitian ini telah memberikan kontribusi yang bermakna, terdapat beberapa keterbatasan yang perlu diakui dan menjadi pertimbangan bagi pengembangan penelitian lebih lanjut.
 
 ### 6.3.1 Keterbatasan Teknis
 

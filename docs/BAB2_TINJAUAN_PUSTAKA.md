@@ -1,6 +1,6 @@
 # BAB 2: TINJAUAN PUSTAKA
 
-Bab ini memaparkan konsep-konsep dasar yang menjadi landasan teoretis penelitian, meliputi arsitektur Ethereum dan Ethereum Virtual Machine (EVM), mekanisme keamanan smart contract, optimasi gas, EIP-1153 Transient Storage, Maximal Extractable Value (MEV), serta EIP-4844 Proto-Danksharding. Tinjauan pustaka ini dirancang untuk memberikan fondasi pemahaman yang komprehensif terhadap komponen-komponen yang diintegrasikan dalam arsitektur bridge yang diusulkan.
+Bab ini menyajikan landasan teoretis yang mendasari penelitian: arsitektur Ethereum dan EVM, mekanisme keamanan smart contract, teknik optimasi gas, EIP-1153 Transient Storage, Maximal Extractable Value (MEV), serta EIP-4844 Proto-Danksharding. Tujuannya agar pembaca memahami mengapa komponen-komponen tersebut dipilih dan bagaimana saling terkait dalam arsitektur bridge yang diusulkan.
 
 ## 2.1 Arsitektur Ethereum dan Ethereum Virtual Machine (EVM)
 
@@ -23,9 +23,9 @@ Arsitektur *storage* EVM merupakan aspek kritis dalam optimasi gas. EVM mengguna
 | SLOAD *cold read* | 2.100 | Pembacaan awal dari *slot* baru |
 | SLOAD *warm read* | 100 | Pembacaan dari *slot* yang sudah diakses |
 
-Di Sorbo et al. (2022) dalam penelitian profil konsumsi gas pada *smart contract* Solidity mengidentifikasi bahwa operasi SSTORE dan SLOAD merupakan kontributor terbesar terhadap biaya gas eksekusi, yang secara langsung mempengaruhi profitabilitas aplikasi terdesentralisasi. Temuan ini konsisten dengan analisis gas cost pada pola *proxy* dan *diamond* yang dilakukan oleh Benedetti et al., yang menunjukkan bahwa pemilihan pola arsitektural memiliki dampak signifikan terhadap biaya *deployment* dan eksekusi.
+Di Sorbo et al. (2022) mengidentifikasi 19 jenis *code smells* pada Solidity yang berkontribusi terhadap pemborosan gas, termasuk penggunaan *storage* yang tidak efisien. Temuan mereka konsisten dengan analisis gas cost pada pola *proxy* dan *diamond* yang dilakukan oleh Benedetti et al., yang membuktikan bahwa pemilihan pola arsitektural berdampak besar terhadap biaya *deployment* dan eksekusi.
 
-Biaya yang signifikan ini menjadi motivasi utama bagi optimasi gas, khususnya melalui teknik *variable packing* yang akan dibahas pada Bagian 2.3.
+Biaya besar ini menjadi motivasi utama bagi optimasi gas, khususnya melalui teknik *variable packing* yang akan dibahas pada Bagian 2.3.
 
 ### 2.1.3 Model Eksekusi Transaksi
 
@@ -39,7 +39,7 @@ Model ini relevan dengan penelitian karena setiap instruksi yang dieksekusi memi
 
 *Reentrancy attack* merupakan salah satu celah keamanan paling kritis dalam *smart contract*, di mana penyerang melakukan panggilan rekursif ke fungsi *withdraw* sebelum *state balance* diperbarui (Samreen & Alalfi, 2020). Serangan ini pertama kali didokumentasikan secara luas melalui insiden The DAO pada tahun 2016, yang mengakibatkan kerugian sebesar $60 juta ETH (Zheng et al., 2023).
 
-Zheng et al. dalam penelitiannya mengenai deteksi reentrancy pada smart contract menunjukkan bahwa *reentrancy* merupakan salah satu kerentanan paling kritis yang menyebabkan kerugian jutaan dolar. Temuan mereka menunjukkan bahwa deteksi kerentanan memerlukan pendekatan gabungan antara analisis statis dan eksekusi dinamis untuk mencapai cakupan yang komprehensif.
+Zheng et al. memperlihatkan bahwa *reentrancy* masih menjadi salah satu kerentanan paling merugikan di ekosistem Ethereum. Deteksi serangan semacam ini memerlukan kombinasi antara analisis statis dan eksekusi dinamis untuk mencapai cakupan yang memadai.
 
 Secara formal, *reentrancy attack* dapat didefinisikan sebagai berikut:
 
@@ -50,9 +50,9 @@ Attacker.call(withdraw(amount))
       → Attacker.call(withdraw(amount))  [RECURSIVE CALL]
 ```
 
-Celah keamanan ini terjadi karena pelanggaran pola *Checks-Effects-Interactions* (CEI), di mana interaksi eksternal (transfer ETH) dilakukan sebelum efek (pembaruan *state*) diterapkan (ConsenSys, 2023). Samreen dan Alalfi dalam penelitiannya mengenai identifikasi kerentanan *reentrancy* pada *smart contract* Ethereum menunjukkan bahwa deteksi serangan ini memerlukan analisis interaksi antar-kontrak melalui spesifikasi *Application Binary Interface* (ABI), karena *reentrancy* modern sering melibatkan panggilan silang antar-kontrak yang kompleks.
+Celah keamanan ini terjadi karena pelanggaran pola *Checks-Effects-Interactions* (CEI), di mana interaksi eksternal (transfer ETH) dilakukan sebelum efek (pembaruan *state*) diterapkan (ConsenSys, 2023). Samreen dan Alalfi menekankan bahwa deteksi serangan ini memerlukan analisis interaksi antar-kontrak melalui spesifikasi *Application Binary Interface* (ABI), mengingat *reentrancy* modern sering melibatkan panggilan silang antar-kontrak yang kompleks.
 
-Dalam konteks *bridge blockchain*, *reentrancy attack* merupakan ancaman yang sangat serius karena *bridge* menyimpan aset dalam jumlah besar dari banyak pengguna. Zheng et al. (2023) dalam studi skala besar terhadap 230.548 kontrak terverifikasi di Etherscan menemukan bahwa 21.212 kontrak memiliki masalah *reentrancy*, yang menunjukkan bahwa kerentanan ini masih menjadi masalah widespread dalam ekosistem Ethereum.
+Dalam konteks *bridge blockchain*, *reentrancy attack* menjadi ancaman yang sangat serius karena *bridge* menyimpan aset dalam jumlah besar dari banyak pengguna. Zheng et al. (2023) dalam studi skala besar terhadap 230.548 kontrak terverifikasi di Etherscan menemukan bahwa 21.212 kontrak memiliki masalah *reentrancy*—angka yang menunjukkan betapa merajalelanya kerentanan ini.
 
 ### 2.2.2 Checks-Effects-Interactions (CEI) Pattern
 
@@ -62,11 +62,11 @@ Pola CEI merupakan metodologi desain keamanan yang direkomendasikan oleh OpenZep
 2. **Effects**: Pembaruan *state* internal kontrak sebelum melakukan interaksi eksternal.
 3. **Interactions**: Panggilan eksternal ke kontrak lain atau transfer ETH.
 
-Casale-Brunet dan Mattavelli dalam penelitiannya mengenai pendekatan *secure-by-design* pada *smart contract* berbasis implementasi *dataflow* menekankan pentingnya desain keamanan proaktif yang menerapkan pola CEI sejak tahap perancangan. Pendekatan mereka menunjukkan bahwa kontrak yang dirancang dengan mempertimbangkan aliran data sejak awal memiliki ketahanan yang lebih baik terhadap serangan *reentrancy*.
+Casale-Brunet dan Mattavelli menekankan pentingnya desain keamanan proaktif yang menerapkan pola CEI sejak tahap perancangan. Kontrak yang dirancang dengan mempertimbangkan aliran data sejak awal terbukti lebih tahan terhadap serangan *reentrancy*.
 
 Penerapan CEI pada *bridge* dapat dilihat pada kontrak `BridgeStaticOnly`, di mana fungsi *withdraw* menerapkan urutan yang benar: validasi saldo (Checks), pengurangan *balance* (Effects), kemudian transfer ETH (Interactions). Pendekatan ini memastikan bahwa bahkan jika penyerang melakukan *reentrancy*, *state* sudah diperbarui sehingga tidak ada dana yang bisa ditarik secara berulang.
 
-Namun, CEI memiliki keterbatasan. Wang et al. (2024a) dalam penelitiannya mengenai deteksi *reentrancy* yang efisien pada kontrak kompleks menunjukkan bahwa pola CEI statis tidak dapat mendeteksi pola serangan yang lebih kompleks seperti *cross-function reentrancy* dan *reentrancy* yang melibatkan interaksi antar-kontrak, yang memerlukan mekanisme deteksi dinamis berbasis pemotongan program (*program slicing*) dan eksekusi simbolis.
+Namun, CEI memiliki keterbatasan. Wang et al. (2024a) membuktikan bahwa pola CEI statis tidak cukup untuk mendeteksi pola serangan yang lebih kompleks seperti *cross-function reentrancy* dan *reentrancy* yang melibatkan interaksi antar-kontrak. Deteksi semacam ini memerlukan mekanisme dinamis berbasis pemotongan program (*program slicing*) dan eksekusi simbolis.
 
 ### 2.2.3 Studi Kasus Eksploitasi Bridge
 
@@ -78,7 +78,7 @@ Analisis terhadap eksploitasi *bridge* dalam tiga tahun terakhir mengungkapkan p
 
 **Nomad Bridge (Agustus 2022)**: Eksploitasi ini terjadi akibat kesalahan konfigurasi pembaruan kontrak, yang memungkinkan siapa saja memverifikasi transaksi palsu. Kerugian mencapai $190 juta (Shou et al., 2023).
 
-Salzano et al. (2026) dalam studi komparatifnya mengenai pendekatan akademik dan pengembang terhadap kerentanan *smart contract* menemukan bahwa hanya 60,55% strategi perbaikan yang diterapkan oleh pengembang sesuai dengan panduan akademik yang ada. Temuan ini mengindikasikan adanya kesenjangan antara teori keamanan dan praktik implementasi, yang menjadi motivasi bagi pendekatan *defense-in-depth* yang diusulkan dalam penelitian ini.
+Salzano et al. (2026) menemukan kejanggalan yang menarik: hanya 60,55% strategi perbaikan yang diterapkan oleh pengembang sesuai dengan panduan akademik yang ada. Kesenjangan antara teori keamanan dan praktik implementasi inilah yang menjadi motivasi bagi pendekatan *defense-in-depth* yang diusulkan dalam penelitian ini.
 
 Pola-pola serangan ini menunjukkan bahwa keamanan *bridge* memerlukan pendekatan berlapis (*defense-in-depth*) yang mencakup perlindungan terhadap *reentrancy*, manipulasi *signature*, dan anomali transaksi *on-chain*.
 
@@ -88,7 +88,7 @@ Pola-pola serangan ini menunjukkan bahwa keamanan *bridge* memerlukan pendekatan
 
 *Variable packing* merupakan teknik optimasi gas yang memanfaatkan model *storage* 32-*byte* EVM untuk menggabungkan beberapa variabel ke dalam satu *slot*. Dalam model *storage* default, setiap variabel menempati *slot* terpisah terlepas dari ukurannya. Sebagai contoh, variabel `address` (20 *byte*) dan `bool` (1 *byte*) masing-masing menempati satu *slot* 32-*byte* penuh, sehingga menghasilkan pemborosan ruang sebesar 11 *byte* dan 31 *byte* (Ethereum StackExchange, 2023).
 
-Di Sorbo et al. (2022) dalam penelitian profil konsumsi gas mengidentifikasi 19 jenis *code smells* pada Solidity yang berkontribusi terhadap pemborosan gas, termasuk penggunaan *storage* yang tidak efisien. Temuan mereka menunjukkan bahwa optimasi *storage* layout dapat menghasilkan penghematan gas yang signifikan tanpa mengubah logika bisnis kontrak.
+Di Sorbo et al. (2022) mengidentifikasi 19 jenis *code smells* pada Solidity yang berkontribusi terhadap pemborosan gas, termasuk penggunaan *storage* yang tidak efisien. Optimasi *storage* layout terbukti menghasilkan penghematan gas yang cukup besar tanpa mengubah logika bisnis kontrak.
 
 Dengan *variable packing*, dua variabel dapat digabungkan ke dalam satu *slot* jika total ukurannya tidak melebihi 32 *byte*. Pada penelitian ini, struct `UserBalance` memaketkan `address` (20 *byte*) dan `uint96` (12 *byte*) ke dalam satu *slot* 32-*byte*, mengurangi jumlah *slot* dari 2 menjadi 1. Penghematan gas yang dihasilkan adalah:
 
@@ -98,13 +98,13 @@ Dengan *variable packing*, dua variabel dapat digabungkan ke dalam satu *slot* j
             = 20.000 gas per transaksi deposit pertama
 ```
 
-Benedetti et al. dalam analisis biaya gas pada pola *proxy* dan *diamond* menunjukkan bahwa pemilihan pola arsitektural memiliki dampak signifikan terhadap biaya eksekusi. Mereka merekomendasikan penggunaan *storage packing* sebagai salah satu strategi optimasi utama, terutama untuk kontrak yang berinteraksi dengan banyak *slot* secara频繁.
+Benedetti et al. dalam analisis biaya gas pada pola *proxy* dan *diamond* merekomendasikan penggunaan *storage packing* sebagai salah satu strategi optimasi utama, terutama untuk kontrak yang berinteraksi dengan banyak *slot* secara intensif.
 
 ### 2.3.2 Unchecked Arithmetic
 
 Solidity 0.8.x secara default menerapkan pemeriksaan *overflow/underflow* pada setiap operasi aritmatika. Meskipun ini meningkatkan keamanan, pemeriksaan tersebut menambah biaya gas sekitar 20-50 gas per operasi. Pada situasi di mana *overflow* dapat dipastikan tidak terjadi — misalnya setelah validasi input yang memastikan nilai positif — blok `unchecked` dapat digunakan untuk menghilangkan pemeriksaan ini (Solidity Documentation, 2023).
 
-Benedetti et al. dalam penelitiannya mengenai biaya gas pada smart contract menunjukkan bahwa optimasi gas yang agresif tanpa pertimbangan batas *gas limit* justru dapat menciptakan kerentanan baru. Oleh karena itu, penggunaan blok `unchecked` harus dibatasi pada konteks di mana keamanan aritmatika sudah dijamin melalui mekanisme lain.
+Benedetti et al. juga memperingatkan bahwa optimasi gas yang agresif tanpa pertimbangan batas *gas limit* justru dapat menciptakan kerentanan baru. Oleh karena itu, penggunaan blok `unchecked` harus dibatasi pada konteks di mana keamanan aritmatika sudah dijamin melalui mekanisme lain.
 
 Pada penelitian ini, blok `unchecked` diterapkan pada *increment balance* dalam fungsi `deposit` dan *decrement balance* dalam fungsi `withdraw`. Penghematan gas yang dihasilkan sekitar 20 gas per operasi, yang secara kumulatif menjadi signifikan untuk *bridge* dengan volume transaksi tinggi.
 
@@ -112,7 +112,7 @@ Pada penelitian ini, blok `unchecked` diterapkan pada *increment balance* dalam 
 
 Sebelum Solidity 0.8.4, mekanisme *revert* standar menggunakan *string error message*, yang memerlukan encoding ABI dan menambah biaya gas sekitar 200-500 gas per *revert*. *Custom errors*, yang diperkenalkan melalui Solidity 0.8.4, memungkinkan deklarasi *error* tanpa *string*, sehingga mengurangi biaya *revert* sekitar 50 gas per permohonan (Solidity 0.8.4 Release Notes, 2021).
 
-Salzano et al. (2026) dalam studi komparatifnya menemukan bahwa penggunaan *custom errors* merupakan salah satu strategi optimasi yang paling sering diterapkan oleh pengembang, namun implementasinya masih belum konsisten di seluruh ekosistem Solidity.
+Salzano et al. (2026) menemukan bahwa penggunaan *custom errors* merupakan salah satu strategi optimasi yang paling sering diterapkan oleh pengembang, meskipun implementasinya masih belum konsisten di seluruh ekosistem Solidity.
 
 ### 2.3.4 Calldata vs Memory
 
@@ -122,13 +122,13 @@ Parameter fungsi yang hanya dibaca (tidak dimodifikasi) dapat dideklarasikan seb
 
 Variabel `immutable` dideklasikan pada *constructor* dan nilainya ditulis langsung ke *bytecode* kontrak, bukan ke *storage*. Akibatnya, pembacaan variabel `immutable` tidak memerlukan operasi SLOAD, sehingga menghemat gas pada setiap akses (EIP-1967, 2020). Pada penelitian ini, variabel `admin` dideklarasikan sebagai `immutable` pada ketiga kontrak *bridge*, yang menghasilkan penghematan sekitar 2.100 gas per pembacaan dibandingkan *storage* biasa.
 
-Zheng et al. (jurnal_18) dalam penelitiannya mengenai GasAgent, sebuah *multi-agent framework* untuk optimasi gas otomatis menggunakan LLM, menunjukkan bahwa kombinasi teknik optimasi statis seperti *variable packing*, *immutable variables*, dan *custom errors* dapat menghasilkan penghematan gas kumulatif yang signifikan tanpa mengorbankan keamanan atau fungsionalitas kontrak.
+Zheng et al. (jurnal_18) mengembangkan GasAgent, sebuah *multi-agent framework* untuk optimasi gas otomatis menggunakan LLM. Mereka membuktikan bahwa kombinasi teknik optimasi statis seperti *variable packing*, *immutable variables*, dan *custom errors* menghasilkan penghematan gas kumulatif yang besar tanpa mengorbankan keamanan atau fungsionalitas kontrak.
 
 ## 2.4 EIP-1153: Transient Storage
 
 ### 2.4.1 Spesifikasi dan Latar Belakang
 
-EIP-1153 (*Transient Storage Opcodes*) merupakan *Ethereum Improvement Proposal* yang memperkenalkan dua *opcode* baru: TSTORE (*Transient Store*) dan TLOAD (*Transient Load*). Proposal ini diaktifkan melalui *fork Cancun* pada Maret 2024, bersamaan dengan EIP-4844 dan beberapa peningkatan lainnya (EIP-1153, 2021). Solidity Blog (2024) dalam dokumentasi resminya menjelaskan bahwa desain *transient storage* terinspirasi dari kebutuhan akan mekanisme penyimpanan sementara yang efisien gas untuk kasus penggunaan seperti *reentrancy guard* dan *cross-function state tracking*.
+EIP-1153 (*Transient Storage Opcodes*) memperkenalkan dua *opcode* baru: TSTORE (*Transient Store*) dan TLOAD (*Transient Load*). Proposal ini diaktifkan melalui *fork Cancun* pada Maret 2024, bersamaan dengan EIP-4844 dan beberapa peningkatan lainnya (EIP-1153, 2021). Solidity Blog (2024) menjelaskan bahwa desain *transient storage* terinspirasi dari kebutuhan akan mekanisme penyimpanan sementara yang efisien gas untuk kasus penggunaan seperti *reentrancy guard* dan *cross-function state tracking*.
 
 *Transient storage* merupakan mekanisme penyimpanan sementara yang berbeda dari *storage* permanen (SSTORE/SLOAD) dalam tiga aspek kritis:
 
@@ -140,7 +140,7 @@ EIP-1153 (*Transient Storage Opcodes*) merupakan *Ethereum Improvement Proposal*
 
 ### 2.4.2 Analisis Penghematan Gas
 
-Penghematan gas yang dicapai melalui EIP-1153 sangat signifikan. Bandingkan mekanisme *reentrancy guard* konvensional dengan pendekatan *transient storage*:
+Penghematan gas dari EIP-1153 sangat mencolok. Bandingkan mekanisme *reentrancy guard* konvensional dengan pendekatan *transient storage*:
 
 **Tanpa EIP-1153 (*Mutex Lock* Tradisional):**
 ```
@@ -163,17 +163,17 @@ G_tstore = TSTORE(enter) + TSTORE(exit)
           = 22.700 gas (99.1% savings)
 ```
 
-Penghematan ini bersifat eksponensial untuk *bridge* dengan volume transaksi tinggi. Pada 1.000 transaksi per hari, penghematan kumulatif mencapai 22,7 juta gas, yang setara dengan sekitar 0,0227 ETH pada harga gas 10 Gwei (Paradigm, 2023). Benedetti et al. dalam analisis biaya gas pola *proxy* dan *diamond* menunjukkan bahwa penghematan sebesar ini sangat signifikan dalam konteks *upgradeable smart contracts* yang memiliki interaksi *storage* yang intensif.
+Penghematan ini menjadi sangat berarti untuk *bridge* dengan volume transaksi tinggi. Pada 1.000 transaksi per hari, penghematan kumulatif mencapai 22,7 juta gas—setara sekitar 0,0227 ETH pada harga gas 10 Gwei (Paradigm, 2023). Untuk *upgradeable smart contracts* yang memiliki interaksi *storage* intensif, angka ini tentu tidak bisa diabaikan.
 
 ### 2.4.3 Aplikasi dalam Smart Contract Security
 
-Zhang, A. & Debono (2024) dalam studi dampak EIP-1153 terhadap ekosistem Ethereum menemukan bahwa dari sekitar 250 kontrak yang menggunakan *transient storage*, lebih dari 60 di antaranya merupakan kontrak yang di-*deploy* lintas *chain*. Temuan ini menunjukkan adopsi yang luas meskipun penggunaan *transient storage* masih terbatas pada penggunaan *inline assembly* karena dukungan *compiler* yang baru mulai tersedia.
+Zhang, A. & Debono (2024) menemukan bahwa dari sekitar 250 kontrak yang menggunakan *transient storage*, lebih dari 60 di antaranya di-*deploy* lintas *chain*. Angka ini mengindikasikan adopsi yang luas, meskipun penggunaan *transient storage* masih terbatas pada *inline assembly* karena dukungan *compiler* yang baru mulai tersedia.
 
 Solady, *library* Solidity yang dikembangkan oleh Vector Finance, juga menyediakan `TransientStorageLock` yang mengimplementasikan mekanisme serupa (Solady, 2023). Kedua implementasi ini membuktikan bahwa EIP-1153 telah diterima secara luas dalam ekosistem Solidity sebagai standar baru untuk *reentrancy guard*.
 
 ### 2.4.4 Keamanan Transient Storage
 
-Model keamanan *transient storage* didasarkan pada properti *auto-reset* yang meyakinkan bahwa data tidak dapat persist lintas transaksi (OpenZeppelin, 2024). Trail of Bits (2024) dalam asesmen keamanannya menyimpulkan bahwa EIP-1153 memperkuat model keamanan *smart contract* dengan mengurangi kompleksitas manajemen *state* sementara.
+Model keamanan *transient storage* dibangun di atas properti *auto-reset* yang memastikan data tidak persist lintas transaksi (OpenZeppelin, 2024). Trail of Bits (2024) menyimpulkan bahwa EIP-1153 memperkuat model keamanan *smart contract* dengan menyederhanakan manajemen *state* sementara.
 
 Namun, terdapat pertimbangan keamanan yang perlu diperhatikan: *transient storage* berbagi ruang alamat dengan *storage* permanen, sehingga kontrak yang menggunakan SSTORE pada alamat yang sama dengan TSTORE pada transaksi sebelumnya dapat mengalami konflik. Dalam penelitian ini, konflik ini dihindari melalui penggunaan slot konstan (`REENTRANCY_SLOT = 1`) yang tidak digunakan untuk *storage* permanen.
 
@@ -215,9 +215,9 @@ Di mana `Δv` adalah jumlah transaksi korban dan `x` adalah jumlah *frontrun* pe
 
 ### 2.5.3 Dampak MEV pada Bridge
 
-Dalam konteks *bridge*, *sandwich attack* memiliki dampak yang lebih luas dibandingkan DEX biasa. Pengguna *bridge* tidak hanya kehilangan nilai akibat *slippage*, tetapi juga menghadapi risiko keamanan yang lebih serius. Data dari Flashbots (2021) menunjukkan bahwa MEV bot telah mengumpulkan keuntungan lebih dari $600 juta dalam bentuk ETH dari ekosistem DeFi sejak 2020.
+Dalam konteks *bridge*, *sandwich attack* memiliki dampak yang lebih luas dibandingkan DEX biasa. Pengguna *bridge* tidak hanya kehilangan nilai akibat *slippage*, tetapi juga menghadapi risiko keamanan yang lebih serius. Data dari Flashbots (2021) memperlihatkan bahwa MEV bot telah mengumpulkan keuntungan lebih dari $600 juta dalam bentuk ETH dari ekosistem DeFi sejak 2020.
 
-Qin et al. (2021) dalam analisisnya terhadap nilai yang dapat diekstraksi dari blockchain menunjukkan bahwa *sandwich attack* menjadi ancaman struktural yang tidak dapat dihilangkan sepenuhnya melalui mekanisme konsensus. Solusi mitigasi memerlukan pendekatan pada lapisan aplikasi, termasuk: (1) *encrypted mempool* yang mengenkripsi transaksi sampai dieksekusi, (2) *commit-reveal scheme* yang menunda pengungkapan detail transaksi, dan (3) *on-chain monitoring* yang mendeteksi pola serangan secara real-time.
+Qin et al. (2021) membuktikan bahwa *sandwich attack* merupakan ancaman struktural yang tidak dapat dihilangkan sepenuhnya melalui mekanisme konsensus. Solusi mitigasi memerlukan pendekatan pada lapisan aplikasi, termasuk: (1) *encrypted mempool* yang mengenkripsi transaksi sampai dieksekusi, (2) *commit-reveal scheme* yang menunda pengungkapan detail transaksi, dan (3) *on-chain monitoring* yang mendeteksi pola serangan secara real-time.
 
 ### 2.5.4 Strategi Mitigasi MEV
 
@@ -229,7 +229,7 @@ Uniswap V3 memperkenalkan TWAP (*Time-Weighted Average Price*) *oracle* yang men
 
 ### 2.6.1 Latar Belakang dan Spesifikasi
 
-EIP-4844 (*Shard Blob Transactions*), yang diaktifkan melalui *fork Cancun* pada Maret 2024, memperkenalkan jenis transaksi baru yang membawa "*blob*" — data sementara yang dapat diakses oleh klien *light* tetapi tidak disimpan secara permanen dalam *state* Ethereum (EIP-4844, 2023). Park et al. dalam penelitian komprehensifnya mengenai dampak EIP-4844 terhadap Ethereum menganalisis aspek keamanan konsensus, dinamika transaksi *rollup*, dan pasar biaya gas *blob*, memberikan pemahaman menyeluruh mengenai implikasi teknis dan ekonomis dari implementasi EIP-4844.
+EIP-4844 (*Shard Blob Transactions*), yang diaktifkan melalui *fork Cancun* pada Maret 2024, memperkenalkan jenis transaksi baru yang membawa "*blob*"—data sementara yang dapat diakses oleh klien *light* tetapi tidak disimpan secara permanen dalam *state* Ethereum (EIP-4844, 2023). Park et al. menganalisis aspek keamanan konsensus, dinamika transaksi *rollup*, dan pasar biaya gas *blob*, memberikan pemahaman menyeluruh mengenai implikasi teknis dan ekonomis dari implementasi EIP-4844.
 
 Spesifikasi teknis *blob* meliputi:
 - Ukuran maksimum per *blob*: 128 KB (131.072 *byte*)
@@ -273,9 +273,9 @@ Perbandingan antara Optimistic Rollups dan ZK-Rollups menunjukkan *tradeoff* ant
 
 ### 2.8.1 Konsep EWS
 
-*Early Warning System* (EWS) *on-chain* merupakan mekanisme deteksi anomali transaksi yang berjalan sebagai komponen *smart contract*. Berbeda dari monitoring *off-chain* yang bergantung pada infrastruktur server terpusat, EWS *on-chain* memproses dan mengevaluasi transaksi secara langsung dalam lingkungan EVM, sehingga tidak memiliki *single point of failure* (Trail of Bits, 2024).
+*Early Warning System* (EWS) *on-chain* merupakan mekanisme deteksi anomali transaksi yang berjalan sebagai komponen *smart contract*. Berbeda dari monitoring *off-chain* yang bergantung pada infrastruktur server terpusat, EWS *on-chain* memproses dan mengevaluasi transaksi secara langsung dalam lingkungan EVM—tanpa *single point of failure* (Trail of Bits, 2024).
 
-Pada penelitian ini, EWS diimplementasikan melalui kontrak `MonitorMock` yang menggunakan EIP-1153 *transient storage* untuk melacak status transaksi, mendeteksi pola *sandwich attack*, dan menerapkan penalti ekonomi secara otomatis. Casale-Brunet dan Mattavelli dalam penelitiannya mengenai pendekatan *secure-by-design* menekankan bahwa mekanisme deteksi yang terintegrasi langsung dalam kontrak memiliki keunggulan dalam hal keandalan dan ketahanan terhadap kegagalan infrastruktur eksternal.
+Pada penelitian ini, EWS diimplementasikan melalui kontrak `MonitorMock` yang menggunakan EIP-1153 *transient storage* untuk melacak status transaksi, mendeteksi pola *sandwich attack*, dan menerapkan penalti ekonomi secara otomatis. Casale-Brunet dan Mattavelli meyakini bahwa mekanisme deteksi yang terintegrasi langsung dalam kontrak memiliki keunggulan dalam hal keandalan dan ketahanan terhadap kegagalan infrastruktur eksternal.
 
 ### 2.8.2 Mekanisme Deteksi MEV Sandwich
 
@@ -291,7 +291,7 @@ Deteksi MEV *sandwich* pada EWS didasarkan pada analisis pola transaksi beruruta
 
 ### 2.8.3 Model Penalti Ekonomi
 
-Model penalti ekonomi pada EWS didasarkan pada prinsip *incentive compatibility* — membuat serangan menjadi tidak menguntungkan secara ekonomi. Formula penalti didefinisikan sebagai:
+Model penalti ekonomi pada EWS dibangun di atas prinsip *incentive compatibility*—membuat serangan menjadi tidak menguntungkan secara ekonomi. Formula penalti didefinisikan sebagai:
 
 ```
 Penalty = amount × (λ × P_detect / 100.000.000)
@@ -393,7 +393,7 @@ Tabel berikut merangkum perbandingan arsitektural antara *bridge* yang diteliti 
 | Biaya Gas | Tergantung chain | Flat fee | Tiered (A/B/C/D) |
 | Rollup Integration | Multi-rollup | LayerZero | EIP-4844 dynamic |
 
-Perbandingan ini menunjukkan bahwa penelitian ini menawarkan pendekatan yang berbeda dalam hal integrasi EIP-1153 untuk keamanan dan *dynamic routing* untuk optimasi biaya *rollup*.
+Perbandingan ini memperlihatkan bahwa penelitian ini menawarkan pendekatan yang berbeda dalam hal integrasi EIP-1153 untuk keamanan dan *dynamic routing* untuk optimasi biaya *rollup*.
 
 ## 2.11 Kerangka Konseptual Penelitian
 

@@ -2,7 +2,7 @@
 
 ## 4.1 Ikhtisar Hasil
 
-Penelitian ini mengembangkan empat tier arsitektur bridge untuk membuktikan bahwa modifikasi EIP-1153 (Cancun, 2024) dapat meningkatkan keamanan smart contract bridge secara signifikan dengan biaya gas yang terkendali (Benedetti et al., 2024; Casale-Brunet, 2024). Berikut adalah ringkasan hasil pengukuran dari 215 test cases (Shou et al., 2023; Lagouvardos et al., 2024).
+Penelitian ini mengembangkan empat tier arsitektur bridge untuk membuktikan bahwa modifikasi EIP-1153 (Cancun, 2024) dapat meningkatkan keamanan smart contract bridge dengan biaya gas yang terkendali (Benedetti et al., 2024; Casale-Brunet, 2024). Berikut adalah ringkasan hasil pengukuran dari 215 test cases (Shou et al., 2023; Lagouvardos et al., 2024).
 
 ---
 
@@ -19,11 +19,11 @@ Tabel berikut menyajikan data gas rata-rata dari 100 sampel untuk setiap operasi
 | Swap | 10,593 | 10,494 | 103,825 | 13,443 |
 | Deploy | 413,860 | 352,921 | 886,301 | 736,064 |
 
-**Temuan 1**: Tier B (Static Only) dan Tier A (Baseline) memiliki gas yang hampir identik untuk deposit dan withdraw. Hal ini menunjukkan bahwa optimasi statis saja (CEI, packing, custom errors) tidak memberikan perbedaan signifikan pada gas runtime.
+Temuan pertama yang menarik: Tier B (Static Only) dan Tier A (Baseline) memiliki gas yang hampir identik untuk deposit dan withdraw. Optimasi statis saja (CEI, packing, custom errors) rupanya tidak memberikan perbedaan berarti pada gas runtime.
 
-**Temuan 2**: Tier C (Rollup Full) memiliki gas 3.91x sampai 10.77x lebih tinggi dari Tier B. Kemahalan ini disebabkan oleh 5-6 external calls ke MonitorMock per transaksi.
+Sementara itu, Tier C (Rollup Full) memiliki gas 3.91x sampai 10.77x lebih tinggi dari Tier B. Kemahalan ini disebabkan oleh 5-6 external calls ke MonitorMock per transaksi.
 
-**Temuan 3**: Tier D (Rollup Ringan) hanya 8.7% lebih mahal dari Tier B untuk deposit, dan 25% lebih mahal untuk withdraw. Ini membuktikan bahwa modifikasi EIP-1153 secara inline dapat menjaga biaya gas tetap rendah.
+Yang menarik, Tier D (Rollup Ringan) hanya 8.7% lebih mahal dari Tier B untuk deposit, dan 25% lebih mahal untuk withdraw. Ini membuktikan bahwa modifikasi EIP-1153 secara inline dapat menjaga biaya gas tetap rendah.
 
 ### 4.2.2 Analisis Rasio Gas
 
@@ -43,7 +43,7 @@ Tabel berikut menyajikan data gas rata-rata dari 100 sampel untuk setiap operasi
 | Swap | 103,825 | 13,443 | 90,382 | **87.1%** |
 | Deploy | 886,301 | 736,064 | 150,237 | **17.0%** |
 
-**Temuan 4**: Tier D menghemat 52.9% sampai 88.4% gas dibanding Tier C untuk operasi yang sama, tanpa mengorbankan fitur keamanan yang signifikan.
+Tier D menghemat 52.9% sampai 88.4% gas dibanding Tier C untuk operasi yang sama, tanpa mengorbankan fitur keamanan yang ada.
 
 ---
 
@@ -60,9 +60,7 @@ Serangan reentrancy diuji menggunakan metodologi yang dikembangkan oleh Samreen 
 | Consecutive (3x) | BERHASIL | BERHASIL | DIBLOKIR | DIBLOKIR |
 | Profit attacker | +5 ETH | 0 ETH | 0 ETH | 0 ETH |
 
-**Temuan 5**: Tier B hanya melindungi dari reentrancy single-function melalui CEI (Zheng et al., 2023). Cross-function reentrancy masih bisa mengeksploitasi Tier B karena tidak ada runtime guard (Wang et al., 2024).
-
-**Temuan 6**: Tier C dan Tier D berhasil memblokir semua jenis reentrancy berkat EIP-1153 transient storage (Zheng et al., 2023; Wang et al., 2026).
+Tier B hanya melindungi dari reentrancy single-function melalui CEI (Zheng et al., 2023). Cross-function reentrancy masih bisa mengeksploitasi Tier B karena tidak ada runtime guard (Wang et al., 2024). Sementara itu, Tier C dan Tier D berhasil memblokir semua jenis reentrancy berkat EIP-1153 transient storage (Zheng et al., 2023; Wang et al., 2026).
 
 ### 4.3.2 Deteksi MEV Sandwich
 
@@ -75,7 +73,7 @@ Deteksi MEV sandwich attack diimplementasikan menggunakan pendekatan yang dikemb
 | Penalty diterapkan | Tidak ada | Tidak ada | Ya | Ya |
 | Cross-block false positive | N/A | N/A | Tidak (correct) | Tidak (correct) |
 
-**Temuan 7**: Tier C menggunakan dynamic array `txRecords[]` yang memerlukan SSTORE sebesar 22,100 gas per push. Tier D menggantinya dengan single-slot `LastTx` struct yang hanya memerlukan 2,900 gas (warm write) (Li, 2025).
+Perbedaan mencolok terlihat pada mekanisme penyimpanan: Tier C menggunakan dynamic array `txRecords[]` yang memerlukan SSTORE sebesar 22,100 gas per push. Tier D menggantinya dengan single-slot `LastTx` struct yang hanya memerlukan 2,900 gas (warm write) (Li, 2025).
 
 ### 4.3.3 Emergency Pause
 
@@ -139,7 +137,7 @@ Metrik SPG dikembangkan untuk mengukur cost-effectiveness keamanan (Rodler et al
 | Inline Penalty Calculation | Deterrence ekonomi | 300 | Pure math: (amount × lambda × score) / 1e8 |
 | Emergency Pause | Emergency stop | 2,900 | SSTORE paused flag |
 
-**Temuan 11**: Modifikasi EIP-1153 pada Tier D menambah 4 fungsi keamanan tambahan dengan biaya tambahan hanya 9,700 gas — 48.5x lebih murah dari Tier C.
+Modifikasi EIP-1153 pada Tier D menambah 4 fungsi keamanan tambahan dengan biaya tambahan hanya 9,700 gas—48.5x lebih murah dari Tier C.
 
 ---
 
@@ -157,7 +155,7 @@ Uji statistik dilakukan menggunakan Welch's t-test (Welch, 1947) dengan ukuran s
 | 95% CI | [98.18%, 98.23%] | Sangat sempit → konsisten |
 | Cost Ratio | 55.7x | Tier C 55.7x lebih mahal |
 
-**Temuan 12**: Perbedaan gas antara Tier C dan Tier D sangat signifikan secara statistik, dengan confidence interval yang sangat sempit.
+Perbedaan gas antara Tier C dan Tier D sangat mencolok secara statistik, dengan confidence interval yang sangat sempit.
 
 ---
 
@@ -181,7 +179,7 @@ Estimasi biaya real-world menggunakan data gas price dari Etherscan (Park et al.
 | 30 Gwei | $110,000/bulan | $31,000/bulan | **$79,000/bulan** |
 | 80 Gwei | $295,000/bulan | $82,000/bulan | **$213,000/bulan** |
 
-**Temuan 13**: Untuk bridge dengan 100,000 transaksi per bulan, Tier D menghemat $79,000 sampai $213,000 per bulan dibanding Tier C.
+Untuk bridge dengan 100,000 transaksi per bulan, Tier D menghemat $79,000 sampai $213,000 per bulan dibanding Tier C.
 
 ---
 
