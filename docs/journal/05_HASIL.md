@@ -1,12 +1,12 @@
-# III. HASIL PENELITIAN
+# 3. Hasil penelitian
 
-## A. Ikhtisar Hasil
+## 3.1 Ikhtisar hasil
 
 Penelitian ini mengembangkan empat tier arsitektur bridge untuk membuktikan bahwa modifikasi EIP-1153 (Cancun, 2024) dapat meningkatkan keamanan smart contract bridge dengan biaya gas yang terkendali ([1], [2]). Berikut adalah ringkasan hasil pengukuran dari 215 test cases ([3], [4]).
 
-## B. Hasil Pengukuran Gas
+## 3.2 Hasil pengukuran gas
 
-### 1) Gas per Operasi Bridge:
+### 3.2.1 Gas per operasi bridge
 
 Tabel berikut menyajikan data gas rata-rata dari 100 sampel untuk setiap operasi bridge pada keempat tier ([1], [5]):
 
@@ -23,7 +23,7 @@ Sementara itu, Tier C (Rollup Full) memiliki gas 3.91x sampai 10.77x lebih tingg
 
 Yang menarik, Tier D (Rollup Ringan) hanya 8.7% lebih mahal dari Tier B untuk deposit, dan 25% lebih mahal untuk withdraw. Ini membuktikan bahwa modifikasi EIP-1153 secara inline dapat menjaga biaya gas tetap rendah.
 
-### 2) Analisis Rasio Gas:
+### 3.2.2 Analisis rasio gas
 
 | Transisi | Rasio Gas | Keterangan |
 |----------|----------|------------|
@@ -32,7 +32,7 @@ Yang menarik, Tier D (Rollup Ringan) hanya 8.7% lebih mahal dari Tier B untuk de
 | B → D | 1.09x - 1.25x | Modifikasi inline hanya menambah sedikit gas |
 | C → D | 0.08x - 0.12x | Inline 8x-11x lebih murah dari external calls |
 
-### 3) Penghematan Gas Tier D vs Tier C:
+### 3.2.3 Penghematan gas Tier D vs Tier C
 
 | Operasi | Tier C | Tier D | Penghematan | Persentase |
 |---------|--------|--------|-------------|-----------|
@@ -43,9 +43,9 @@ Yang menarik, Tier D (Rollup Ringan) hanya 8.7% lebih mahal dari Tier B untuk de
 
 Tier D menghemat 52.9% sampai 88.4% gas dibanding Tier C untuk operasi yang sama, tanpa mengorbankan fitur keamanan yang ada.
 
-## C. Hasil Verifikasi Keamanan
+## 3.3 Hasil verifikasi keamanan
 
-### 1) Serangan Reentrancy:
+### 3.3.1 Serangan reentrancy
 
 Serangan reentrancy diuji menggunakan metodologi yang dikembangkan oleh [6] dan [7]:
 
@@ -58,7 +58,7 @@ Serangan reentrancy diuji menggunakan metodologi yang dikembangkan oleh [6] dan 
 
 Tier B hanya melindungi dari reentrancy single-function melalui CEI ([7]). Cross-function reentrancy masih bisa mengeksploitasi Tier B karena tidak ada runtime guard ([8]). Sementara itu, Tier C dan Tier D berhasil memblokir semua jenis reentrancy berkat EIP-1153 transient storage ([7], [16]).
 
-### 2) Deteksi MEV Sandwich:
+### 3.3.2 Deteksi MEV sandwich
 
 Deteksi MEV sandwich attack diimplementasikan menggunakan pendekatan yang dikembangkan oleh [10] dan [11]:
 
@@ -71,7 +71,7 @@ Deteksi MEV sandwich attack diimplementasikan menggunakan pendekatan yang dikemb
 
 Perbedaan mencolok terlihat pada mekanisme penyimpanan: Tier C menggunakan dynamic array `txRecords[]` yang memerlukan SSTORE sebesar 22,100 gas per push. Tier D menggantinya dengan single-slot `LastTx` struct yang hanya memerlukan 2,900 gas (warm write) ([9]).
 
-### 3) Emergency Pause:
+### 3.3.3 Emergency pause
 
 | Aspek | Tier C | Tier D |
 |-------|--------|--------|
@@ -82,11 +82,11 @@ Perbedaan mencolok terlihat pada mekanisme penyimpanan: Tier C menggunakan dynam
 | Berfungsi setelah unpause | Ya | Ya |
 | Balance terjaga | Ya | Ya |
 
-**Temuan 8**: Kedua Tier C dan Tier D memiliki emergency pause yang berfungsi identik.
+Kedua Tier C dan Tier D memiliki emergency pause yang berfungsi identik.
 
-## D. Hasil Analisis Cost-Effectiveness
+## 3.4 Hasil analisis cost-effectiveness
 
-### 1) Security Points per Gas (SPG):
+### 3.4.1 Security Points per Gas (SPG)
 
 Metrik SPG dikembangkan untuk mengukur cost-effectiveness keamanan ([10]):
 
@@ -97,9 +97,9 @@ Metrik SPG dikembangkan untuk mengukur cost-effectiveness keamanan ([10]):
 | C | 8/8 | 122,769 | 65 | 3 |
 | **D** | **7/8** | **34,156** | **205** | **1** |
 
-**Temuan 9**: Tier D memiliki cost-effectiveness terbaik (205 SPG), 3.15x lebih efisien dari Tier C (65 SPG) ([15]).
+Tier D memiliki cost-effectiveness terbaik (205 SPG), 3.15x lebih efisien dari Tier C (65 SPG) ([15]).
 
-### 2) Biaya per Fitur Keamanan Tambahan:
+### 3.4.2 Biaya per fitur keamanan tambahan
 
 | Transisi | Fitur Tambahan | Gas Tambahan | Biaya per Fitur |
 |----------|---------------|-------------|-----------------|
@@ -107,11 +107,11 @@ Metrik SPG dikembangkan untuk mengukur cost-effectiveness keamanan ([10]):
 | B → D | 3 fitur | +2,729 | 909.7 gas/fitur |
 | D → C | 1 fitur | +88,613 | 88,613 gas/fitur |
 
-**Temuan 10**: Menambah 3 fitur keamanan dari Tier B ke Tier D hanya memerlukan 909.7 gas per fitur. Sedangkan menambah 1 fitur tambahan dari Tier D ke Tier C memerlukan 88,613 gas per fitur — 97.4x lebih mahal.
+Menambah 3 fitur keamanan dari Tier B ke Tier D hanya memerlukan 909.7 gas per fitur. Sedangkan menambah 1 fitur tambahan dari Tier D ke Tier C memerlukan 88,613 gas per fitur — 97.4x lebih mahal.
 
-## E. Hasil Modifikasi EIP-1153
+## 3.5 Hasil modifikasi EIP-1153
 
-### 1) Perbandingan Implementasi EIP-1153:
+### 3.5.1 Perbandingan implementasi EIP-1153
 
 | Pendekatan | Fungsi Keamanan | Gas Total | External Calls |
 |-----------|----------------|-----------|----------------|
@@ -119,7 +119,7 @@ Metrik SPG dikembangkan untuk mengukur cost-effectiveness keamanan ([10]):
 | Tier C (via MonitorMock) | 5 | ~74,100 | 5-6 per tx |
 | **Tier D (modifikasi inline)** | **5** | **~9,900** | **0** |
 
-### 2) Rincian Modifikasi EIP-1153 pada Tier D:
+### 3.5.2 Rincian modifikasi EIP-1153 pada Tier D
 
 | Modifikasi | Fungsi | Gas | Mekanisme |
 |-----------|--------|-----|-----------|
@@ -131,9 +131,9 @@ Metrik SPG dikembangkan untuk mengukur cost-effectiveness keamanan ([10]):
 
 Modifikasi EIP-1153 pada Tier D menambah 4 fungsi keamanan tambahan dengan biaya tambahan hanya 9,700 gas—48.5x lebih murah dari Tier C.
 
-## F. Hasil Analisis Statistik
+## 3.6 Hasil analisis statistik
 
-### 1) Welch's t-test (Tier C vs Tier D):
+### 3.6.1 Welch's t-test (Tier C vs Tier D)
 
 Uji statistik dilakukan menggunakan Welch's t-test ([13]) dengan ukuran sampel 100 per tier ([4]):
 
@@ -147,9 +147,9 @@ Uji statistik dilakukan menggunakan Welch's t-test ([13]) dengan ukuran sampel 1
 
 Perbedaan gas antara Tier C dan Tier D sangat mencolok secara statistik, dengan confidence interval yang sangat sempit.
 
-## G. Hasil Estimasi Biaya Real-World
+## 3.7 Hasil estimasi biaya real-world
 
-### 1) Biaya USD per Transaksi (ETH = $3,000):
+### 3.7.1 Biaya USD per transaksi (ETH = $3,000)
 
 Estimasi biaya real-world menggunakan data gas price dari Etherscan ([14]):
 
@@ -160,7 +160,7 @@ Estimasi biaya real-world menggunakan data gas price dari Etherscan ([14]):
 | 80 Gwei | $0.75 | $0.75 | $2.95 | $0.82 |
 | 150 Gwei | $1.41 | $1.41 | $5.53 | $1.54 |
 
-### 2) Estimasi Penghematan Bulanan:
+### 3.7.2 Estimasi penghematan bulanan
 
 | Skenario | Tier C (100K tx) | Tier D (100K tx) | Penghematan |
 |----------|-----------------|-----------------|-------------|
@@ -169,9 +169,9 @@ Estimasi biaya real-world menggunakan data gas price dari Etherscan ([14]):
 
 Untuk bridge dengan 100,000 transaksi per bulan, Tier D menghemat $79,000 sampai $213,000 per bulan dibanding Tier C.
 
-## H. Kesimpulan Hasil Penelitian
+## 3.8 Kesimpulan hasil penelitian
 
-### 1) Temuan Utama:
+### 3.8.1 Temuan utama
 
 1. **Modifikasi EIP-1153 efektif** ([1], [2]): Tier D berhasil mengimplementasikan 5 fungsi keamanan (reentrancy guard, MEV detection, economic penalty, emergency pause, block tracking) dengan biaya hanya 9,900 gas — 48.5x lebih murah dari Tier C.
 
@@ -183,7 +183,7 @@ Untuk bridge dengan 100,000 transaksi per bulan, Tier D menghemat $79,000 sampai
 
 5. **Peningkatan keamanan signifikan** ([7], [16]): Tier D meningkatkan keamanan 75% dari Tier B (4/8 → 7/8) dengan biaya hanya 8.7% lebih tinggi.
 
-### 2) Kontribusi Penelitian:
+### 3.8.2 Kontribusi penelitian
 
 | Kontribusi | Bukti Empiris | Referensi |
 |-----------|---------------|-----------|
@@ -193,7 +193,7 @@ Untuk bridge dengan 100,000 transaksi per bulan, Tier D menghemat $79,000 sampai
 | Cost-effectiveness terbaik | 205 SPG (ranking 1 dari 4 tier) | [10], [15] |
 | Peningkatan keamanan | +75% dari Tier B, +87.5% dari Tier A | [7], [16] |
 
-## I. Keterbatasan Hasil
+## 3.9 Keterbatasan hasil
 
 1. **Belum teruji di production** ([17]): Semua hasil masih berupa pengukuran di environment test (Foundry)
 2. **Pattern detection sederhana** ([10], [3]): Deteksi MEV hanya untuk pola Ta1→Tv, belum Ta1→Tv→Ta2
@@ -201,7 +201,7 @@ Untuk bridge dengan 100,000 transaksi per bulan, Tier D menghemat $79,000 sampai
 4. **Parameter statis** ([15]): P_DETECT (9600) dan LAMBDA (15000) tidak di-tune secara dinamis
 5. **Single chain testing** ([14]): Belum diuji di multiple EVM-compatible chains
 
-## References
+## Referensi
 
 [1] M. Benedetti *et al.*, "Gas Cost Analysis for Smart Contracts," 2024.
 

@@ -1,10 +1,10 @@
-# II. METODOLOGI PENELITIAN
+# 2. Metodologi penelitian
 
 Metode yang digunakan dalam penelitian ini terbagi atas tiga bagian utama, yaitu desain penelitian, model matematika dan ancaman formal, serta kerangka analisis statistik beserta lingkungan pengujian yang digunakan.
 
-## A. Desain Penelitian
+## 2.1 Desain penelitian
 
-### 1) Pendekatan Penelitian:
+### 2.1.1 Pendekatan penelitian:
 
 Penelitian ini menggunakan pendekatan kuantitatif eksperimental dengan desain comparative study [11], [12]. Pendekatan ini dipilih karena penelitian bertujuan mengukur dan membandingkan kinerja gas serta tingkat keamanan pada empat arsitektur bridge yang berbeda secara sistematis dan terkontrol [14].
 
@@ -16,7 +16,7 @@ Desain penelitian terdiri dari tiga tahap utama:
 
 3. **Analisis**: Perbandingan gas cost, evaluasi keamanan terhadap delapan fitur keamanan, perhitungan cost-effectiveness (SPG), dan validasi statistik menggunakan Welch's t-test [16].
 
-### 2) Arsitektur Penelitian:
+### 2.1.2 Arsitektur penelitian:
 
 Penelitian ini mengimplementasikan empat tier bridge dalam satu arsitektur komparatif:
 
@@ -29,7 +29,7 @@ Penelitian ini mengimplementasikan empat tier bridge dalam satu arsitektur kompa
 
 Tier D merupakan kontribusi utama penelitian, yang membuktikan bahwa semua fitur keamanan Tier C dapat diimplementasikan secara inline tanpa external calls, menghasilkan biaya gas yang jauh lebih rendah.
 
-### 3) Asumsi Sistem:
+### 2.1.3 Asumsi sistem:
 
 Penelitian ini dibangun atas beberapa asumsi sistem yang perlu dinyatakan secara eksplisit:
 
@@ -50,9 +50,9 @@ Penelitian ini dibangun atas beberapa asumsi sistem yang perlu dinyatakan secara
 - Primitif kriptografi aman secara komputasional
 - Model eksekusi EVM tidak berubah selama transaksi berjalan
 
-## B. Model Matematika
+## 2.2 Model matematika
 
-### 1) Model Biaya Gas:
+### 2.2.1 Model biaya gas:
 
 Total biaya gas per transaksi didefinisikan sebagai:
 
@@ -77,7 +77,7 @@ Komponen storage merupakan biaya terbesar dalam bridge contract. Model biaya sto
 | TSTORE (EIP-1153) | 100 | Penulisan transient storage [11] |
 | TLOAD (EIP-1153) | 100 | Pembacaan transient storage [21] |
 
-### 2) Model Penghematan Variable Packing:
+### 2.2.2 Model penghematan variable packing:
 
 Variable packing mengurangi jumlah slot storage yang digunakan. Penghematan gas dihitung sebagai:
 
@@ -103,7 +103,7 @@ Total: 2 slot = 40.000 gas (cold write).
 
 Penghematan: 60.000 gas (60%) per transaksi deposit pertama.
 
-### 3) Model Penghematan EIP-1153:
+### 2.2.3 Model penghematan EIP-1153:
 
 Perbandingan mekanisme reentrancy guard konvensional dan transient storage:
 
@@ -130,7 +130,7 @@ G_tstore = TSTORE(enter) + TLOAD(check) + TSTORE(exit)
 
 Penghematan ini menjadi fondasi bagi efisiensi gas Tier D, di mana semua fitur keamanan diimplementasikan secara inline menggunakan TSTORE/TLOAD.
 
-### 4) Model Keuntungan MEV Sandwich Attack:
+### 2.2.4 Model keuntungan MEV sandwich attack:
 
 Tanpa Early Warning System (EWS), keuntungan penyerang dihitung sebagai:
 
@@ -157,7 +157,7 @@ Profit_a' = Ta2.output - Ta1.input - Penalty
 Penalty = amount × (λ × P_detect / 100.000.000)
 ```
 
-### 5) Model Biaya Dynamic Rollup Submission:
+### 2.2.5 Model biaya dynamic rollup submission:
 
 Dynamic engine memilih rute termurah antara blob dan calldata:
 
@@ -176,7 +176,7 @@ Faktor kompresi `α` bergantung pada metode kompresi:
 - ZK proof: α = 0,70 (30% savings)
 - Kombinasi: α = 0,88 (12% savings)
 
-### 6) Model Penalti Ekonomi:
+### 2.2.6 Model penalti ekonomi:
 
 Penalti ekonomi didefinisikan sebagai:
 
@@ -203,9 +203,9 @@ Kondisi agar serangan tidak menguntungkan:
 Profit > 24 × Penalty (untuk P_detect = 96%)
 ```
 
-## C. Model Ancaman Formal
+## 2.3 Model ancaman formal
 
-### 1) Asumsi Aktor:
+### 2.3.1 Asumsi aktor:
 
 Penelitian ini mendefinisikan lima tipe aktor dalam model ancaman:
 
@@ -217,7 +217,7 @@ Penelitian ini mendefinisikan lima tipe aktor dalam model ancaman:
 | MEV Bot | Bot sandwich attack | Adversarial |
 | Rollup Sequencer | Pengirim batch ke L1 | Semi-trusted |
 
-### 2) Vektor Serangan:
+### 2.3.2 Vektor serangan:
 
 **Reentrancy Attack [10], [13]:**
 Attacker melakukan panggilan rekursif ke fungsi withdraw sebelum state balance diperbarui.
@@ -248,7 +248,7 @@ Status keamanan:
 - Tier C: MITIGATED (EWS mendeteksi + penalty)
 - Tier D: MITIGATED (inline detection + penalty)
 
-### 3) Sifat Keamanan:
+### 2.3.3 Sifat keamanan:
 
 **Integrity:**
 - Dijamin oleh EVM [4]: state transitions bersifat deterministic
@@ -262,7 +262,7 @@ Status keamanan:
 **Non-repudiation:**
 - Dijamin oleh blockchain: semua transaksi tercatat di L1/L2
 
-### 4) Matrix Mitigasi Ancaman:
+### 2.3.4 Matrix mitigasi ancaman:
 
 | Ancaman | Probabilitas | Dampak | Mitigasi | Residual Risk |
 |---------|-------------|--------|----------|---------------|
@@ -272,9 +272,9 @@ Status keamanan:
 | Flash loan | Low | High | TWAP + slippage | Low |
 | DoS | Low | Medium | Minimum deposit + gas limit | Low |
 
-## D. Desain Eksperimental
+## 2.4 Desain eksperimental
 
-### 1) Variabel Penelitian:
+### 2.4.1 Variabel penelitian:
 
 | Variabel | Tipe | Deskripsi |
 |----------|------|-----------|
@@ -284,7 +284,7 @@ Status keamanan:
 | Tipe serangan | Independen | reentrancy, MEV sandwich |
 | Gas price | Terkontrol | L1 fee, Blob fee |
 
-### 2) Variabel Terkontrol:
+### 2.4.2 Variabel terkontrol:
 
 Kondisi yang dikontrol selama pengujian:
 - Kondisi jaringan: Normal (tidak congested)
@@ -295,7 +295,7 @@ Kondisi yang dikontrol selama pengujian:
 - Optimizer: 200 runs
 - EVM version: Cancun
 
-### 3) Replikasi:
+### 2.4.3 Replikasi:
 
 Setiap pengukuran gas dilakukan dengan 100 sampel per operasi [15]. Jumlah sampel ini dipilih berdasarkan Central Limit Theorem (CLT) yang menyatakan bahwa distribusi mean akan mendekati normal untuk n ≥ 30 [1], dan diperkuat hingga 100 untuk menghasilkan confidence interval yang lebih sempit dan statistik yang lebih robust [19].
 
@@ -305,7 +305,7 @@ Protokol replikasi:
 3. Gas usage dicatat menggunakan `gasleft()` sebelum dan sesudah transaksi.
 4. Statistik deskriptif (mean, min, max, std dev, 95% CI) dihitung dari 100 sampel.
 
-### 4) Prosedur Pengukuran Gas:
+### 2.4.4 Prosedur pengukuran gas:
 
 Pengukuran gas dilakukan menggunakan mekanisme bawaan Foundry [5] melalui `gasleft()`. Prosedur pengukuran adalah sebagai berikut:
 
@@ -325,9 +325,9 @@ Pengukuran ini mencakup seluruh komponen gas termasuk:
 
 Untuk pengukuran deployment, gas dihitung dari perbedaan `gasleft()` sebelum dan sesudah `new Contract()`.
 
-## E. Kerangka Analisis Statistik
+## 2.5 Kerangka analisis statistik
 
-### 1) Uji Hipotesis:
+### 2.5.1 Uji hipotesis:
 
 **H₀ (Null Hypothesis):** Tidak ada perbedaan bermakna gas cost antara bridge statis dan bridge dinamis.
 
@@ -354,7 +354,7 @@ Derajat kebebasan (df) dihitung menggunakan Welch-Satterthwaite equation:
 df = (s₁²/n₁ + s₂²/n₂)² / [(s₁²/n₁)²/(n₁-1) + (s₂²/n₂)²/(n₂-1)]
 ```
 
-### 2) Confidence Interval:
+### 2.5.2 Confidence interval:
 
 Interval kepercayaan 95% untuk perbedaan mean:
 
@@ -364,7 +364,7 @@ CI_95% = (x̄₁ - x̄₂) ± t_α/2 × √(s₁²/n₁ + s₂²/n₂)
 
 Di Mana `t_α/2` adalah nilai kritis t-tabel untuk α = 0,05 (two-tailed) dengan df yang sesuai.
 
-### 3) Effect Size (Cohen's d):
+### 2.5.3 Effect size (Cohen's d):
 
 Untuk mengukur besarnya perbedaan yang bermakna secara praktis [3]:
 
@@ -386,7 +386,7 @@ Interpretasi Cohen's d:
 | 0,5 ≤ d < 0,8 | Medium |
 | d ≥ 0,8 | Large |
 
-### 4) Metrik Cost-Effectiveness (SPG):
+### 2.5.4 Metrik cost-effectiveness (SPG):
 
 SPG (Security Points per Gas) mengukur efisiensi bridge dalam mengubah biaya gas menjadi keamanan:
 
@@ -398,9 +398,9 @@ Di Mana:
 - Skor Keamanan = jumlah fitur keamanan aktif (0-8)
 - Gas Deposit = gas yang digunakan untuk operasi deposit
 
-## F. Metrik Keamanan
+## 2.6 Metrik keamanan
 
-### 1) Skor Keamanan:
+### 2.6.1 Skor keamanan:
 
 Keamanan dinilai berdasarkan delapan fitur keamanan [13], [14]:
 
@@ -416,7 +416,7 @@ Keamanan dinilai berdasarkan delapan fitur keamanan [13], [14]:
 | 8 | Custom Errors | ✗ | ✓ | ✓ | ✓ |
 | **Total** | | **0/8** | **2/8** | **8/8** | **8/8** |
 
-### 2) Reentrancy Resistance Score (RRS):
+### 2.6.2 Reentrancy resistance score (RRS):
 
 ```
 RRS = 1 - (successful_reentrancy_attempts / total_withdraw_calls)
@@ -424,7 +424,7 @@ RRS = 1 - (successful_reentrancy_attempts / total_withdraw_calls)
 
 Nilai ideal: RRS = 1,0 (0% reentrancy berhasil).
 
-### 3) MEV Protection Score (MPS):
+### 2.6.3 MEV protection score (MPS):
 
 ```
 MPS = detected_mev_attempts / total_mev_attempts
@@ -432,7 +432,7 @@ MPS = detected_mev_attempts / total_mev_attempts
 
 Nilai ideal: MPS ≥ 0,96 (96% deteksi).
 
-### 4) Gas Efficiency Ratio (GER):
+### 2.6.4 Gas efficiency ratio (GER):
 
 ```
 GER = G_unoptimized / G_optimized
@@ -440,9 +440,9 @@ GER = G_unoptimized / G_optimized
 
 GER > 1: Optimized lebih efisien.
 
-## G. Tools dan Lingkungan Pengujian
+## 2.7 Tools dan lingkungan pengujian
 
-### 1) Platform Pengembangan:
+### 2.7.1 Platform pengembangan:
 
 | Komponen | Spesifikasi |
 |----------|------------|
@@ -453,7 +453,7 @@ GER > 1: Optimized lebih efisien.
 | EVM Version | Cancun (mendukung EIP-1153) |
 | Optimizer | 200 runs |
 
-### 2) Framework Pengujian:
+### 2.7.2 Framework pengujian:
 
 Foundry [5] dipilih sebagai framework pengujian karena mendukung [16], [21]:
 - EVM version Cancun (EIP-1153 [7] TSTORE/TLOAD)
@@ -462,7 +462,7 @@ Foundry [5] dipilih sebagai framework pengujian karena mendukung [16], [21]:
 - Invariant testing [18]
 - Cheat codes untuk manipulasi state (`vm.deal`, `vm.prank`, `vm.warp`, `vm.roll`)
 
-### 3) Spesifikasi foundry.toml:
+### 2.7.3 Spesifikasi foundry.toml:
 
 ```toml
 [profile.default]
@@ -476,14 +476,14 @@ evm_version = "cancun"
 gas_reports = ["*"]
 ```
 
-### 4) Sumber Data Gas Real-Time:
+### 2.7.4 Sumber data gas real-time:
 
 Data gas price real-time diperoleh dari Etherscan V2 API [6]:
 - Endpoint: `https://api.etherscan.io/api`
 - Blok referensi: #25.243.215
 - Base Fee: 0,55 Gwei (waktu pengukuran)
 
-### 5) Komposisi Sumber Daya Pengujian:
+### 2.7.5 Komposisi sumber daya pengujian:
 
 | Sumber Daya | Fungsi |
 |-------------|--------|
@@ -494,9 +494,9 @@ Data gas price real-time diperoleh dari Etherscan V2 API [6]:
 | Chart.js (CDN) | Dashboard interaktif |
 | Etherscan V2 API [6] | Data gas price real-time |
 
-## H. Struktur Sumber Daya Penelitian
+## 2.8 Struktur sumber daya penelitian
 
-### 1) Hierarki Arsitektur:
+### 2.8.1 Hierarki arsitektur:
 
 ```
 src/
@@ -509,7 +509,7 @@ src/
 └── BridgeWithSSTOREGuard.sol  ← Benchmark SSTORE guard
 ```
 
-### 2) Hierarki Pengujian:
+### 2.8.2 Hierarki pengujian:
 
 ```
 test/
@@ -530,7 +530,7 @@ test/
 
 Total: 215 tes di 13 test suites.
 
-### 3) Hierarki Skrip:
+### 2.8.3 Hierarki skrip:
 
 ```
 scripts/
@@ -539,22 +539,22 @@ scripts/
 └── dynamic_submission_engine.py  ← Monte Carlo simulation (perlu revisi 4-tier)
 ```
 
-## I. Validitas dan Reliabilitas
+## 2.9 Validitas dan reliabilitas
 
-### 1) Validitas Internal:
+### 2.9.1 Validitas internal:
 
 - **Kontrol variabel**: Semua parameter EVM (solc, optimizer, evm_version) dikontrol ketat [11], [12].
 - **Isolasi pengukuran**: Setiap pengukuran gas menggunakan alamat unik dan transaksi terisolasi.
 - **Replikasi**: 100 sampel per kondisi memastikan kecenderungan sentral yang stabil [15].
 - **Fuzz testing**: Property-based testing memvalidasi kebenaran formulasi untuk input arbitrary [16].
 
-### 2) Validitas Eksternal:
+### 2.9.2 Validitas eksternal:
 
 - **Etherscan data [6]**: Gas price real-time dari Etherscan V2 API memastikan relevansi kondisi pasar aktual.
 - **EVM Cancun [4]**: Penggunaan EVM version terbaru memastikan kompatibilitas dengan fitur terkini [20].
 - **EIP-1153 [7]**: Implementasi mengikuti spesifikasi resmi dan telah diterapkan oleh OpenZeppelin [8], [11].
 
-### 3) Reliabilitas:
+### 2.9.3 Reliabilitas:
 
 - **Deterministic**: Semua pengukuran bersifat deterministic (sama untuk input yang sama) [19].
 - **Automated**: Pengukuran dilakukan secara otomatis melalui Foundry [5], mengurangi human error [21].
