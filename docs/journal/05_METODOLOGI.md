@@ -1,6 +1,6 @@
 # III. METODOLOGI PENELITIAN
 
-Bab ini menjelaskan desain penelitian, model matematika yang digunakan, model ancaman formal, desain eksperimental, kerangka analisis statistik, serta tools dan lingkungan pengujian yang digunakan dalam penelitian ini.
+Metode yang digunakan dalam penelitian ini terbagi atas tiga bagian utama, yaitu desain penelitian, model matematika dan ancaman formal, serta kerangka analisis statistik beserta lingkungan pengujian yang digunakan.
 
 ## A. Desain Penelitian
 
