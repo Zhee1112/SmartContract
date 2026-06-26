@@ -29,17 +29,17 @@ Penelitian ini mengimplementasikan empat tier bridge dalam satu arsitektur kompa
 
 Tier D merupakan kontribusi utama penelitian, yang membuktikan bahwa semua fitur keamanan Tier C dapat diimplementasikan secara inline tanpa external calls, menghasilkan biaya gas yang jauh lebih rendah.
 
-### 3) Asumsi Penelitian:
+### 3) Asumsi Sistem:
 
-Penelitian ini dibangun atas beberapa asumsi yang perlu dinyatakan secara eksplisit:
+Penelitian ini dibangun atas beberapa asumsi sistem yang perlu dinyatakan secara eksplisit:
 
-**Asumsi Jaringan:**
+**Kondisi Jaringan:**
 - Ethereum L1 dan L2 beroperasi normal
 - Blob transactions (EIP-4844) tersedia pada Cancun fork ke atas
 - Gas price berfluktuasi secara normal (10-150 Gwei L1, 1-30 Gwei Blob)
 - Block time sekitar 12 detik pada L1
 
-**Asumsi Aktor:**
+**Model Aktor:**
 - User bersifat jujur (benign)
 - Bridge operator semi-trusted
 - Attacker dan MEV bot bersifat adversarial
