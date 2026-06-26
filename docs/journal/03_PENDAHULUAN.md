@@ -43,3 +43,45 @@ C. Manfaat Penelitian
 1) Manfaat Teoritis: Kontribusi ilmu pengetahuan dalam bidang optimasi gas smart contract menggunakan EIP-1153 transient storage [8], khususnya untuk arsitektur bridge yang memerlukan tingkat keamanan tinggi [11]. Bukti empiris tentang tradeoff antara biaya gas dan tingkat keamanan pada arsitektur bridge 4-tier [8], [9], memberikan landasan empiris bagi pengambil keputusan dalam desain bridge.
 
 2) Manfaat Praktis: Template arsitektur bridge yang aman dan efisien gas bagi pengembang DeFi [20], dengan referensi implementasi EIP-1153 reentrancy guard yang terbukti mengurangi biaya dari 22.900 gas menjadi 200 gas (penghematan 100x lipat). Implementasi referensi Early Warning System untuk proteksi MEV sandwich attack on-chain [16], [6], yang dapat diintegrasikan ke bridge production sebagai lapisan keamanan tambahan.
+
+D. Related Work
+
+Bagian ini membahas landasan teoretis yang mendasari penelitian: optimasi gas, mekanisme keamanan smart contract, EIP-1153 Transient Storage, Maximal Extractable Value (MEV), serta EIP-4844 Proto-Danksharding.
+
+1) Optimasi Gas pada Smart Contract
+
+EVM menggunakan model storage berbasis slot 32-byte, di mana operasi SSTORE dan SLOAD merupakan operasi paling mahal [22]. Di Sorbo et al. [9] mengidentifikasi 19 jenis code smells pada Solidity yang berkontribusi terhadap pemborosan gas, termasuk penggunaan storage yang tidak efisien. Variable packing—teknik menggabungkan beberapa variabel ke dalam satu slot—terbukti menghasilkan penghematan signifikan tanpa mengubah logika bisnis [6]. Teknik lain meliputi unchecked arithmetic, custom errors, calldata parameter, dan immutable variables [33].
+
+2) EIP-1153 Transient Storage
+
+EIP-1153 memperkenalkan TSTORE dan TLOAD—dua opcode baru dengan biaya 100 gas per operasi, jauh lebih rendah dibandingkan SSTORE cold (20.000 gas) [16]. Data transient storage hanya berlaku selama satu transaksi dan direset otomatis (*auto-reset*), sehingga sangat cocok untuk reentrancy guard [17]. Zhang & Debono [19] menemukan bahwa lebih dari 60 kontrak telah di-deploy lintas chain menggunakan transient storage. Penghematan gas dari mekanisme ini mencapai 22.700 gas per transaksi (99.1%) dibandingkan mutex lock konvensional [29].
+
+3) MEV dan Sandwich Attack
+
+Maximal Extractable Value (MEV) merupakan keuntungan maksimum yang dapat diperoleh oleh validator atau bot melalui kemampuan menyusun transaksi dalam satu blok [12]. Sandwich attack merupakan bentuk MEV yang paling merusak: penyerang menjalankan frontrun sebelum transaksi korban, lalu backrun setelahnya, merealisasikan keuntungan dari selisih harga [5]. Qin et al. membuktikan bahwa sandwich attack merupakan ancaman struktural yang tidak dapat dihilangkan sepenuhnya melalui mekanisme konsensus, sehingga memerlukan solusi pada lapisan aplikasi.
+
+4) Early Warning System On-Chain
+
+Early Warning System (EWS) on-chain merupakan mekanisme deteksi anomali yang berjalan langsung dalam lingkungan EVM tanpa single point of failure [40]. Mekanisme ini mendeteksi pola sandwich attack melalui analisis transaksi berurutan dan menerapkan penalti ekonomi secara otomatis. Model penalti dibangun di atas prinsip incentive compatibility—membuat serangan menjadi tidak menguntungkan secara ekonomi [9].
+
+5) Dynamic Rollup Submission Engine
+
+EIP-4844: Proto-Danksharding memperkenalkan Blob transactions yang menawarkan biaya jauh lebih rendah dibandingkan calldata konvensional [21]. Park et al. [30] menganalisis dampak EIP-4844 terhadap dinamika transaksi rollup dan pasar biaya gas blob. Dynamic Rollup Submission Engine mengoptimalkan pengiriman batch dengan melakukan routing dynamic antara blob dan calldata berdasarkan harga gas real-time, memilih rute termurah pada setiap momen pengiriman.
+
+6) Perbandingan dengan Bridge Existing
+
+Tabel berikut merangkum perbandingan arsitektural antara penelitian ini dengan bridge existing:
+
+| Aspek | Hop Protocol | Stargate | Penelitian Ini |
+|-------|-------------|----------|----------------|
+| Mekanisme | Liquidity pool + bonder | Unified Liquidity | Liquidity pool |
+| Keamanan | Validator set + bond | DVN + oracle | EWS on-chain + EIP-1153 |
+| MEV Protection | Off-chain | Rate limiting | On-chain detection + penalty |
+| Biaya Gas | Tergantung chain | Flat fee | Tiered (A/B/C/D) |
+| Rollup Integration | Multi-rollup | LayerZero | EIP-4844 dynamic |
+
+Penelitian ini menawarkan pendekatan berbeda dalam integrasi EIP-1153 untuk keamanan dan dynamic routing untuk optimasi biaya rollup.
+
+7) Kerangka Konseptual
+
+Berdasarkan tinjauan pustaka, kerangka konseptual penelitian ini mengintegrasikan lima pilar: (1) optimasi gas statis—variable packing, CEI pattern, unchecked arithmetic, custom errors [9], [6]; (2) EIP-1153 transient storage untuk reentrancy guard yang efisien [16], [17]; (3) MEV protection on-chain melalui EWS [12], [5]; (4) dynamic rollup submission antara blob dan calldata [30], [21]; dan (5) arsitektur bridge 4-tier dari baseline hingga lightweight dynamic [33]. Integrasi kelima pilar ini menghasilkan arsitektur bridge yang aman terhadap serangan reentrancy dan MEV, sekaligus efisien gas melalui optimasi statis dan dinamis.

@@ -1,4 +1,4 @@
-# III. METODOLOGI PENELITIAN
+# II. METODOLOGI PENELITIAN
 
 Metode yang digunakan dalam penelitian ini terbagi atas tiga bagian utama, yaitu desain penelitian, model matematika dan ancaman formal, serta kerangka analisis statistik beserta lingkungan pengujian yang digunakan.
 

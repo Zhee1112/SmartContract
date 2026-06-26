@@ -1,4 +1,4 @@
-# VI. KESIMPULAN
+# V. KESIMPULAN
 
 Penelitian ini telah mengkaji optimasi gas smart contract bridge menggunakan modifikasi EIP-1153 transient storage pada jaringan Ethereum. Melalui implementasi empat tier arsitektur bridge (Tier A: baseline, Tier B: optimasi statis, Tier C: dynamic penuh, dan Tier D: dynamic ringan) serta pengujian terhadap 215 test cases yang terdistribusi dalam 13 test suites, berikut disajikan kesimpulan-kesimpulan yang diperoleh dari seluruh rangkaian penelitian.
 

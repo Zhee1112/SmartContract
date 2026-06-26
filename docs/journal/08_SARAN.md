@@ -1,4 +1,4 @@
-# VII. SARAN UNTUK PENELITIAN SELANJUTNYA
+# VI. SARAN UNTUK PENELITIAN SELANJUTNYA
 
 Berdasarkan temuan dan keterbatasan penelitian ini, berikut disajikan beberapa arah pengembangan yang dapat dieksplorasi dalam penelitian selanjutnya.
 
