@@ -1,0 +1,1004 @@
+﻿forge.exe : Warning: Found unknown `etherscan` config for profile `mainnet` defined in foundry.toml.
+At line:1 char:1
++ & "C:\Users\RAZYAL~1\.foundry\bin\forge.exe" test --gas-report 2>&1 | ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Warning: Found ...n foundry.toml.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Warning: Found unknown `rpc_endpoints` config for profile `mainnet` defined in foundry.toml.
+Warning: Found unknown `etherscan` config for profile `sepolia` defined in foundry.toml.
+Warning: Found unknown `rpc_endpoints` config for profile `sepolia` defined in foundry.toml.
+No files changed, compilation skipped
+
+Ran 7 tests for test/EIP1153Benchmark.t.sol:EIP1153Benchmark
+[PASS] testComparison_30Samples() (gas: 69814)
+Logs:
+  ========================================
+    WARM SLOT COMPARISON (30 samples)    
+  ========================================
+  Avg TSTORE write+clear: 220 gas
+  Avg SSTORE write+clear: 185 gas
+  ========================================
+  NOTE: Both cost ~100 gas per opcode when warm.
+  Real savings come from COLD access:
+    SSTORE cold: 20,000 gas (first write)
+    TSTORE cold: 100 gas (always warm)
+  ========================================
+  For full bridge comparison, see OZGuardComparison
+  and MultiContractTest (3-way gas benchmarks).
+  ========================================
+
+[PASS] testSSTORE_Read() (gas: 3655)
+Logs:
+  SLOAD single read: 9 gas
+
+[PASS] testSSTORE_ReadWrite() (gas: 8783)
+Logs:
+  SLOAD+SSTORE: 5114 gas
+
+[PASS] testSSTORE_SetAndClear() (gas: 5954)
+Logs:
+  SSTORE lock/unlock: 2262 gas
+
+[PASS] testTSTORE_Read() (gas: 3656)
+Logs:
+  TLOAD single read: 9 gas
+
+[PASS] testTSTORE_ReadWrite() (gas: 3876)
+Logs:
+  TLOAD+TSTORE: 250 gas
+
+[PASS] testTSTORE_SetAndClear() (gas: 4032)
+Logs:
+  TSTORE lock/unlock: 364 gas
+
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 4.85ms (9.23ms CPU time)
+
+Ran 1 test for test/OZGuardComparison.t.sol:OZGuardComparison
+[PASS] testGasWithdraw_SSTORE_vs_EIP1153() (gas: 476678)
+Logs:
+  ========================================
+    SSTORE GUARD vs EIP-1153 TSTORE      
+  ========================================
+  SSTORE Guard  : 47433 gas
+  EIP-1153 + EWS: 140237 gas
+  Overhead (EWS monitoring): 92804 gas
+  ========================================
+  NOTE: EIP-1153 bridge includes EWS monitoring overhead.
+  Pure TSTORE/TLOAD cost = 200 gas vs SSTORE cold+warm = ~22,900 gas.
+  ========================================
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 12.32ms (3.04ms CPU time)
+
+Ran 6 tests for test/SecurityComparisonTest.t.sol:SecurityComparisonTest
+[PASS] testEconomicPenaltyAllTiers() (gas: 40108)
+Logs:
+  ==================================================
+   SECURITY MATRIX: Economic Penalty vs 4 Tier      
+  ==================================================
+  [A] Unoptimized: NO penalty
+  [B] Static Only: NO penalty
+  [C] Full Dynamic: Penalty = 10 ETH
+  [D] Lightweight: Penalty = 10 ETH
+  ---
+  A=no, B=no, C=dynamic, D=dynamic (same formula)
+  ==================================================
+
+[PASS] testEmergencyPauseAllTiers() (gas: 181389)
+Logs:
+  ==================================================
+   SECURITY MATRIX: Emergency Pause vs 4 Tier       
+  ==================================================
+  [A] Unoptimized: NO pause mechanism
+  [B] Static Only: NO pause mechanism
+  [C] Full Dynamic: Pause/Unpause works
+  [D] Lightweight: Pause/Unpause works
+  ---
+  A=no, B=no, C=yes, D=yes
+  ==================================================
+
+[PASS] testGasVsSecurityMatrix() (gas: 438538)
+Logs:
+  ==================================================
+   GAS vs SECURITY MATRIX: 4-Tier Comparison        
+  ==================================================
+  Tier | Gas    | Security
+  A    | 56809 | 0/8
+  B    | 54891 | 4/8
+  C    | 171798 | 8/8
+  D    | 101979 | 7/8
+  ---
+  Best value: Tier D (7/8 security at Tier B+131% gas)
+  ==================================================
+
+[PASS] testMEVDetectionAllTiers() (gas: 461064)
+Logs:
+  ==================================================
+   SECURITY MATRIX: MEV Detection vs 4 Tier         
+  ==================================================
+  [A] Unoptimized: NO MEV detection
+  [B] Static Only: NO MEV detection
+  [C] Full Dynamic: Full MEV detection (txRecords array)
+    -> Detected and penalty applied
+  [D] Lightweight: Single-slot MEV detection
+    -> Detected via single-slot lastTx
+  ---
+  A=no, B=no, C=full, D=single-slot
+  ==================================================
+
+[PASS] testReentrancyAllTiers() (gas: 826014)
+Logs:
+  ==================================================
+   SECURITY MATRIX: Reentrancy Attack vs 4 Tier     
+  ==================================================
+  [A] Unoptimized: Reentrancy BERHASIL (vulnerable)
+  [B] Static Only: Reentrancy DITOLAK oleh CEI
+  [C] Full Dynamic: Reentrancy DIBLOKIR oleh EWS
+  [D] Lightweight: Reentrancy DIBLOKIR oleh EIP-1153 inline
+  ---
+  A=vulnerable, B=CEI, C=EWS, D=inline EIP-1153
+  ==================================================
+
+[PASS] testSecurityPerGasUnit() (gas: 438808)
+Logs:
+  ==================================================
+   SECURITY PER GAS UNIT: Ranking                    
+  ==================================================
+  [A] Unoptimized  : 0 SPG
+  [B] Static Only  : 72 SPG
+  [C] Full Dynamic : 46 SPG
+  [D] Lightweight  : 68 SPG
+  ---
+  SPG = Security Points per Gas (x1000000)
+  Ranking: Tier D (best) > Tier B > Tier C > Tier A (worst)
+  ==================================================
+
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 22.01ms (12.81ms CPU time)
+
+Ran 14 tests for test/MultiContractTest.t.sol:MultiContractTest
+[PASS] testEconomicDeterrence_AttackerLoses() (gas: 38311)
+Logs:
+  ==================================================
+    PENGUJIAN 10: ECONOMIC DETERRENCE               
+  ==================================================
+  Attack Volume   : 10 ETH
+  Estimated Profit: 0 ETH (2% estimate)
+  Penalty         : 10 ETH
+  P_detect        : 96 %
+  Expected Utility: 115792089237316195423570985008687907853269984665640564039447 ETH (negative = unprofitable)
+  ==================================================
+
+[PASS] testEconomicDeterrence_Baseline_NoEWS() (gas: 26633)
+Logs:
+  ==================================================
+    BASELINE: ATTACK PROFITABLE WITHOUT EWS         
+  ==================================================
+  Attack Volume: 10 ETH
+  Profit       : 0 ETH
+  Penalty      : 0 ETH (no EWS)
+  Expected Utility: 0 ETH (POSITIVE)
+  ==================================================
+
+[PASS] testEconomicDeterrence_LargeVolume() (gas: 92021)
+Logs:
+  ==================================================
+    LARGE VOLUME: EWS EFFECTIVENESS                 
+  ==================================================
+  Volume: 10 ETH
+    Profit: 0 ETH
+    Penalty: 10 ETH
+  Volume: 50 ETH
+    Profit: 1 ETH
+    Penalty: 50 ETH
+  Volume: 100 ETH
+    Profit: 2 ETH
+    Penalty: 100 ETH
+  ==================================================
+
+[PASS] testGasDeployment() (gas: 2832499)
+Logs:
+  ==================================================
+    BENCHMARK 1: GAS DEPLOYMENT (VARIABLE PACKING)  
+  ==================================================
+  [A] Unoptimized     : 493144 gas
+  [B] Static Only     : 431035 gas
+  [C] Dynamic (EWS)   : 1006293 gas
+  [D] Lightweight     : 861799 gas
+  --- Selisih A vs B  : 62109 gas hemat (statis)
+  --- Selisih B vs C  : 575258 gas overhead EWS
+  --- Selisih B vs D  : 430764 gas overhead inline
+  --- Selisih C vs D  : 144494 gas hemat (D vs C)
+  ==================================================
+
+[PASS] testGasDeposit() (gas: 441233)
+Logs:
+  ==================================================
+         BENCHMARK 2: GAS DEPOSIT FUNGSI           
+  ==================================================
+  [A] Unoptimized     : 58829 gas
+  [B] Static Only     : 56707 gas
+  [C] Dynamic (EWS)   : 173461 gas
+  [D] Lightweight     : 103652 gas
+  --- Selisih A vs B  : 2122 gas hemat (statis)
+  --- Selisih B vs C  : 116754 gas overhead EWS
+  --- Selisih B vs D  : 46945 gas overhead inline
+  --- Selisih C vs D  : 69809 gas hemat (D vs C)
+  ==================================================
+
+[PASS] testGasSummary_FourTier() (gas: 440185)
+Logs:
+  ==================================================
+    SUMMARY: 4-TIER GAS COMPARISON                 
+  ==================================================
+  DEPOSIT GAS:
+    [A] Unoptimized: 58829
+    [B] Static Only: 56707
+    [C] Full Dynamic: 173461
+    [D] Lightweight: 103652
+    D vs B overhead: 82 %
+    C vs B overhead: 205 %
+    D savings vs C: 40 %
+  ==================================================
+
+[PASS] testGasSwap() (gas: 373224)
+Logs:
+  ==================================================
+         BENCHMARK 8: GAS SWAP FUNGSI              
+  ==================================================
+  [A] Unoptimized     : 43144 gas
+  [B] Static Only     : 36192 gas
+  [C] Dynamic (EWS)   : 154581 gas
+  [D] Lightweight     : 84134 gas
+  --- Overhead EWS    : 111437 gas
+  --- Overhead D vs B : 47942 gas
+  --- Savings D vs C  : 70447 gas
+  ==================================================
+
+[PASS] testGasWithdraw() (gas: 701123)
+Logs:
+  ==================================================
+         BENCHMARK 3: GAS WITHDRAW FUNGSI          
+  ==================================================
+  [A] Unoptimized     : 37799 gas
+  [B] Static Only     : 35791 gas
+  [C] Dynamic (EWS)   : 140237 gas
+  [D] Lightweight     : 44188 gas
+  --- Selisih A vs B  : 2008 gas hemat (statis)
+  --- Selisih B vs C  : 104446 gas overhead EWS/EIP-1153
+  --- Selisih B vs D  : 8397 gas overhead inline
+  --- Selisih C vs D  : 96049 gas hemat (D vs C)
+  ==================================================
+
+[PASS] testMEVSandwich_C_Dynamic_Detected() (gas: 361191)
+Logs:
+  ==================================================
+    PENGUJIAN 7: MEV SANDWICH - [B] vs [C]          
+  ==================================================
+  [B] Static Bridge: Swap selesai TANPA deteksi MEV. Gas: 40692
+  [C] Dynamic Bridge: Pola MEV TERDETEKSI! Gas (termasuk EWS): 159250
+  -> [B]: Korban kehilangan token tanpa ganti rugi.
+  -> [C]: Penyerang dikenai penalti ekonomi on-chain (P_detect=96%).
+  ==================================================
+
+[PASS] testMEVSandwich_D_Lightweight_Detected() (gas: 156057)
+Logs:
+  ==================================================
+    PENGUJIAN 12: MEV SANDWICH - [D] LIGHTWEIGHT     
+  ==================================================
+  [D] Lightweight: Pola MEV TERDETEKSI via single-slot!
+  -> Monitoring service -> recordFrontrun() -> lastTx.txType=0
+  -> Victim swap di block sama -> _checkAnomaly() mendeteksi pola
+  ==================================================
+
+[PASS] testReentrancyAttack_A_Unoptimized_Exploitable() (gas: 173577)
+Logs:
+  ==================================================
+   PENGUJIAN 4: REENTRANCY vs [A] UNOPTIMIZED       
+  ==================================================
+  [A] Saldo Jembatan (Sebelum)  : 50 ETH
+  [A] Saldo Penyerang (Sebelum) : 20 ETH
+  [A] Saldo Jembatan (Sesudah)  : 40 ETH
+  [A] Saldo Penyerang (Sesudah) : 35 ETH
+  -> HASIL: Reentrancy BERHASIL! Jembatan terkuras.
+  ==================================================
+
+[PASS] testReentrancyAttack_B_StaticCEI_Blocked() (gas: 112067)
+Logs:
+  ==================================================
+   PENGUJIAN 5: REENTRANCY vs [B] STATIC CEI ONLY   
+  ==================================================
+  [B] Saldo Jembatan (Sebelum) : 55 ETH
+  [B] Saldo Jembatan (Sesudah) : 55 ETH
+  -> HASIL: Reentrancy ditolak oleh pola CEI statis.
+  -> CEI memastikan balance = 0 sebelum transfer, rekursi tidak berefek.
+  ==================================================
+
+[PASS] testReentrancyAttack_C_Dynamic_EWS_Blocked() (gas: 469476)
+Logs:
+  ==================================================
+   PENGUJIAN 6: REENTRANCY vs [C] DYNAMIC EWS       
+  ==================================================
+  -> HASIL: Serangan DIBLOKIR oleh EWS (MonitorMock).
+  -> EIP-1153 TSTORE mendeteksi callDepth >= 2 secara real-time.
+  ==================================================
+
+[PASS] testReentrancyAttack_D_Lightweight_Blocked() (gas: 284754)
+Logs:
+  ==================================================
+   PENGUJIAN 11: REENTRANCY vs [D] LIGHTWEIGHT      
+  ==================================================
+  -> HASIL: Serangan DIBLOKIR oleh EIP-1153 inline.
+  -> TSTORE/TLOAD langsung di bridge mendeteksi callDepth > 0.
+  ==================================================
+
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 23.40ms (15.11ms CPU time)
+
+Ran 25 tests for test/MEVSimulationTest.t.sol:MEVSimulationTest
+[PASS] testCrossBlockMEV_TierC_NotDetected() (gas: 329191)
+[PASS] testCrossBlockMEV_TierD_NotDetected() (gas: 163011)
+[PASS] testMEVDetection_TierC_CheckAnomaly_Detects() (gas: 161491)
+[PASS] testMEVDetection_TierC_CheckAnomaly_NoFrontrun_NoDetect() (gas: 32075)
+[PASS] testMEVDetection_TierC_TxRecordsGrow() (gas: 134715)
+[PASS] testMEVDetection_TierD_DifferentBlock_NoAnomaly() (gas: 479591)
+[PASS] testMEVDetection_TierD_LastTxTracksFrontrun() (gas: 86679)
+[PASS] testMEVDetection_TierD_RecordFrontrunResetByNewTx() (gas: 481288)
+[PASS] testMEVPenalty_TierC_ReducesSwapOutput() (gas: 670131)
+[PASS] testMEVPenalty_TierD_Formula() (gas: 755)
+[PASS] testMEVPenalty_TierD_SmallAmount() (gas: 707)
+[PASS] testMEVPenalty_TierD_ZeroScore_NoPenalty() (gas: 584)
+[PASS] testMonitorMock_ClearRecords() (gas: 289564)
+[PASS] testMonitorMock_NonAdmin_CannotClear() (gas: 34098)
+[PASS] testMonitorMock_NonAdmin_CannotUpdate() (gas: 34461)
+[PASS] testMonitorMock_UpdateParameters() (gas: 50709)
+[PASS] testNoMEVProtection_TierA_SwapOpenly() (gas: 464787)
+[PASS] testNoMEVProtection_TierB_SwapNoDetection() (gas: 438684)
+[PASS] testNoPenalty_TierA_AttackerKeepsAll() (gas: 528759)
+[PASS] testReentrancy_ViaSwap_TierC_Blocked() (gas: 829862)
+[PASS] testReentrancy_ViaSwap_TierD_Blocked() (gas: 556055)
+[PASS] testSandwich_TierA_AttackerProfits() (gas: 194969)
+[PASS] testSandwich_TierB_CEIblocksAttack() (gas: 145005)
+[PASS] testSandwich_TierC_EWSblocksAndPenalizes() (gas: 708857)
+[PASS] testSandwich_TierD_inlineEIP1153blocks() (gas: 296508)
+Suite result: ok. 25 passed; 0 failed; 0 skipped; finished in 31.47ms (22.22ms CPU time)
+
+Ran 25 tests for test/EconomicDeterrenceTest.t.sol:EconomicDeterrenceTest
+[PASS] testAttackerLoses_GasOnFailedAttack_C() (gas: 709607)
+[PASS] testAttackerLoses_GasOnFailedAttack_D() (gas: 297068)
+[PASS] testConsecutiveReentrancy_AllBlocked_C() (gas: 1451784)
+[PASS] testConsecutiveReentrancy_AllBlocked_D() (gas: 945898)
+[PASS] testConsecutiveReentrancy_TierA_ExploitsMultipleTimes() (gas: 611214)
+[PASS] testEconomicMatrix_AllTiers_Summary() (gas: 1241938)
+[PASS] testMonitorParam_HigherLambda_MorePenalty() (gas: 48733)
+[PASS] testMonitorParam_HigherPDetect_HigherScore() (gas: 374982)
+[PASS] testPenalty_AtVariousScores() (gas: 29405)
+[PASS] testPenalty_CalculatedCorrectly_C() (gas: 8395)
+[PASS] testPenalty_CappedAtAmount_C() (gas: 8162)
+[PASS] testPenalty_CappedAtAmount_D() (gas: 825)
+[PASS] testPenalty_FormulaConsistency_CvsD() (gas: 8463)
+[PASS] testPenalty_LargeAmount_NotCapped() (gas: 8591)
+[PASS] testPenalty_MinimumAmount_C() (gas: 8237)
+[PASS] testPenalty_MinimumAmount_D() (gas: 574)
+[PASS] testPenalty_ZeroScore_NoPenalty_C() (gas: 5717)
+[PASS] testPenalty_ZeroScore_NoPenalty_D() (gas: 382)
+[PASS] testROI_TierA_AttackerROI100Percent() (gas: 194617)
+[PASS] testROI_TierB_CEIPreventsProfit() (gas: 144815)
+[PASS] testROI_TierC_PenaltyMakesUnprofitable() (gas: 709077)
+[PASS] testROI_TierD_PenaltyMakesUnprofitable() (gas: 296705)
+[PASS] testRealisticScenario_LargeAttackerVsSmallPool() (gas: 585978)
+[PASS] testRealisticScenario_RapidFireAttacks() (gas: 1306160)
+[PASS] testRealisticScenario_SmallAttackerVsLargePool() (gas: 586078)
+Suite result: ok. 25 passed; 0 failed; 0 skipped; finished in 187.40ms (33.66ms CPU time)
+
+Ran 9 tests for test/CostAnalysisTest.t.sol:CostAnalysisTest
+[PASS] testCostEffectiveness() (gas: 436261)
+Logs:
+  ==================================================
+   COST EFFECTIVENESS: Security per Gas             
+  ==================================================
+  [A] Unoptimized  : Score=0, Gas= 56828 , CE= 0
+  [B] Static Only  : Score=4, Gas= 54910 , CE= 72
+  [C] Full Dynamic : Score=8, Gas= 171817 , CE= 46
+  [D] Lightweight  : Score=7, Gas= 102009 , CE= 68
+  ---
+  Ranking: D > B > C > A (higher CE = better)
+  ==================================================
+
+[PASS] testCostPerSecurityFeature() (gas: 1106353)
+Logs:
+  ==================================================
+   COST ANALYSIS: Gas per Security Feature          
+  ==================================================
+  [A] Unoptimized  : 55159 gas
+  [B] Static Only  : 53241 gas
+  [C] Full Dynamic : 158748 gas
+  [D] Lightweight  : 75673 gas
+  ---
+  CEI+Packing (B)   : 1918 gas savings
+  Full EWS overhead  : 105507 gas
+  Inline EWS overhead: 22432 gas
+  D saves vs C       : 83075 gas
+  ==================================================
+
+[PASS] testCostTierDvsTierCDelta() (gas: 926722)
+Logs:
+  ==================================================
+   COST DELTA: Tier D vs Tier C                     
+  ==================================================
+  OPERASI     | Tier C   | Tier D   | Selisih
+  Deposit     | 175817 | 102009
+  Withdraw    | 140667 | 44619
+  Swap        | 146817 | 47733
+  Selisih     : 73808 96048 99084
+  Deposit saves: 41 %
+  ==================================================
+
+[PASS] testDeploymentCostComparison() (gas: 2832998)
+Logs:
+  ==================================================
+   DEPLOYMENT COST: 4-Tier Comparison               
+  ==================================================
+  [A] Unoptimized  : 493144 gas
+  [B] Static Only  : 431035 gas
+  [C] Full Dynamic : 1006293 gas
+  [D] Lightweight  : 861799 gas
+  B vs A savings   : 12 %
+  C vs A overhead  : 104 %
+  D vs A overhead  : 74 %
+  D saves vs C     : 14 %
+  ==================================================
+
+[PASS] testGasCost100SampleStat() (gas: 33758581)
+Logs:
+  ==================================================
+   100-SAMPLE GAS STATISTICS: 4-TIER DEPOSIT        
+  ==================================================
+  N = 100 samples per tier
+  [A] Mean: 54351 Min: 54326
+  [A] Max: 56826 StdDev: 248
+  [B] Mean: 52433 Min: 52408
+  [B] Max: 54908 StdDev: 248
+  [C] Mean: 152411 Min: 152215
+  [C] Max: 171815 StdDev: 1950
+  [D] Mean: 62902 Min: 62507
+  [D] Max: 102007 StdDev: 3930
+  ---
+  95% CI A: 54351 +/- 47
+  95% CI B: 52433 +/- 47
+  95% CI C: 152411 +/- 382
+  95% CI D: 62902 +/- 770
+  ==================================================
+
+[PASS] testGasCostSummaryForThesis() (gas: 1321655)
+Logs:
+  ==================================================
+   THESIS DATA: 4-Tier Gas Cost Summary             
+  ==================================================
+  Dep gas: A= 56828 B= 54910
+  Dep gas: C= 171817 D= 102009
+  Wit gas: A= 37886 B= 36068
+  Wit gas: C= 140667 D= 44619
+  Swp gas: A= 43143 B= 36440
+  Swp gas: C= 146817 D= 47733
+  Tier C/B ratio  : 3 x
+  Tier D/B ratio  : 1 x
+  D saves vs C    : 40 %
+  ==================================================
+
+[PASS] testGasPriceSensitivity() (gas: 400826)
+Logs:
+  ==================================================
+   SENSITIVITY: Cost at Different Gas Prices         
+  ==================================================
+  Gas= 10 Gwei -> B: 0
+  Gas= 10 wei -> C: 0
+  Gas= 10 wei -> D: 0
+  Gas= 30 Gwei -> B: 0
+  Gas= 30 wei -> C: 0
+  Gas= 30 wei -> D: 0
+  Gas= 80 Gwei -> B: 0
+  Gas= 80 wei -> C: 0
+  Gas= 80 wei -> D: 0
+  Gas= 150 Gwei -> B: 0
+  Gas= 150 wei -> C: 0
+  Gas= 150 wei -> D: 0
+  ==================================================
+
+[PASS] testGasSwap100Sample_4Tiers() (gas: 28744883)
+Logs:
+  ==================================================
+   100-SAMPLE GAS SWAP: 4-TIER COMPARISON          
+  ==================================================
+  N = 100 samples per tier
+  [A] Mean: 43141
+  [A] Min: 43141 Max: 43141
+  [B] Mean: 36438
+  [B] Min: 36438 Max: 36438
+  [C] Mean: 146896
+  [C] Min: 146815 Max: 154991
+  [D] Mean: 48099
+  [D] Min: 47731 Max: 84545
+  D vs B overhead: 11661 gas
+  D vs C savings : 98797 gas
+  ==================================================
+
+[PASS] testRealWorldCostEstimation() (gas: 442985)
+Logs:
+  ==================================================
+   REAL-WORLD COST: USD per Transaction              
+  ==================================================
+  Gas= 10 Gwei: C=$ 0
+  Gas= 10 Gwei: D=$ 0
+  Gas= 30 Gwei: C=$ 0
+  Gas= 30 Gwei: D=$ 0
+  Gas= 80 Gwei: C=$ 0
+  Gas= 80 Gwei: D=$ 0
+  Gas= 150 Gwei: C=$ 0
+  Gas= 150 Gwei: D=$ 0
+  ==================================================
+
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 362.25ms (486.00ms CPU time)
+
+Ran 3 tests for test/GasStatsTest.t.sol:GasStatsTest
+[PASS] testGasDeposit_100Samples() (gas: 15426662)
+Logs:
+  ==================================================
+    GAS DEPOSIT - 100-SAMPLE REPLICATION            
+  ==================================================
+  Mean   : 152126 gas
+  Min    : 151910 gas
+  Max    : 173510 gas
+  Range  : 21600 gas
+  ==================================================
+
+[PASS] testGasSwap_100Samples() (gas: 14875381)
+Logs:
+  ==================================================
+    GAS SWAP - 100-SAMPLE REPLICATION               
+  ==================================================
+  Mean   : 146540 gas
+  Min    : 146414 gas
+  Max    : 159090 gas
+  Range  : 12676 gas
+  ==================================================
+
+[PASS] testGasWithdraw_100Samples() (gas: 29496704)
+Logs:
+  ==================================================
+    GAS WITHDRAW - 100-SAMPLE REPLICATION           
+  ==================================================
+  Mean   : 140246 gas
+  Min    : 140246 gas
+  Max    : 140246 gas
+  Range  : 0 gas
+  ==================================================
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 544.89ms (230.83ms CPU time)
+
+Ran 8 tests for test/FuzzTest.t.sol:FuzzTest
+[PASS] testFuzz_DepositRevertOnZero(uint256) (runs: 256, ╬╝: 34513, ~: 34513)
+[PASS] testFuzz_DepositValidAmount(uint96) (runs: 256, ╬╝: 183795, ~: 183795)
+[PASS] testFuzz_PenaltyNeverExceedsAmount(uint256,uint256) (runs: 256, ╬╝: 11787, ~: 11863)
+[PASS] testFuzz_PenaltyZeroWhenScoreZero(uint256) (runs: 256, ╬╝: 5757, ~: 5757)
+[PASS] testFuzz_StaticBridge_DepositWithdraw(uint96,uint96) (runs: 256, ╬╝: 95259, ~: 89365)
+[PASS] testFuzz_SwapFormulaCorrectness(uint96) (runs: 256, ╬╝: 331276, ~: 331276)
+[PASS] testFuzz_UnoptimizedBridge_Deposit(uint256) (runs: 256, ╬╝: 68515, ~: 68515)
+[PASS] testFuzz_WithdrawCannotExceedBalance(uint96,uint96) (runs: 256, ╬╝: 314039, ~: 306390)
+Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 634.31ms (1.89s CPU time)
+
+Ran 41 tests for test/EdgeCaseTest.t.sol:EdgeCaseTest
+[PASS] testAdmin_CanClearRecords() (gas: 210958)
+[PASS] testAdmin_CanUpdateMonitor() (gas: 50611)
+[PASS] testMEV_SandwichDetectedVictim() (gas: 336798)
+[PASS] testMultiUser_DepositAndWithdrawLightweight() (gas: 223016)
+[PASS] testMultiUser_DepositAndWithdrawSSTORE() (gas: 261571)
+[PASS] testMultiUser_DepositAndWithdrawStatic() (gas: 190288)
+[PASS] testMultiUser_DepositAndWithdrawVictim() (gas: 615748)
+[PASS] testOverflow_WithdrawExceedsBalanceLightweight() (gas: 137244)
+[PASS] testOverflow_WithdrawExceedsBalanceSSTORE() (gas: 117160)
+[PASS] testOverflow_WithdrawExceedsBalanceStatic() (gas: 87706)
+[PASS] testOverflow_WithdrawExceedsBalanceUnopt() (gas: 91928)
+[PASS] testOverflow_WithdrawExceedsBalanceVictim() (gas: 304767)
+[PASS] testReentrancy_LightweightBridge_Blocked() (gas: 189656)
+[PASS] testReentrancy_SSTOREGuard_NormalWithdrawWorks() (gas: 134829)
+[PASS] testReentrancy_StaticBridge_Blocked() (gas: 198728)
+[PASS] testReentrancy_Unoptimized_Exploitable() (gas: 89159)
+[PASS] testReentrancy_VictimBridge_Blocked() (gas: 363804)
+[PASS] testSSTOREGuard_DepositAndWithdraw() (gas: 134763)
+[PASS] testSSTOREGuard_MultipleDeposits() (gas: 128053)
+[PASS] testSSTOREGuard_TotalDepositsTracking() (gas: 216480)
+[PASS] testSSTOREGuard_WithdrawAll() (gas: 134774)
+[PASS] testSwap_ExceedsLiquidityLightweight() (gas: 163406)
+[PASS] testSwap_ExceedsLiquidityStatic() (gas: 70460)
+[PASS] testSwap_ExceedsLiquidityUnopt() (gas: 72610)
+[PASS] testSwap_ExceedsLiquidityVictim() (gas: 187338)
+[PASS] testSwap_SlippageTooHighLightweight() (gas: 147135)
+[PASS] testSwap_SlippageTooHighStatic() (gas: 70459)
+[PASS] testSwap_SlippageTooHighVictim() (gas: 187307)
+[PASS] testUnauthorized_NonAdminCannotClearRecords() (gas: 34140)
+[PASS] testUnauthorized_NonAdminCannotUpdateMonitor() (gas: 34495)
+[PASS] testZeroAmount_DepositLightweightReverts() (gas: 35066)
+[PASS] testZeroAmount_DepositStaticReverts() (gas: 32590)
+[PASS] testZeroAmount_DepositUnoptReverts() (gas: 34686)
+[PASS] testZeroAmount_DepositVictimReverts() (gas: 34697)
+[PASS] testZeroAmount_SwapLightweightReverts() (gas: 35373)
+[PASS] testZeroAmount_SwapStaticReverts() (gas: 85418)
+[PASS] testZeroAmount_SwapUnoptReverts() (gas: 89514)
+[PASS] testZeroAmount_SwapVictimReverts() (gas: 204375)
+[PASS] testZeroAmount_WithdrawLightweightReverts() (gas: 148455)
+[PASS] testZeroAmount_WithdrawStaticReverts() (gas: 89171)
+[PASS] testZeroAmount_WithdrawVictimReverts() (gas: 290530)
+Suite result: ok. 41 passed; 0 failed; 0 skipped; finished in 17.80s (32.26ms CPU time)
+
+Ran 50 tests for test/TierComparisonTest.t.sol:TierComparisonTest
+[PASS] testAdmin_SetToDeployer_AllTiers() (gas: 32959)
+[PASS] testConstants_Immutable_D() (gas: 10864)
+[PASS] testDepositWithdraw_RoundTrip_KeepsBridgeSOLVENCY() (gas: 452624)
+[PASS] testDeposit_1Wei_AllTiers() (gas: 421039)
+[PASS] testDeposit_BalanceIncreases_AllTiers() (gas: 432051)
+[PASS] testDeposit_EventEmission_AllTiers() (gas: 408744)
+[PASS] testDeposit_RevertsWhenPaused_C() (gas: 69476)
+[PASS] testDeposit_RevertsWhenPaused_D() (gas: 86529)
+[PASS] testDeposit_WorksAfterUnpause_C() (gas: 239035)
+[PASS] testDeposit_WorksAfterUnpause_D() (gas: 176702)
+[PASS] testDoubleWithdraw_ShouldFail_AllTiers() (gas: 824653)
+[PASS] testLastTx_DifferentBlock_NoAnomaly_D() (gas: 479561)
+[PASS] testLastTx_UpdatedAfterDeposit_D() (gas: 122304)
+[PASS] testLastTx_UpdatedAfterSwap_D() (gas: 449310)
+[PASS] testLastTx_UpdatedAfterWithdraw_D() (gas: 448974)
+[PASS] testLifecycle_DepositSwapWithdraw_AllTiers() (gas: 929240)
+[PASS] testLifecycle_FullPauseUnpauseCycle_D() (gas: 276080)
+[PASS] testMultiUser_IsolatedBalances_AllTiers() (gas: 794953)
+[PASS] testMultiUser_OneWithdraw_DoesNotAffectOther() (gas: 784482)
+[PASS] testMultiUser_SimultaneousDeposit_SameBlock() (gas: 268564)
+[PASS] testNoPauseFunction_B() (gas: 26588)
+[PASS] testNoUnpauseFunction_B() (gas: 26567)
+[PASS] testPause_CannotPauseTwice_C() (gas: 59750)
+[PASS] testPause_CannotPauseTwice_D() (gas: 76869)
+[PASS] testPause_EmergencyPausedEvent_CandD() (gas: 90864)
+[PASS] testPause_OnlyAdmin_C() (gas: 31973)
+[PASS] testPause_OnlyAdmin_D() (gas: 32040)
+[PASS] testPause_PreservesUserBalances_C() (gas: 468455)
+[PASS] testPause_PreservesUserBalances_D() (gas: 476042)
+[PASS] testRecordFrontrun_CanBeCalledByAnyone_D() (gas: 84107)
+[PASS] testRecordFrontrun_Permissionless_D() (gas: 84260)
+[PASS] testRecordFrontrun_UpdatesLastTx_D() (gas: 86616)
+[PASS] testSwap_EventEmission_AllTiers() (gas: 644086)
+[PASS] testSwap_ReservesUpdate_AllTiers() (gas: 683956)
+[PASS] testSwap_RevertsWhenPaused_C() (gas: 458710)
+[PASS] testSwap_RevertsWhenPaused_D() (gas: 475779)
+[PASS] testUnpause_CannotUnpauseWhenNotPaused_C() (gas: 31643)
+[PASS] testUnpause_CannotUnpauseWhenNotPaused_D() (gas: 31647)
+[PASS] testUnpause_EmergencyUnpausedEvent_CandD() (gas: 137462)
+[PASS] testUnpause_OnlyAdmin_C() (gas: 60166)
+[PASS] testUnpause_OnlyAdmin_D() (gas: 77194)
+[PASS] testWithdraw_1Wei_AllTiers() (gas: 693214)
+[PASS] testWithdraw_BalanceDecreases_AllTiers() (gas: 703968)
+[PASS] testWithdraw_EntireBalance_AllTiers() (gas: 683929)
+[PASS] testWithdraw_EventEmission_AllTiers() (gas: 669630)
+[PASS] testWithdraw_NeverDeposited_ShouldFail_AllTiers() (gas: 212941)
+[PASS] testWithdraw_RevertsWhenPaused_C() (gas: 452119)
+[PASS] testWithdraw_RevertsWhenPaused_D() (gas: 469173)
+[PASS] testZeroAmount_Deposit_ShouldFail_BCD() (gas: 90717)
+[PASS] testZeroAmount_Swap_ShouldFail_BCD() (gas: 471375)
+Suite result: ok. 50 passed; 0 failed; 0 skipped; finished in 17.79s (55.23ms CPU time)
+
+Ran 23 tests for test/VictimBridgeSecurityTest.t.sol:VictimBridgeSecurityTest
+[PASS] testDeposit_NormalWorks() (gas: 182899)
+[PASS] testPauseUnpause_TierD_Works() (gas: 209338)
+[PASS] testPause_CannotPauseTwice() (gas: 59784)
+[PASS] testPause_DepositRevertsWhenPaused() (gas: 69575)
+[PASS] testPause_EventEmitted() (gas: 37099)
+[PASS] testPause_OnlyAdminCanPause() (gas: 31980)
+[PASS] testPause_SwapRevertsWhenPaused() (gas: 215416)
+[PASS] testPause_TierD_DepositRevertsWhenPaused() (gas: 86878)
+[PASS] testPause_WithdrawRevertsWhenPaused() (gas: 232586)
+[PASS] testReentrancy_AttackRevertsEntireTx() (gas: 608918)
+[PASS] testReentrancy_AttackerDoesNotProfit() (gas: 609481)
+[PASS] testReentrancy_BridgeBalanceUnchangedAfterAttack() (gas: 609582)
+[PASS] testReentrancy_CallDepthResetsAfterAttack() (gas: 611824)
+[PASS] testReentrancy_ConsecutiveAttacksAllFail() (gas: 1463429)
+[PASS] testReentrancy_TierD_AttackReverts() (gas: 264787)
+[PASS] testReentrancy_TierD_BridgeBalanceUnchanged() (gas: 265267)
+[PASS] testUnpause_CannotUnpauseWhenNotPaused() (gas: 31739)
+[PASS] testUnpause_DepositWorksAfterUnpause() (gas: 235961)
+[PASS] testUnpause_EventEmitted() (gas: 65306)
+[PASS] testUnpause_OnlyAdminCanUnpause() (gas: 60178)
+[PASS] testUnpause_SwapWorksAfterUnpause() (gas: 383478)
+[PASS] testUnpause_WithdrawWorksAfterUnpause() (gas: 376689)
+[PASS] testWithdraw_NormalWorks() (gas: 323657)
+Suite result: ok. 23 passed; 0 failed; 0 skipped; finished in 18.17s (32.38ms CPU time)
+
+Ran 4 tests for test/InvariantTest.t.sol:InvariantTest
+[PASS] invariant_balancesAlwaysNonNegative() (runs: 256, calls: 128000, reverts: 78984)
+
+Ôò¡--------------+-------------------+-------+---------+----------Ôò«
+| Contract     | Selector          | Calls | Reverts | Discards |
++===============================================================+
+| MonitorMock  | checkAnomaly      | 11585 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | clearRecords      | 11547 | 11547   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | enterCall         | 11711 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | exitCall          | 11639 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | recordTransaction | 11542 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | updateParameters  | 11728 | 11725   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | deposit           | 11790 | 11790   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | pause             | 11577 | 11575   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | swapETHForTokens  | 11658 | 11658   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | unpause           | 11579 | 11579   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | withdraw          | 11644 | 9110    | 0        |
+Ôò░--------------+-------------------+-------+---------+----------Ôò»
+
+[PASS] invariant_callDepthNonNegative() (runs: 256, calls: 128000, reverts: 79032)
+
+Ôò¡--------------+-------------------+-------+---------+----------Ôò«
+| Contract     | Selector          | Calls | Reverts | Discards |
++===============================================================+
+| MonitorMock  | checkAnomaly      | 11585 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | clearRecords      | 11547 | 11535   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | enterCall         | 11711 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | exitCall          | 11639 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | recordTransaction | 11542 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | updateParameters  | 11728 | 11715   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | deposit           | 11790 | 11790   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | pause             | 11577 | 11564   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | swapETHForTokens  | 11658 | 11658   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | unpause           | 11579 | 11579   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | withdraw          | 11644 | 9191    | 0        |
+Ôò░--------------+-------------------+-------+---------+----------Ôò»
+
+[PASS] invariant_callDepthResetsAfterTransaction() (runs: 256, calls: 128000, reverts: 78986)
+
+Ôò¡--------------+-------------------+-------+---------+----------Ôò«
+| Contract     | Selector          | Calls | Reverts | Discards |
++===============================================================+
+| MonitorMock  | checkAnomaly      | 11585 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | clearRecords      | 11547 | 11536   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | enterCall         | 11711 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | exitCall          | 11639 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | recordTransaction | 11542 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | updateParameters  | 11728 | 11719   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | deposit           | 11790 | 11790   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | pause             | 11577 | 11569   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | swapETHForTokens  | 11658 | 11658   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | unpause           | 11579 | 11579   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | withdraw          | 11644 | 9135    | 0        |
+Ôò░--------------+-------------------+-------+---------+----------Ôò»
+
+[PASS] test_reentrancyGuardWorks() (gas: 322330)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 21.46s (57.35s CPU time)
+
+Ôò¡------------------------------------+-----------------+--------+--------+--------+---------Ôò«
+| src/Attacker.sol:Attacker Contract |                 |        |        |        |         |
++===========================================================================================+
+| Deployment Cost                    | Deployment Size |        |        |        |         |
+|------------------------------------+-----------------+--------+--------+--------+---------|
+|                             573761 |            2424 |        |        |        |         |
+|------------------------------------+-----------------+--------+--------+--------+---------|
+|                                    |                 |        |        |        |         |
+|------------------------------------+-----------------+--------+--------+--------+---------|
+| Function Name                      | Min             | Avg    | Median | Max    | # Calls |
+|------------------------------------+-----------------+--------+--------+--------+---------|
+| attackLightweight                  |           70050 | 139574 | 145181 | 145181 |      20 |
+|------------------------------------+-----------------+--------+--------+--------+---------|
+| attackStatic                       |          134109 | 134109 | 134109 | 134109 |       1 |
+|------------------------------------+-----------------+--------+--------+--------+---------|
+| attackUnoptimized                  |           80835 | 126795 | 137735 | 137735 |       9 |
+|------------------------------------+-----------------+--------+--------+--------+---------|
+| attackVictim                       |          346137 | 412383 | 419011 | 436111 |      17 |
+|------------------------------------+-----------------+--------+--------+--------+---------|
+| setLightweightBridge               |           43877 |  43877 |  43877 |  43877 |      93 |
+|------------------------------------+-----------------+--------+--------+--------+---------|
+| setStaticBridge                    |           43965 |  43965 |  43965 |  43965 |      71 |
+Ôò░------------------------------------+-----------------+--------+--------+--------+---------Ôò»
+
+Ôò¡----------------------------------------------------+-----------------+-------+--------+-------+---------Ôò«
+| src/BridgeStaticOnly.sol:BridgeStaticOnly Contract |                 |       |        |       |         |
++=========================================================================================================+
+| Deployment Cost                                    | Deployment Size |       |        |       |         |
+|----------------------------------------------------+-----------------+-------+--------+-------+---------|
+|                                             398667 |            1612 |       |        |       |         |
+|----------------------------------------------------+-----------------+-------+--------+-------+---------|
+|                                                    |                 |       |        |       |         |
+|----------------------------------------------------+-----------------+-------+--------+-------+---------|
+| Function Name                                      | Min             | Avg   | Median | Max   | # Calls |
+|----------------------------------------------------+-----------------+-------+--------+-------+---------|
+| admin                                              |             303 |   303 |    303 |   303 |       1 |
+|----------------------------------------------------+-----------------+-------+--------+-------+---------|
+| deposit                                            |           21310 | 44890 |  45002 | 45002 |     426 |
+|----------------------------------------------------+-----------------+-------+--------+-------+---------|
+| pause                                              |           21250 | 21250 |  21250 | 21250 |       1 |
+|----------------------------------------------------+-----------------+-------+--------+-------+---------|
+| reserves                                           |            2414 |  2414 |   2414 |  2414 |       4 |
+|----------------------------------------------------+-----------------+-------+--------+-------+---------|
+| swapETHForTokens                                   |               0 | 28356 |  29014 | 29014 |     111 |
+|----------------------------------------------------+-----------------+-------+--------+-------+---------|
+| unpause                                            |           21250 | 21250 |  21250 | 21250 |       1 |
+|----------------------------------------------------+-----------------+-------+--------+-------+---------|
+| userBalances                                       |            2570 |  2570 |   2570 |  2570 |     112 |
+|----------------------------------------------------+-----------------+-------+--------+-------+---------|
+| withdraw                                           |           23819 | 28634 |  23939 | 35345 |     276 |
+Ôò░----------------------------------------------------+-----------------+-------+--------+-------+---------Ôò»
+
+Ôò¡--------------------------------------------------------------+-----------------+-------+--------+-------+---------Ôò«
+| src/BridgeWithSSTOREGuard.sol:BridgeWithSSTOREGuard Contract |                 |       |        |       |         |
++===================================================================================================================+
+| Deployment Cost                                              | Deployment Size |       |        |       |         |
+|--------------------------------------------------------------+-----------------+-------+--------+-------+---------|
+|                                                       312160 |             933 |       |        |       |         |
+|--------------------------------------------------------------+-----------------+-------+--------+-------+---------|
+|                                                              |                 |       |        |       |         |
+|--------------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| Function Name                                                | Min             | Avg   | Median | Max   | # Calls |
+|--------------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| deposit                                                      |           32901 | 60882 |  67101 | 67101 |      11 |
+|--------------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| totalDeposits                                                |            2294 |  2294 |   2294 |  2294 |      13 |
+|--------------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| withdraw                                                     |           31086 | 43168 |  44552 | 46952 |       8 |
+Ôò░--------------------------------------------------------------+-----------------+-------+--------+-------+---------Ôò»
+
+Ôò¡------------------------------------------------------+-----------------+-------+--------+-------+---------Ôò«
+| src/LightweightBridge.sol:LightweightBridge Contract |                 |       |        |       |         |
++===========================================================================================================+
+| Deployment Cost                                      | Deployment Size |       |        |       |         |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+|                                               829116 |            3636 |       |        |       |         |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+|                                                      |                 |       |        |       |         |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| Function Name                                        | Min             | Avg   | Median | Max   | # Calls |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| LAMBDA                                               |             228 |   228 |    228 |   228 |       1 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| P_DETECT                                             |             207 |   207 |    207 |   207 |       1 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| admin                                                |             303 |   303 |    303 |   303 |       1 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| deposit                                              |           23394 | 67154 |  54947 | 91947 |     185 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| lastTx                                               |            2459 |  2459 |   2459 |  2459 |       8 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| lastTxBlock                                          |            2305 |  2305 |   2305 |  2305 |       3 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| pause                                                |           21333 | 41733 |  44708 | 44708 |      15 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| paused                                               |            2398 |  2398 |   2398 |  2398 |       2 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| recordFrontrun                                       |           26548 | 43087 |  29348 | 66348 |      23 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| reserves                                             |            2415 |  2415 |   2415 |  2415 |       3 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| swapETHForTokens                                     |           23668 | 40171 |  40142 | 76956 |     118 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| unpause                                              |           21311 | 22675 |  22777 | 23434 |       8 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| userBalances                                         |            2684 |  2684 |   2684 |  2684 |      19 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| withdraw                                             |           23762 | 39655 |  43718 | 46518 |      19 |
+Ôò░------------------------------------------------------+-----------------+-------+--------+-------+---------Ôò»
+
+Ôò¡------------------------------------------+-----------------+--------+--------+---------+---------Ôò«
+| src/MonitorMock.sol:MonitorMock Contract |                 |        |        |         |         |
++==================================================================================================+
+| Deployment Cost                          | Deployment Size |        |        |         |         |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+|                                   516781 |            1892 |        |        |         |         |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+|                                          |                 |        |        |         |         |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| Function Name                            | Min             | Avg    | Median | Max     | # Calls |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| P_detect                                 |            2316 |   2316 |   2316 |    2316 |       2 |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| calculatePenalty                         |             392 |   1592 |   2772 |    2782 |     537 |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| callDepth                                |             313 |    313 |    313 |     313 |       4 |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| checkAnomaly                             |            2612 |   8656 |   2629 |   38086 |   42462 |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| clearRecords                             |           23477 | 417293 | 360152 | 1175532 |      28 |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| enterCall                                |             383 |   4094 |    383 |   21447 |   42764 |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| exitCall                                 |             379 |   4106 |    379 |   21443 |   42578 |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| lambda                                   |            2338 |   2338 |   2338 |    2338 |       2 |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| recordTransaction                        |           54319 |  92233 |  94119 |  115891 |   42305 |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| txRecords                                |           11127 |  11127 |  11127 |   11127 |       1 |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| txRecordsLength                          |            2325 |   2325 |   2325 |    2325 |       2 |
+|------------------------------------------+-----------------+--------+--------+---------+---------|
+| updateParameters                         |           13803 |  17027 |  13803 |   35171 |      31 |
+Ôò░------------------------------------------+-----------------+--------+--------+---------+---------Ôò»
+
+Ôò¡------------------------------------------------------+-----------------+-------+--------+-------+---------Ôò«
+| src/UnoptimizedBridge.sol:UnoptimizedBridge Contract |                 |       |        |       |         |
++===========================================================================================================+
+| Deployment Cost                                      | Deployment Size |       |        |       |         |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+|                                               460604 |            1655 |       |        |       |         |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+|                                                      |                 |       |        |       |         |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| Function Name                                        | Min             | Avg   | Median | Max   | # Calls |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| admin                                                |            2423 |  2423 |   2423 |  2423 |       1 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| balances                                             |            2493 |  2493 |   2493 |  2493 |     264 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| deposit                                              |           23481 | 47016 |  47073 | 47073 |     415 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| reserveETH                                           |            2284 |  2284 |   2284 |  2284 |       1 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| reserveToken                                         |            2349 |  2349 |   2349 |  2349 |       2 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| swapETHForTokens                                     |               0 | 35432 |  35888 | 35888 |     106 |
+|------------------------------------------------------+-----------------+-------+--------+-------+---------|
+| withdraw                                             |           25976 | 34984 |  37318 | 37318 |       9 |
+Ôò░------------------------------------------------------+-----------------+-------+--------+-------+---------Ôò»
+
+Ôò¡--------------------------------------------+-----------------+--------+--------+--------+---------Ôò«
+| src/VictimBridge.sol:VictimBridge Contract |                 |        |        |        |         |
++===================================================================================================+
+| Deployment Cost                            | Deployment Size |        |        |        |         |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+|                                     971051 |            4323 |        |        |        |         |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+|                                            |                 |        |        |        |         |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+| Function Name                              | Min             | Avg    | Median | Max    | # Calls |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+| admin                                      |             303 |    303 |    303 |    303 |       1 |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+| deposit                                    |           23411 | 132592 | 161756 | 161756 |    1416 |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+| pause                                      |            6550 |  16860 |  21310 |  27614 |      47 |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+| paused                                     |            2415 |   2415 |   2415 |   2415 |       2 |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+| receive                                    |           21055 |  21055 |  21055 |  21055 |       6 |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+| reserves                                   |            2392 |   2392 |   2392 |   2392 |     261 |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+| swapETHForTokens                           |               0 | 137445 | 139227 | 149572 |     476 |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+| unpause                                    |           21355 |  25904 |  27644 |  27644 |      12 |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+| userBalances                               |            2593 |   2593 |   2593 |   2593 |     377 |
+|--------------------------------------------+-----------------+--------+--------+--------+---------|
+| withdraw                                   |           23779 | 202106 | 205135 | 222619 |    7913 |
+Ôò░--------------------------------------------+-----------------+--------+--------+--------+---------Ôò»
+
+
+Ran 13 test suites in 22.30s (77.04s CPU time): 216 tests passed, 0 failed, 0 skipped (216 total tests)

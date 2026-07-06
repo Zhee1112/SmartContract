@@ -1,0 +1,631 @@
+﻿forge.exe : Warning: Found unknown `etherscan` config for profile `mainnet` defined in foundry.toml.
+At line:1 char:1
++ & "C:\Users\RAZYAL~1\.foundry\bin\forge.exe" coverage 2>&1 | Out-File ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Warning: Found ...n foundry.toml.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Warning: Found unknown `rpc_endpoints` config for profile `mainnet` defined in foundry.toml.
+Warning: Found unknown `etherscan` config for profile `sepolia` defined in foundry.toml.
+Warning: Found unknown `rpc_endpoints` config for profile `sepolia` defined in foundry.toml.
+Warning: optimizer settings and `viaIR` have been disabled for accurate coverage reports.
+If you encounter "stack too deep" errors, consider using `--ir-minimum` which enables `viaIR` with minimum optimization
+ resolving most of the errors.
+See more: https://book.getfoundry.sh/guides/best-practices/stack-too-deep
+Compiling 41 files with Solc 0.8.28
+Solc 0.8.28 finished in 6.51s
+Compiler run successful with warnings:
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> src/MonitorMock.sol:137:43:
+    |
+137 |     function checkAnomaly(address sender, uint256 amount, uint8 txType) external returns (bool, uint256) {
+    |                                           ^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> src/LightweightBridge.sol:117:47:
+    |
+117 |     function recordFrontrun(address attacker, uint256 amount) external {
+    |                                               ^^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/CostAnalysisTest.t.sol:204:9:
+    |
+204 |         uint256 witD = _measureOneWithdraw(address(lightweightBridge), 1 ether);
+    |         ^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+  --> test/EIP1153Benchmark.t.sol:70:9:
+   |
+70 |         uint256 val = _sstoreStatus;
+   |         ^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+  --> test/EconomicDeterrenceTest.t.sol:81:9:
+   |
+81 |         uint256 attackerBefore = address(attacker).balance;
+   |         ^^^^^^^^^^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+  --> test/EconomicDeterrenceTest.t.sol:95:9:
+   |
+95 |         uint256 attackerBefore = address(attacker).balance;
+   |         ^^^^^^^^^^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/EconomicDeterrenceTest.t.sol:194:9:
+    |
+194 |         uint256 gasCost = gasUsed * tx.gasprice;
+    |         ^^^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/EconomicDeterrenceTest.t.sol:353:10:
+    |
+353 |         (bool d1, uint256 s1) = monitor.checkAnomaly(bob, 2 ether, 1);
+    |          ^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/EconomicDeterrenceTest.t.sol:353:19:
+    |
+353 |         (bool d1, uint256 s1) = monitor.checkAnomaly(bob, 2 ether, 1);
+    |                   ^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/EconomicDeterrenceTest.t.sol:360:10:
+    |
+360 |         (bool d2, uint256 s2) = monitor.checkAnomaly(bob, 2 ether, 1);
+    |          ^^^^^^^
+
+Warning (2072): Unused local variable.
+  --> test/MEVSimulationTest.t.sol:71:9:
+   |
+71 |         uint256 attackerBefore = address(attacker).balance;
+   |         ^^^^^^^^^^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/MEVSimulationTest.t.sol:123:10:
+    |
+123 |         (bool detected, uint256 score) = monitor.checkAnomaly(bob, 2 ether, 1);
+    |          ^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/MEVSimulationTest.t.sol:238:23:
+    |
+238 |         (uint96 ethR, uint96 tokenR) = stat.reserves();
+    |                       ^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/MultiContractTest.t.sol:443:9:
+    |
+443 |         uint256 lambda = 15000;
+    |         ^^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/TierComparisonTest.t.sol:208:10:
+    |
+208 |         (uint96 ethR, uint96 tokenR) = stat.reserves();
+    |          ^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/TierComparisonTest.t.sol:208:23:
+    |
+208 |         (uint96 ethR, uint96 tokenR) = stat.reserves();
+    |                       ^^^^^^^^^^^^^
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/EIP1153Benchmark.t.sol:92:5:
+   |
+92 |     function testTSTORE_Read() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/EIP1153Benchmark.t.sol:99:5:
+   |
+99 |     function testSSTORE_Read() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/EconomicDeterrenceTest.t.sol:111:5:
+    |
+111 |     function testPenalty_CalculatedCorrectly_C() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/EconomicDeterrenceTest.t.sol:122:5:
+    |
+122 |     function testPenalty_CappedAtAmount_C() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> test/EconomicDeterrenceTest.t.sol:131:5:
+    |
+131 |     function testPenalty_CappedAtAmount_D() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/EconomicDeterrenceTest.t.sol:142:5:
+    |
+142 |     function testPenalty_ZeroScore_NoPenalty_C() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> test/EconomicDeterrenceTest.t.sol:146:5:
+    |
+146 |     function testPenalty_ZeroScore_NoPenalty_D() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/EconomicDeterrenceTest.t.sol:151:5:
+    |
+151 |     function testPenalty_MinimumAmount_C() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> test/EconomicDeterrenceTest.t.sol:157:5:
+    |
+157 |     function testPenalty_MinimumAmount_D() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/EconomicDeterrenceTest.t.sol:163:5:
+    |
+163 |     function testPenalty_LargeAmount_NotCapped() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/EconomicDeterrenceTest.t.sol:309:5:
+    |
+309 |     function testPenalty_AtVariousScores() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/EconomicDeterrenceTest.t.sol:323:5:
+    |
+323 |     function testPenalty_FormulaConsistency_CvsD() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/FuzzTest.t.sol:96:5:
+   |
+96 |     function testFuzz_PenaltyNeverExceedsAmount(uint256 amount, uint256 score) public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/FuzzTest.t.sol:106:5:
+    |
+106 |     function testFuzz_PenaltyZeroWhenScoreZero(uint256 amount) public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/InvariantTest.t.sol:32:5:
+   |
+32 |     function invariant_balancesAlwaysNonNegative() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/InvariantTest.t.sol:40:5:
+   |
+40 |     function invariant_callDepthNonNegative() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/InvariantTest.t.sol:46:5:
+   |
+46 |     function invariant_callDepthResetsAfterTransaction() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> test/MEVSimulationTest.t.sol:188:5:
+    |
+188 |     function testMEVPenalty_TierD_Formula() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> test/MEVSimulationTest.t.sol:200:5:
+    |
+200 |     function testMEVPenalty_TierD_SmallAmount() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> test/MEVSimulationTest.t.sol:210:5:
+    |
+210 |     function testMEVPenalty_TierD_ZeroScore_NoPenalty() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/MultiContractTest.t.sol:436:5:
+    |
+436 |     function testEconomicDeterrence_AttackerLoses() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> test/MultiContractTest.t.sol:465:5:
+    |
+465 |     function testEconomicDeterrence_Baseline_NoEWS() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/MultiContractTest.t.sol:484:5:
+    |
+484 |     function testEconomicDeterrence_LargeVolume() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/SecurityComparisonTest.t.sol:146:5:
+    |
+146 |     function testEconomicPenaltyAllTiers() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/TierComparisonTest.t.sol:300:5:
+    |
+300 |     function testConstants_Immutable_D() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/TierComparisonTest.t.sol:305:5:
+    |
+305 |     function testAdmin_SetToDeployer_AllTiers() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Analysing contracts...
+Running tests...
+
+Ran 1 test for test/OZGuardComparison.t.sol:OZGuardComparison
+[PASS] testGasWithdraw_SSTORE_vs_EIP1153() (gas: 360468)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 17.94ms (3.69ms CPU time)
+
+Ran 7 tests for test/EIP1153Benchmark.t.sol:EIP1153Benchmark
+[PASS] testComparison_30Samples() (gas: 109904)
+[PASS] testSSTORE_Read() (gas: 6385)
+[PASS] testSSTORE_ReadWrite() (gas: 9495)
+[PASS] testSSTORE_SetAndClear() (gas: 6670)
+[PASS] testTSTORE_Read() (gas: 4274)
+[PASS] testTSTORE_ReadWrite() (gas: 4470)
+[PASS] testTSTORE_SetAndClear() (gas: 4626)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 43.22ms (38.18ms CPU time)
+
+Ran 6 tests for test/SecurityComparisonTest.t.sol:SecurityComparisonTest
+[PASS] testEconomicPenaltyAllTiers() (gas: 22526)
+[PASS] testEmergencyPauseAllTiers() (gas: 44945)
+[PASS] testGasVsSecurityMatrix() (gas: 340155)
+[PASS] testMEVDetectionAllTiers() (gas: 337712)
+[PASS] testReentrancyAllTiers() (gas: 698328)
+[PASS] testSecurityPerGasUnit() (gas: 340910)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 51.37ms (41.80ms CPU time)
+
+Ran 25 tests for test/EconomicDeterrenceTest.t.sol:EconomicDeterrenceTest
+[PASS] testAttackerLoses_GasOnFailedAttack_C() (gas: 640051)
+[PASS] testAttackerLoses_GasOnFailedAttack_D() (gas: 219996)
+[PASS] testConsecutiveReentrancy_AllBlocked_C() (gas: 1270113)
+[PASS] testConsecutiveReentrancy_AllBlocked_D() (gas: 699958)
+[PASS] testConsecutiveReentrancy_TierA_ExploitsMultipleTimes() (gas: 499203)
+[PASS] testEconomicMatrix_AllTiers_Summary() (gas: 992744)
+[PASS] testMonitorParam_HigherLambda_MorePenalty() (gas: 22348)
+[PASS] testMonitorParam_HigherPDetect_HigherScore() (gas: 166500)
+[PASS] testPenalty_AtVariousScores() (gas: 16989)
+[PASS] testPenalty_CalculatedCorrectly_C() (gas: 10087)
+[PASS] testPenalty_CappedAtAmount_C() (gas: 9424)
+[PASS] testPenalty_CappedAtAmount_D() (gas: 1269)
+[PASS] testPenalty_FormulaConsistency_CvsD() (gas: 10155)
+[PASS] testPenalty_LargeAmount_NotCapped() (gas: 10283)
+[PASS] testPenalty_MinimumAmount_C() (gas: 9755)
+[PASS] testPenalty_MinimumAmount_D() (gas: 1014)
+[PASS] testPenalty_ZeroScore_NoPenalty_C() (gas: 6814)
+[PASS] testPenalty_ZeroScore_NoPenalty_D() (gas: 382)
+[PASS] testROI_TierA_AttackerROI100Percent() (gas: 171579)
+[PASS] testROI_TierB_CEIPreventsProfit() (gas: 83298)
+[PASS] testROI_TierC_PenaltyMakesUnprofitable() (gas: 639256)
+[PASS] testROI_TierD_PenaltyMakesUnprofitable() (gas: 219645)
+[PASS] testRealisticScenario_LargeAttackerVsSmallPool() (gas: 449033)
+[PASS] testRealisticScenario_RapidFireAttacks() (gas: 951302)
+[PASS] testRealisticScenario_SmallAttackerVsLargePool() (gas: 449121)
+Suite result: ok. 25 passed; 0 failed; 0 skipped; finished in 107.36ms (97.20ms CPU time)
+
+Ran 3 tests for test/GasStatsTest.t.sol:GasStatsTest
+[PASS] testGasDeposit_100Samples() (gas: 12669346)
+[PASS] testGasSwap_100Samples() (gas: 11121993)
+[PASS] testGasWithdraw_100Samples() (gas: 23645488)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 1.46s (121.88ms CPU time)
+
+Ran 9 tests for test/CostAnalysisTest.t.sol:CostAnalysisTest
+[PASS] testCostEffectiveness() (gas: 341640)
+[PASS] testCostPerSecurityFeature() (gas: 812559)
+[PASS] testCostTierDvsTierCDelta() (gas: 719003)
+[PASS] testDeploymentCostComparison() (gas: 4290389)
+[PASS] testGasCost100SampleStat() (gas: 24615192)
+[PASS] testGasCostSummaryForThesis() (gas: 934091)
+[PASS] testGasPriceSensitivity() (gas: 317225)
+[PASS] testGasSwap100Sample_4Tiers() (gas: 16641213)
+[PASS] testRealWorldCostEstimation() (gas: 354477)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 1.46s (206.56ms CPU time)
+
+Ran 25 tests for test/MEVSimulationTest.t.sol:MEVSimulationTest
+[PASS] testCrossBlockMEV_TierC_NotDetected() (gas: 277055)
+[PASS] testCrossBlockMEV_TierD_NotDetected() (gas: 113112)
+[PASS] testMEVDetection_TierC_CheckAnomaly_Detects() (gas: 111012)
+[PASS] testMEVDetection_TierC_CheckAnomaly_NoFrontrun_NoDetect() (gas: 11794)
+[PASS] testMEVDetection_TierC_TxRecordsGrow() (gas: 103452)
+[PASS] testMEVDetection_TierD_DifferentBlock_NoAnomaly() (gas: 345218)
+[PASS] testMEVDetection_TierD_LastTxTracksFrontrun() (gas: 56475)
+[PASS] testMEVDetection_TierD_RecordFrontrunResetByNewTx() (gas: 345935)
+[PASS] testMEVPenalty_TierC_ReducesSwapOutput() (gas: 523623)
+[PASS] testMEVPenalty_TierD_Formula() (gas: 1199)
+[PASS] testMEVPenalty_TierD_SmallAmount() (gas: 1151)
+[PASS] testMEVPenalty_TierD_ZeroScore_NoPenalty() (gas: 1024)
+[PASS] testMonitorMock_ClearRecords() (gas: 156023)
+[PASS] testMonitorMock_NonAdmin_CannotClear() (gas: 13320)
+[PASS] testMonitorMock_NonAdmin_CannotUpdate() (gas: 14204)
+[PASS] testMonitorMock_UpdateParameters() (gas: 22457)
+[PASS] testNoMEVProtection_TierA_SwapOpenly() (gas: 344314)
+[PASS] testNoMEVProtection_TierB_SwapNoDetection() (gas: 337857)
+[PASS] testNoPenalty_TierA_AttackerKeepsAll() (gas: 446606)
+[PASS] testReentrancy_ViaSwap_TierC_Blocked() (gas: 724561)
+[PASS] testReentrancy_ViaSwap_TierD_Blocked() (gas: 446529)
+[PASS] testSandwich_TierA_AttackerProfits() (gas: 171841)
+[PASS] testSandwich_TierB_CEIblocksAttack() (gas: 83752)
+[PASS] testSandwich_TierC_EWSblocksAndPenalizes() (gas: 639003)
+[PASS] testSandwich_TierD_inlineEIP1153blocks() (gas: 219415)
+Suite result: ok. 25 passed; 0 failed; 0 skipped; finished in 1.60s (110.57ms CPU time)
+
+Ran 41 tests for test/EdgeCaseTest.t.sol:EdgeCaseTest
+[PASS] testAdmin_CanClearRecords() (gas: 129040)
+[PASS] testAdmin_CanUpdateMonitor() (gas: 22365)
+[PASS] testMEV_SandwichDetectedVictim() (gas: 285309)
+[PASS] testMultiUser_DepositAndWithdrawLightweight() (gas: 142382)
+[PASS] testMultiUser_DepositAndWithdrawSSTORE() (gas: 134024)
+[PASS] testMultiUser_DepositAndWithdrawStatic() (gas: 100621)
+[PASS] testMultiUser_DepositAndWithdrawVictim() (gas: 507333)
+[PASS] testOverflow_WithdrawExceedsBalanceLightweight() (gas: 93223)
+[PASS] testOverflow_WithdrawExceedsBalanceSSTORE() (gas: 74668)
+[PASS] testOverflow_WithdrawExceedsBalanceStatic() (gas: 45019)
+[PASS] testOverflow_WithdrawExceedsBalanceUnopt() (gas: 47426)
+[PASS] testOverflow_WithdrawExceedsBalanceVictim() (gas: 255423)
+[PASS] testReentrancy_LightweightBridge_Blocked() (gas: 149505)
+[PASS] testReentrancy_SSTOREGuard_NormalWithdrawWorks() (gas: 66179)
+[PASS] testReentrancy_StaticBridge_Blocked() (gas: 154289)
+[PASS] testReentrancy_Unoptimized_Exploitable() (gas: 89610)
+[PASS] testReentrancy_VictimBridge_Blocked() (gas: 346964)
+[PASS] testSSTOREGuard_DepositAndWithdraw() (gas: 66126)
+[PASS] testSSTOREGuard_MultipleDeposits() (gas: 76499)
+[PASS] testSSTOREGuard_TotalDepositsTracking() (gas: 121760)
+[PASS] testSSTOREGuard_WithdrawAll() (gas: 90223)
+[PASS] testSwap_ExceedsLiquidityLightweight() (gas: 115215)
+[PASS] testSwap_ExceedsLiquidityStatic() (gas: 50735)
+[PASS] testSwap_ExceedsLiquidityUnopt() (gas: 52445)
+[PASS] testSwap_ExceedsLiquidityVictim() (gas: 169092)
+[PASS] testSwap_SlippageTooHighLightweight() (gas: 105930)
+[PASS] testSwap_SlippageTooHighStatic() (gas: 50734)
+[PASS] testSwap_SlippageTooHighVictim() (gas: 169072)
+[PASS] testUnauthorized_NonAdminCannotClearRecords() (gas: 13299)
+[PASS] testUnauthorized_NonAdminCannotUpdateMonitor() (gas: 14181)
+[PASS] testZeroAmount_DepositLightweightReverts() (gas: 14502)
+[PASS] testZeroAmount_DepositStaticReverts() (gas: 12038)
+[PASS] testZeroAmount_DepositUnoptReverts() (gas: 14491)
+[PASS] testZeroAmount_DepositVictimReverts() (gas: 14208)
+[PASS] testZeroAmount_SwapLightweightReverts() (gas: 15112)
+[PASS] testZeroAmount_SwapStaticReverts() (gas: 44713)
+[PASS] testZeroAmount_SwapUnoptReverts() (gas: 46735)
+[PASS] testZeroAmount_SwapVictimReverts() (gas: 163212)
+[PASS] testZeroAmount_WithdrawLightweightReverts() (gas: 100777)
+[PASS] testZeroAmount_WithdrawStaticReverts() (gas: 47049)
+[PASS] testZeroAmount_WithdrawVictimReverts() (gas: 243684)
+Suite result: ok. 41 passed; 0 failed; 0 skipped; finished in 3.31s (157.56ms CPU time)
+
+Ran 50 tests for test/TierComparisonTest.t.sol:TierComparisonTest
+[PASS] testAdmin_SetToDeployer_AllTiers() (gas: 28005)
+[PASS] testConstants_Immutable_D() (gas: 6958)
+[PASS] testDepositWithdraw_RoundTrip_KeepsBridgeSOLVENCY() (gas: 337294)
+[PASS] testDeposit_1Wei_AllTiers() (gas: 328535)
+[PASS] testDeposit_BalanceIncreases_AllTiers() (gas: 332183)
+[PASS] testDeposit_EventEmission_AllTiers() (gas: 331724)
+[PASS] testDeposit_RevertsWhenPaused_C() (gas: 26037)
+[PASS] testDeposit_RevertsWhenPaused_D() (gas: 42983)
+[PASS] testDeposit_WorksAfterUnpause_C() (gas: 168027)
+[PASS] testDeposit_WorksAfterUnpause_D() (gas: 97059)
+[PASS] testDoubleWithdraw_ShouldFail_AllTiers() (gas: 542598)
+[PASS] testLastTx_DifferentBlock_NoAnomaly_D() (gas: 345175)
+[PASS] testLastTx_UpdatedAfterDeposit_D() (gas: 93280)
+[PASS] testLastTx_UpdatedAfterSwap_D() (gas: 341468)
+[PASS] testLastTx_UpdatedAfterWithdraw_D() (gas: 335799)
+[PASS] testLifecycle_DepositSwapWithdraw_AllTiers() (gas: 634784)
+[PASS] testLifecycle_FullPauseUnpauseCycle_D() (gas: 142337)
+[PASS] testMultiUser_IsolatedBalances_AllTiers() (gas: 560394)
+[PASS] testMultiUser_OneWithdraw_DoesNotAffectOther() (gas: 563417)
+[PASS] testMultiUser_SimultaneousDeposit_SameBlock() (gas: 171811)
+[PASS] testNoPauseFunction_B() (gas: 5777)
+[PASS] testNoUnpauseFunction_B() (gas: 5756)
+[PASS] testPause_CannotPauseTwice_C() (gas: 15812)
+[PASS] testPause_CannotPauseTwice_D() (gas: 32824)
+[PASS] testPause_EmergencyPausedEvent_CandD() (gas: 49805)
+[PASS] testPause_OnlyAdmin_C() (gas: 11097)
+[PASS] testPause_OnlyAdmin_D() (gas: 11164)
+[PASS] testPause_PreservesUserBalances_C() (gas: 328743)
+[PASS] testPause_PreservesUserBalances_D() (gas: 328586)
+[PASS] testRecordFrontrun_CanBeCalledByAnyone_D() (gas: 60336)
+[PASS] testRecordFrontrun_Permissionless_D() (gas: 60465)
+[PASS] testRecordFrontrun_UpdatesLastTx_D() (gas: 56454)
+[PASS] testSwap_EventEmission_AllTiers() (gas: 471410)
+[PASS] testSwap_ReservesUpdate_AllTiers() (gas: 481268)
+[PASS] testSwap_RevertsWhenPaused_C() (gas: 333507)
+[PASS] testSwap_RevertsWhenPaused_D() (gas: 350480)
+[PASS] testUnpause_CannotUnpauseWhenNotPaused_C() (gas: 10660)
+[PASS] testUnpause_CannotUnpauseWhenNotPaused_D() (gas: 10630)
+[PASS] testUnpause_EmergencyUnpausedEvent_CandD() (gas: 39336)
+[PASS] testUnpause_OnlyAdmin_C() (gas: 18335)
+[PASS] testUnpause_OnlyAdmin_D() (gas: 35290)
+[PASS] testWithdraw_1Wei_AllTiers() (gas: 473958)
+[PASS] testWithdraw_BalanceDecreases_AllTiers() (gas: 477333)
+[PASS] testWithdraw_EntireBalance_AllTiers() (gas: 453699)
+[PASS] testWithdraw_EventEmission_AllTiers() (gas: 479884)
+[PASS] testWithdraw_NeverDeposited_ShouldFail_AllTiers() (gas: 152108)
+[PASS] testWithdraw_RevertsWhenPaused_C() (gas: 326847)
+[PASS] testWithdraw_RevertsWhenPaused_D() (gas: 343794)
+[PASS] testZeroAmount_Deposit_ShouldFail_BCD() (gas: 28126)
+[PASS] testZeroAmount_Swap_ShouldFail_BCD() (gas: 325661)
+Suite result: ok. 50 passed; 0 failed; 0 skipped; finished in 3.38s (221.01ms CPU time)
+
+Ran 23 tests for test/VictimBridgeSecurityTest.t.sol:VictimBridgeSecurityTest
+[PASS] testDeposit_NormalWorks() (gas: 163403)
+[PASS] testPauseUnpause_TierD_Works() (gas: 107180)
+[PASS] testPause_CannotPauseTwice() (gas: 15846)
+[PASS] testPause_DepositRevertsWhenPaused() (gas: 26136)
+[PASS] testPause_EventEmitted() (gas: 16723)
+[PASS] testPause_OnlyAdminCanPause() (gas: 11104)
+[PASS] testPause_SwapRevertsWhenPaused() (gas: 174227)
+[PASS] testPause_TierD_DepositRevertsWhenPaused() (gas: 43291)
+[PASS] testPause_WithdrawRevertsWhenPaused() (gas: 168416)
+[PASS] testReentrancy_AttackRevertsEntireTx() (gas: 565169)
+[PASS] testReentrancy_AttackerDoesNotProfit() (gas: 565753)
+[PASS] testReentrancy_BridgeBalanceUnchangedAfterAttack() (gas: 565785)
+[PASS] testReentrancy_CallDepthResetsAfterAttack() (gas: 568351)
+[PASS] testReentrancy_ConsecutiveAttacksAllFail() (gas: 1368884)
+[PASS] testReentrancy_TierD_AttackReverts() (gas: 215858)
+[PASS] testReentrancy_TierD_BridgeBalanceUnchanged() (gas: 216388)
+[PASS] testUnpause_CannotUnpauseWhenNotPaused() (gas: 10756)
+[PASS] testUnpause_DepositWorksAfterUnpause() (gas: 165749)
+[PASS] testUnpause_EventEmitted() (gas: 16386)
+[PASS] testUnpause_OnlyAdminCanUnpause() (gas: 18347)
+[PASS] testUnpause_SwapWorksAfterUnpause() (gas: 280029)
+[PASS] testUnpause_WithdrawWorksAfterUnpause() (gas: 300460)
+[PASS] testWithdraw_NormalWorks() (gas: 298138)
+Suite result: ok. 23 passed; 0 failed; 0 skipped; finished in 3.41s (103.34ms CPU time)
+
+Ran 8 tests for test/FuzzTest.t.sol:FuzzTest
+[PASS] testFuzz_DepositRevertOnZero(uint256) (runs: 256, ╬╝: 14063, ~: 14063)
+[PASS] testFuzz_DepositValidAmount(uint96) (runs: 256, ╬╝: 164643, ~: 164643)
+[PASS] testFuzz_PenaltyNeverExceedsAmount(uint256,uint256) (runs: 256, ╬╝: 13654, ~: 13787)
+[PASS] testFuzz_PenaltyZeroWhenScoreZero(uint256) (runs: 256, ╬╝: 6901, ~: 6901)
+[PASS] testFuzz_StaticBridge_DepositWithdraw(uint96,uint96) (runs: 256, ╬╝: 62352, ~: 47177)
+[PASS] testFuzz_SwapFormulaCorrectness(uint96) (runs: 256, ╬╝: 278645, ~: 278645)
+[PASS] testFuzz_UnoptimizedBridge_Deposit(uint256) (runs: 256, ╬╝: 47302, ~: 47302)
+[PASS] testFuzz_WithdrawCannotExceedBalance(uint96,uint96) (runs: 256, ╬╝: 275314, ~: 257512)
+Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 3.41s (11.20s CPU time)
+
+Ran 14 tests for test/MultiContractTest.t.sol:MultiContractTest
+[PASS] testEconomicDeterrence_AttackerLoses() (gas: 24666)
+[PASS] testEconomicDeterrence_Baseline_NoEWS() (gas: 12833)
+[PASS] testEconomicDeterrence_LargeVolume() (gas: 45111)
+[PASS] testGasDeployment() (gas: 4288984)
+[PASS] testGasDeposit() (gas: 340542)
+[PASS] testGasSummary_FourTier() (gas: 339272)
+[PASS] testGasSwap() (gas: 280330)
+[PASS] testGasWithdraw() (gas: 488208)
+[PASS] testMEVSandwich_C_Dynamic_Detected() (gas: 274104)
+[PASS] testMEVSandwich_D_Lightweight_Detected() (gas: 100132)
+[PASS] testReentrancyAttack_A_Unoptimized_Exploitable() (gas: 147997)
+[PASS] testReentrancyAttack_B_StaticCEI_Blocked() (gas: 56397)
+[PASS] testReentrancyAttack_C_Dynamic_EWS_Blocked() (gas: 444726)
+[PASS] testReentrancyAttack_D_Lightweight_Blocked() (gas: 224520)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 70.10s (67.57ms CPU time)
+
+Ran 4 tests for test/InvariantTest.t.sol:InvariantTest
+[PASS] invariant_balancesAlwaysNonNegative() (runs: 256, calls: 128000, reverts: 78763)
+
+Ôò¡--------------+-------------------+-------+---------+----------Ôò«
+| Contract     | Selector          | Calls | Reverts | Discards |
++===============================================================+
+| MonitorMock  | checkAnomaly      | 11657 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | clearRecords      | 11627 | 11612   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | enterCall         | 11639 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | exitCall          | 11676 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | recordTransaction | 11693 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | updateParameters  | 11532 | 11517   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | deposit           | 11672 | 11672   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | pause             | 11547 | 11532   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | swapETHForTokens  | 11781 | 11781   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | unpause           | 11560 | 11560   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | withdraw          | 11616 | 9089    | 0        |
+Ôò░--------------+-------------------+-------+---------+----------Ôò»
+
+[PASS] invariant_callDepthNonNegative() (runs: 256, calls: 128000, reverts: 78773)
+
+Ôò¡--------------+-------------------+-------+---------+----------Ôò«
+| Contract     | Selector          | Calls | Reverts | Discards |
++===============================================================+
+| MonitorMock  | checkAnomaly      | 11657 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | clearRecords      | 11627 | 11616   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | enterCall         | 11639 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | exitCall          | 11676 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | recordTransaction | 11693 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | updateParameters  | 11532 | 11518   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | deposit           | 11672 | 11672   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | pause             | 11547 | 11527   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | swapETHForTokens  | 11781 | 11781   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | unpause           | 11560 | 11560   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | withdraw          | 11616 | 9099    | 0        |
+Ôò░--------------+-------------------+-------+---------+----------Ôò»
+
+[PASS] invariant_callDepthResetsAfterTransaction() (runs: 256, calls: 128000, reverts: 78771)
+
+Ôò¡--------------+-------------------+-------+---------+----------Ôò«
+| Contract     | Selector          | Calls | Reverts | Discards |
++===============================================================+
+| MonitorMock  | checkAnomaly      | 11657 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | clearRecords      | 11627 | 11614   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | enterCall         | 11639 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | exitCall          | 11676 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | recordTransaction | 11693 | 0       | 0        |
+|--------------+-------------------+-------+---------+----------|
+| MonitorMock  | updateParameters  | 11532 | 11519   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | deposit           | 11672 | 11672   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | pause             | 11547 | 11530   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | swapETHForTokens  | 11781 | 11781   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | unpause           | 11560 | 11560   | 0        |
+|--------------+-------------------+-------+---------+----------|
+| VictimBridge | withdraw          | 11616 | 9095    | 0        |
+Ôò░--------------+-------------------+-------+---------+----------Ôò»
+
+[PASS] test_reentrancyGuardWorks() (gas: 272807)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 72.88s (212.68s CPU time)
+
+Ran 13 test suites in 72.88s (161.22s CPU time): 216 tests passed, 0 failed, 0 skipped (216 total tests)
+
+Ôò¡-------------------------------+------------------+------------------+----------------+-----------------Ôò«
+| File                          | % Lines          | % Statements     | % Branches     | % Funcs         |
++========================================================================================================+
+| script/DeploySepolia.s.sol    | 0.00% (0/25)     | 0.00% (0/31)     | 100.00% (0/0)  | 0.00% (0/1)     |
+|-------------------------------+------------------+------------------+----------------+-----------------|
+| src/Attacker.sol              | 97.96% (48/49)   | 95.92% (47/49)   | 57.89% (11/19) | 100.00% (8/8)   |
+|-------------------------------+------------------+------------------+----------------+-----------------|
+| src/BridgeStaticOnly.sol      | 100.00% (27/27)  | 90.00% (27/30)   | 50.00% (3/6)   | 100.00% (4/4)   |
+|-------------------------------+------------------+------------------+----------------+-----------------|
+| src/BridgeWithSSTOREGuard.sol | 100.00% (22/22)  | 86.96% (20/23)   | 25.00% (1/4)   | 100.00% (4/4)   |
+|-------------------------------+------------------+------------------+----------------+-----------------|
+| src/LightweightBridge.sol     | 97.59% (81/83)   | 93.55% (87/93)   | 75.00% (15/20) | 100.00% (13/13) |
+|-------------------------------+------------------+------------------+----------------+-----------------|
+| src/MonitorMock.sol           | 100.00% (36/36)  | 100.00% (33/33)  | 100.00% (5/5)  | 100.00% (11/11) |
+|-------------------------------+------------------+------------------+----------------+-----------------|
+| src/UnoptimizedBridge.sol     | 100.00% (25/25)  | 100.00% (23/23)  | 68.75% (11/16) | 100.00% (4/4)   |
+|-------------------------------+------------------+------------------+----------------+-----------------|
+| src/VictimBridge.sol          | 86.15% (56/65)   | 86.96% (60/69)   | 70.59% (12/17) | 100.00% (6/6)   |
+|-------------------------------+------------------+------------------+----------------+-----------------|
+| Total                         | 88.86% (295/332) | 84.62% (297/351) | 66.67% (58/87) | 98.04% (50/51)  |
+Ôò░-------------------------------+------------------+------------------+----------------+-----------------Ôò»
