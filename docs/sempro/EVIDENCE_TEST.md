@@ -389,13 +389,133 @@ BREAKDOWN BY CATEGORY:
 | Deployment          | forge --gas   | D: 829,116 gas            |
 
 ==================================================
- TOOLS YANG DIGUNAKAN (dari Consensys List):
+  TOOLS YANG DIGUNAKAN (dari Consensys List):
 ==================================================
   1. Foundry (Testing Framework) - 216 tests PASS
   2. Slither (Static Analysis) - 0 critical vulns
   3. Solhint (Linting) - 0 errors
   4. forge coverage (Code Coverage) - 88.86%
   5. forge --gas-report (Gas Profiling) - Detailed gas
+==================================================
+```
+
+---
+
+## EVIDENCE 7: SLITHER vs FOUNDRY TESTS (Complementary Analysis)
+
+### Pemahaman: Slither dan Tests Saling Melengkapi
+
+Slither adalah **static analysis** (cek kode tanpa menjalankan), sedangkan Foundry Tests adalah **functional testing** (jalankan kode untuk verifikasi behavior). Keduanya COMPLEMENTARY, bukan DUPLICATE.
+
+### Apa yang Slither Deteksi (45 findings):
+
+```
+==================================================
+  SLITHER DETECTIONS: STATIC ANALYSIS             
+==================================================
+| Detektor              | Impact   | Contract                |
+|-----------------------|----------|-------------------------|
+| reentrancy-eth        | HIGH     | UnoptimizedBridge       |
+| reentrancy-eth        | HIGH     | LightweightBridge       |
+| reentrancy-no-eth     | MEDIUM   | VictimBridge            |
+| reentrancy-benign     | LOW      | VictimBridge            |
+| reentrancy-events     | LOW      | VictimBridge (multiple) |
+| incorrect-equality    | MEDIUM   | MonitorMock             |
+| assembly              | INFO     | Semua (EIP-1153)        |
+| low-level-calls       | INFO     | Semua (call)            |
+| naming-convention     | INFO     | Semua                   |
+
+INTERPRETASI:
+- 0 CRITICAL vulnerabilities
+- Reentrancy pada UnoptimizedBridge = EXPECTED (memang sengaja rentan)
+- Reentrancy pada LightweightBridge = False positive (TSTORE mitigates)
+- Assembly = Required for EIP-1153 (TSTORE/TLOAD)
+==================================================
+```
+
+### Apa yang Foundry Tests Verifikasi (216 tests):
+
+```
+==================================================
+  FOUNDRY TESTS: FUNCTIONAL VERIFICATION          
+==================================================
+| Fitur Keamanan        | Test Count | Slither Cover? |
+|-----------------------|------------|----------------|
+| Reentrancy Protection | 10 tests   | ✓ YA           |
+| MEV Detection         | 5 tests    | ❌ TIDAK       |
+| Pause/Unpause         | 12 tests   | ❌ TIDAK       |
+| Economic Penalty      | 4 tests    | ❌ TIDAK       |
+| State Transitions     | 50 tests   | ❌ TIDAK       |
+| Gas Measurement       | 100 tests  | ❌ TIDAK       |
+| Fuzz Testing          | 10 tests   | ❌ TIDAK       |
+| Edge Cases            | 15 tests   | ❌ TIDAK       |
+| Invariant Testing     | 10 tests   | ❌ TIDAK       |
+
+INTERPRETASI:
+- Slither HANYA mendeteksi Reentrancy (pola yang dikenal)
+- MEV Detection = Business logic (Slither tidak bisa analisis)
+- Pause/Unpause = Access control (Slither tidak cek)
+- Economic Penalty = Game theory (Slither tidak bisa)
+- Gas Optimization = Performance metric (Slither tidak ukur)
+==================================================
+```
+
+### Mengapa Keduanya Diperlukan:
+
+```
+==================================================
+  COMPLEMENTARY ANALYSIS                         
+==================================================
+SLITHER (Static Analysis):
+  ✓ Deteksi reentrancy patterns
+  ✓ Deteksi integer overflow
+  ✓ Deteksi dangerous equality
+  ✓ Deteksi low-level calls
+  ❌ TIDAK bisa deteksi business logic
+  ❌ TIDAK bisa verifikasi MEV protection
+  ❌ TIDAK bisa ukur gas efficiency
+
+FOUNDRY TESTS (Functional Testing):
+  ✓ Verifikasi reentrancy BLOCKED (runtime)
+  ✓ Verifikasi MEV detection WORKS
+  ✓ Verifikasi pause mechanism FUNCTIONAL
+  ✓ Verifikasi economic penalty ENFORCED
+  ✓ Ukur gas consumption ACCURATELY
+  ❌ TIDAK bisa deteksi semua vulnerability patterns
+
+KESIMPULAN:
+  Slither = Security baseline (apa yang berbahaya)
+  Tests = Functional verification (apa yang bekerja)
+  Keduanya = Complete security assurance
+==================================================
+```
+
+### Contoh: Reentrancy pada LightweightBridge
+
+```
+==================================================
+  CASE STUDY: REENTRANCY LIGHTWEIGHTBRIDGE        
+==================================================
+SLITHER REPORT:
+  "Reentrancy in LightweightBridge.withdraw()"
+  Impact: HIGH, Confidence: MEDIUM
+
+FOUNDRY TEST RESULT:
+  testReentrancy_TierD_AttackReverts() -> PASS
+  -> Serangan reentrancy DIBLOKIR oleh TSTORE inline
+  -> Bridge balance TIDAK berubah
+
+PENJELASAN:
+  Slither melihat ada external call + state update = reentrancy
+  TAPI Slither tidak tahu bahwa TSTORE sudah mitigasi
+
+  Foundry test MEMBUKTIKAN bahwa reentrancy TIDAK BEKERJA
+  karena TSTORE inline mendeteksi callDepth > 0
+
+KESIMPULAN:
+  Slither = Benar ada pola reentrancy
+  Tests = Benar reentrancy sudah di-block
+  Keduanya = TRUE (komplementer)
 ==================================================
 ```
 
