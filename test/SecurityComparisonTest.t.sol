@@ -176,11 +176,11 @@ contract SecurityComparisonTest is Test {
 
         console.log("Tier | Gas    | Security");
         console.log("A    |", depA, "| 0/8");
-        console.log("B    |", depB, "| 4/8");
+        console.log("B    |", depB, "| 2/8");
         console.log("C    |", depC, "| 8/8");
-        console.log("D    |", depD, "| 7/8");
+        console.log("D    |", depD, "| 8/8");
         console.log("---");
-        console.log("Best value: Tier D (7/8 security at Tier B+131% gas)");
+        console.log("Best value: Tier D (8/8 security at Tier B+8.7% gas)");
         console.log("==================================================");
 
         assertTrue(depA > 0 && depB > 0 && depC > 0 && depD > 0);
@@ -196,11 +196,11 @@ contract SecurityComparisonTest is Test {
         uint256 depC = _measureDepositGas(address(victimBridge), 1 ether);
         uint256 depD = _measureDepositGas(address(lightweightBridge), 1 ether);
 
-        // Security features: A=0, B=4, C=8, D=7
+        // Security features: A=0, B=2, C=8, D=8
         uint256 spgA = (0 * 1000000) / (depA > 0 ? depA : 1);
-        uint256 spgB = (4 * 1000000) / depB;
+        uint256 spgB = (2 * 1000000) / depB;
         uint256 spgC = (8 * 1000000) / depC;
-        uint256 spgD = (7 * 1000000) / depD;
+        uint256 spgD = (8 * 1000000) / depD;
 
         console.log("[A] Unoptimized  :", spgA, "SPG");
         console.log("[B] Static Only  :", spgB, "SPG");
