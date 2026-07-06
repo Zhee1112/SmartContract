@@ -10,6 +10,22 @@ Warning: Found unknown `etherscan` config for profile `sepolia` defined in found
 Warning: Found unknown `rpc_endpoints` config for profile `sepolia` defined in foundry.toml.
 No files changed, compilation skipped
 
+Ran 1 test for test/OZGuardComparison.t.sol:OZGuardComparison
+[PASS] testGasWithdraw_SSTORE_vs_EIP1153() (gas: 348622)
+Logs:
+  ========================================
+    SSTORE GUARD vs EIP-1153 TSTORE      
+  ========================================
+  SSTORE Guard  : 19369 gas
+  EIP-1153 + EWS: 104873 gas
+  Overhead (EWS monitoring): 85504 gas
+  ========================================
+  NOTE: EIP-1153 bridge includes EWS monitoring overhead.
+  Pure TSTORE/TLOAD cost = 200 gas vs SSTORE cold+warm = ~22,900 gas.
+  ========================================
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 24.91ms (4.35ms CPU time)
+
 Ran 7 tests for test/EIP1153Benchmark.t.sol:EIP1153Benchmark
 [PASS] testComparison_30Samples() (gas: 37314)
 Logs:
@@ -52,51 +68,35 @@ Logs:
 Logs:
   TSTORE lock/unlock: 364 gas
 
-Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 69.79ms (9.28ms CPU time)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 28.15ms (13.24ms CPU time)
 
-Ran 1 test for test/OZGuardComparison.t.sol:OZGuardComparison
-[PASS] testGasWithdraw_SSTORE_vs_EIP1153() (gas: 348622)
-Logs:
-  ========================================
-    SSTORE GUARD vs EIP-1153 TSTORE      
-  ========================================
-  SSTORE Guard  : 19369 gas
-  EIP-1153 + EWS: 104873 gas
-  Overhead (EWS monitoring): 85504 gas
-  ========================================
-  NOTE: EIP-1153 bridge includes EWS monitoring overhead.
-  Pure TSTORE/TLOAD cost = 200 gas vs SSTORE cold+warm = ~22,900 gas.
-  ========================================
-
-Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 69.22ms (8.89ms CPU time)
-
-Ran 25 tests for test/MEVSimulationTest.t.sol:MEVSimulationTest
-[PASS] testCrossBlockMEV_TierC_NotDetected() (gas: 269635)
-[PASS] testCrossBlockMEV_TierD_NotDetected() (gas: 109155)
-[PASS] testMEVDetection_TierC_CheckAnomaly_Detects() (gas: 107959)
-[PASS] testMEVDetection_TierC_CheckAnomaly_NoFrontrun_NoDetect() (gas: 10303)
-[PASS] testMEVDetection_TierC_TxRecordsGrow() (gas: 100955)
-[PASS] testMEVDetection_TierD_DifferentBlock_NoAnomaly() (gas: 336811)
-[PASS] testMEVDetection_TierD_LastTxTracksFrontrun() (gas: 54547)
-[PASS] testMEVDetection_TierD_RecordFrontrunResetByNewTx() (gas: 337308)
-[PASS] testMEVPenalty_TierC_ReducesSwapOutput() (gas: 509823)
-[PASS] testMEVPenalty_TierD_Formula() (gas: 755)
-[PASS] testMEVPenalty_TierD_SmallAmount() (gas: 707)
-[PASS] testMEVPenalty_TierD_ZeroScore_NoPenalty() (gas: 584)
-[PASS] testMonitorMock_ClearRecords() (gas: 153613)
-[PASS] testMonitorMock_NonAdmin_CannotClear() (gas: 13034)
-[PASS] testMonitorMock_NonAdmin_CannotUpdate() (gas: 13093)
-[PASS] testMonitorMock_UpdateParameters() (gas: 20841)
-[PASS] testNoMEVProtection_TierA_SwapOpenly() (gas: 337967)
-[PASS] testNoMEVProtection_TierB_SwapNoDetection() (gas: 331236)
-[PASS] testNoPenalty_TierA_AttackerKeepsAll() (gas: 438839)
-[PASS] testReentrancy_ViaSwap_TierC_Blocked() (gas: 712742)
-[PASS] testReentrancy_ViaSwap_TierD_Blocked() (gas: 439335)
-[PASS] testSandwich_TierA_AttackerProfits() (gas: 168241)
-[PASS] testSandwich_TierB_CEIblocksAttack() (gas: 81613)
-[PASS] testSandwich_TierC_EWSblocksAndPenalizes() (gas: 628369)
-[PASS] testSandwich_TierD_inlineEIP1153blocks() (gas: 214448)
-Suite result: ok. 25 passed; 0 failed; 0 skipped; finished in 78.03ms (14.75ms CPU time)
+Ran 25 tests for test/EconomicDeterrenceTest.t.sol:EconomicDeterrenceTest
+[PASS] testAttackerLoses_GasOnFailedAttack_C() (gas: 629119)
+[PASS] testAttackerLoses_GasOnFailedAttack_D() (gas: 215008)
+[PASS] testConsecutiveReentrancy_AllBlocked_C() (gas: 1248680)
+[PASS] testConsecutiveReentrancy_AllBlocked_D() (gas: 684254)
+[PASS] testConsecutiveReentrancy_TierA_ExploitsMultipleTimes() (gas: 488330)
+[PASS] testEconomicMatrix_AllTiers_Summary() (gas: 971246)
+[PASS] testMonitorParam_HigherLambda_MorePenalty() (gas: 18765)
+[PASS] testMonitorParam_HigherPDetect_HigherScore() (gas: 160709)
+[PASS] testPenalty_AtVariousScores() (gas: 11905)
+[PASS] testPenalty_CalculatedCorrectly_C() (gas: 8395)
+[PASS] testPenalty_CappedAtAmount_C() (gas: 8162)
+[PASS] testPenalty_CappedAtAmount_D() (gas: 825)
+[PASS] testPenalty_FormulaConsistency_CvsD() (gas: 8463)
+[PASS] testPenalty_LargeAmount_NotCapped() (gas: 8591)
+[PASS] testPenalty_MinimumAmount_C() (gas: 8237)
+[PASS] testPenalty_MinimumAmount_D() (gas: 574)
+[PASS] testPenalty_ZeroScore_NoPenalty_C() (gas: 5717)
+[PASS] testPenalty_ZeroScore_NoPenalty_D() (gas: 382)
+[PASS] testROI_TierA_AttackerROI100Percent() (gas: 167889)
+[PASS] testROI_TierB_CEIPreventsProfit() (gas: 81423)
+[PASS] testROI_TierC_PenaltyMakesUnprofitable() (gas: 628589)
+[PASS] testROI_TierD_PenaltyMakesUnprofitable() (gas: 214645)
+[PASS] testRealisticScenario_LargeAttackerVsSmallPool() (gas: 440726)
+[PASS] testRealisticScenario_RapidFireAttacks() (gas: 928124)
+[PASS] testRealisticScenario_SmallAttackerVsLargePool() (gas: 440814)
+Suite result: ok. 25 passed; 0 failed; 0 skipped; finished in 28.39ms (13.37ms CPU time)
 
 Ran 41 tests for test/EdgeCaseTest.t.sol:EdgeCaseTest
 [PASS] testAdmin_CanClearRecords() (gas: 127080)
@@ -140,7 +140,199 @@ Ran 41 tests for test/EdgeCaseTest.t.sol:EdgeCaseTest
 [PASS] testZeroAmount_WithdrawLightweightReverts() (gas: 96199)
 [PASS] testZeroAmount_WithdrawStaticReverts() (gas: 44915)
 [PASS] testZeroAmount_WithdrawVictimReverts() (gas: 236974)
-Suite result: ok. 41 passed; 0 failed; 0 skipped; finished in 78.08ms (22.63ms CPU time)
+Suite result: ok. 41 passed; 0 failed; 0 skipped; finished in 29.75ms (12.56ms CPU time)
+
+Ran 23 tests for test/VictimBridgeSecurityTest.t.sol:VictimBridgeSecurityTest
+[PASS] testDeposit_NormalWorks() (gas: 159835)
+[PASS] testPauseUnpause_TierD_Works() (gas: 103982)
+[PASS] testPause_CannotPauseTwice() (gas: 15656)
+[PASS] testPause_DepositRevertsWhenPaused() (gas: 25447)
+[PASS] testPause_EventEmitted() (gas: 16035)
+[PASS] testPause_OnlyAdminCanPause() (gas: 10916)
+[PASS] testPause_SwapRevertsWhenPaused() (gas: 171288)
+[PASS] testPause_TierD_DepositRevertsWhenPaused() (gas: 42750)
+[PASS] testPause_WithdrawRevertsWhenPaused() (gas: 165194)
+[PASS] testReentrancy_AttackRevertsEntireTx() (gas: 554990)
+[PASS] testReentrancy_AttackerDoesNotProfit() (gas: 555553)
+[PASS] testReentrancy_BridgeBalanceUnchangedAfterAttack() (gas: 555654)
+[PASS] testReentrancy_CallDepthResetsAfterAttack() (gas: 557896)
+[PASS] testReentrancy_ConsecutiveAttacksAllFail() (gas: 1343773)
+[PASS] testReentrancy_TierD_AttackReverts() (gas: 211259)
+[PASS] testReentrancy_TierD_BridgeBalanceUnchanged() (gas: 211739)
+[PASS] testUnpause_CannotUnpauseWhenNotPaused() (gas: 10675)
+[PASS] testUnpause_DepositWorksAfterUnpause() (gas: 163169)
+[PASS] testUnpause_EventEmitted() (gas: 15578)
+[PASS] testUnpause_OnlyAdminCanUnpause() (gas: 18050)
+[PASS] testUnpause_SwapWorksAfterUnpause() (gas: 272182)
+[PASS] testUnpause_WithdrawWorksAfterUnpause() (gas: 293533)
+[PASS] testWithdraw_NormalWorks() (gas: 290229)
+Suite result: ok. 23 passed; 0 failed; 0 skipped; finished in 30.63ms (11.82ms CPU time)
+
+Ran 25 tests for test/MEVSimulationTest.t.sol:MEVSimulationTest
+[PASS] testCrossBlockMEV_TierC_NotDetected() (gas: 269635)
+[PASS] testCrossBlockMEV_TierD_NotDetected() (gas: 109155)
+[PASS] testMEVDetection_TierC_CheckAnomaly_Detects() (gas: 107959)
+[PASS] testMEVDetection_TierC_CheckAnomaly_NoFrontrun_NoDetect() (gas: 10303)
+[PASS] testMEVDetection_TierC_TxRecordsGrow() (gas: 100955)
+[PASS] testMEVDetection_TierD_DifferentBlock_NoAnomaly() (gas: 336811)
+[PASS] testMEVDetection_TierD_LastTxTracksFrontrun() (gas: 54547)
+[PASS] testMEVDetection_TierD_RecordFrontrunResetByNewTx() (gas: 337308)
+[PASS] testMEVPenalty_TierC_ReducesSwapOutput() (gas: 509823)
+[PASS] testMEVPenalty_TierD_Formula() (gas: 755)
+[PASS] testMEVPenalty_TierD_SmallAmount() (gas: 707)
+[PASS] testMEVPenalty_TierD_ZeroScore_NoPenalty() (gas: 584)
+[PASS] testMonitorMock_ClearRecords() (gas: 153613)
+[PASS] testMonitorMock_NonAdmin_CannotClear() (gas: 13034)
+[PASS] testMonitorMock_NonAdmin_CannotUpdate() (gas: 13093)
+[PASS] testMonitorMock_UpdateParameters() (gas: 20841)
+[PASS] testNoMEVProtection_TierA_SwapOpenly() (gas: 337967)
+[PASS] testNoMEVProtection_TierB_SwapNoDetection() (gas: 331236)
+[PASS] testNoPenalty_TierA_AttackerKeepsAll() (gas: 438839)
+[PASS] testReentrancy_ViaSwap_TierC_Blocked() (gas: 712742)
+[PASS] testReentrancy_ViaSwap_TierD_Blocked() (gas: 439335)
+[PASS] testSandwich_TierA_AttackerProfits() (gas: 168241)
+[PASS] testSandwich_TierB_CEIblocksAttack() (gas: 81613)
+[PASS] testSandwich_TierC_EWSblocksAndPenalizes() (gas: 628369)
+[PASS] testSandwich_TierD_inlineEIP1153blocks() (gas: 214448)
+Suite result: ok. 25 passed; 0 failed; 0 skipped; finished in 32.98ms (13.12ms CPU time)
+
+Ran 50 tests for test/TierComparisonTest.t.sol:TierComparisonTest
+[PASS] testAdmin_SetToDeployer_AllTiers() (gas: 26959)
+[PASS] testConstants_Immutable_D() (gas: 6364)
+[PASS] testDepositWithdraw_RoundTrip_KeepsBridgeSOLVENCY() (gas: 329804)
+[PASS] testDeposit_1Wei_AllTiers() (gas: 320283)
+[PASS] testDeposit_BalanceIncreases_AllTiers() (gas: 323795)
+[PASS] testDeposit_EventEmission_AllTiers() (gas: 324488)
+[PASS] testDeposit_RevertsWhenPaused_C() (gas: 25348)
+[PASS] testDeposit_RevertsWhenPaused_D() (gas: 42401)
+[PASS] testDeposit_WorksAfterUnpause_C() (gas: 164243)
+[PASS] testDeposit_WorksAfterUnpause_D() (gas: 94410)
+[PASS] testDoubleWithdraw_ShouldFail_AllTiers() (gas: 527629)
+[PASS] testLastTx_DifferentBlock_NoAnomaly_D() (gas: 336781)
+[PASS] testLastTx_UpdatedAfterDeposit_D() (gas: 90740)
+[PASS] testLastTx_UpdatedAfterSwap_D() (gas: 333862)
+[PASS] testLastTx_UpdatedAfterWithdraw_D() (gas: 328654)
+[PASS] testLifecycle_DepositSwapWithdraw_AllTiers() (gas: 613488)
+[PASS] testLifecycle_FullPauseUnpauseCycle_D() (gas: 138260)
+[PASS] testMultiUser_IsolatedBalances_AllTiers() (gas: 544741)
+[PASS] testMultiUser_OneWithdraw_DoesNotAffectOther() (gas: 550406)
+[PASS] testMultiUser_SimultaneousDeposit_SameBlock() (gas: 164072)
+[PASS] testNoPauseFunction_B() (gas: 5524)
+[PASS] testNoUnpauseFunction_B() (gas: 5503)
+[PASS] testPause_CannotPauseTwice_C() (gas: 15622)
+[PASS] testPause_CannotPauseTwice_D() (gas: 32741)
+[PASS] testPause_EmergencyPausedEvent_CandD() (gas: 48736)
+[PASS] testPause_OnlyAdmin_C() (gas: 10909)
+[PASS] testPause_OnlyAdmin_D() (gas: 10976)
+[PASS] testPause_PreservesUserBalances_C() (gas: 321971)
+[PASS] testPause_PreservesUserBalances_D() (gas: 322058)
+[PASS] testRecordFrontrun_CanBeCalledByAnyone_D() (gas: 58475)
+[PASS] testRecordFrontrun_Permissionless_D() (gas: 58628)
+[PASS] testRecordFrontrun_UpdatesLastTx_D() (gas: 54484)
+[PASS] testSwap_EventEmission_AllTiers() (gas: 457454)
+[PASS] testSwap_ReservesUpdate_AllTiers() (gas: 464824)
+[PASS] testSwap_RevertsWhenPaused_C() (gas: 328198)
+[PASS] testSwap_RevertsWhenPaused_D() (gas: 345267)
+[PASS] testUnpause_CannotUnpauseWhenNotPaused_C() (gas: 10579)
+[PASS] testUnpause_CannotUnpauseWhenNotPaused_D() (gas: 10583)
+[PASS] testUnpause_EmergencyUnpausedEvent_CandD() (gas: 38352)
+[PASS] testUnpause_OnlyAdmin_C() (gas: 18038)
+[PASS] testUnpause_OnlyAdmin_D() (gas: 35066)
+[PASS] testWithdraw_1Wei_AllTiers() (gas: 457642)
+[PASS] testWithdraw_BalanceDecreases_AllTiers() (gas: 460656)
+[PASS] testWithdraw_EntireBalance_AllTiers() (gas: 437817)
+[PASS] testWithdraw_EventEmission_AllTiers() (gas: 463818)
+[PASS] testWithdraw_NeverDeposited_ShouldFail_AllTiers() (gas: 149149)
+[PASS] testWithdraw_RevertsWhenPaused_C() (gas: 321535)
+[PASS] testWithdraw_RevertsWhenPaused_D() (gas: 338589)
+[PASS] testZeroAmount_Deposit_ShouldFail_BCD() (gas: 27525)
+[PASS] testZeroAmount_Swap_ShouldFail_BCD() (gas: 319543)
+Suite result: ok. 50 passed; 0 failed; 0 skipped; finished in 41.08ms (26.27ms CPU time)
+
+Ran 6 tests for test/SecurityComparisonTest.t.sol:SecurityComparisonTest
+[PASS] testEconomicPenaltyAllTiers() (gas: 17608)
+Logs:
+  ==================================================
+   SECURITY MATRIX: Economic Penalty vs 4 Tier      
+  ==================================================
+  [A] Unoptimized: NO penalty
+  [B] Static Only: NO penalty
+  [C] Full Dynamic: Penalty = 10 ETH
+  [D] Lightweight: Penalty = 10 ETH
+  ---
+  A=no, B=no, C=dynamic, D=dynamic (same formula)
+  ==================================================
+
+[PASS] testEmergencyPauseAllTiers() (gas: 41894)
+Logs:
+  ==================================================
+   SECURITY MATRIX: Emergency Pause vs 4 Tier       
+  ==================================================
+  [A] Unoptimized: NO pause mechanism
+  [B] Static Only: NO pause mechanism
+  [C] Full Dynamic: Pause/Unpause works
+  [D] Lightweight: Pause/Unpause works
+  ---
+  A=no, B=no, C=yes, D=yes
+  ==================================================
+
+[PASS] testGasVsSecurityMatrix() (gas: 329282)
+Logs:
+  ==================================================
+   GAS vs SECURITY MATRIX: 4-Tier Comparison        
+  ==================================================
+  Tier | Gas    | Security
+  A    | 35745 | 0/8
+  B    | 33827 | 2/8
+  C    | 150734 | 8/8
+  D    | 80915 | 8/8
+  ---
+  Best value: Tier D (8/8 security at Tier B+8.7% gas)
+  ==================================================
+
+[PASS] testMEVDetectionAllTiers() (gas: 319188)
+Logs:
+  ==================================================
+   SECURITY MATRIX: MEV Detection vs 4 Tier         
+  ==================================================
+  [A] Unoptimized: NO MEV detection
+  [B] Static Only: NO MEV detection
+  [C] Full Dynamic: Full MEV detection (txRecords array)
+    -> Detected and penalty applied
+  [D] Lightweight: Single-slot MEV detection
+    -> Detected via single-slot lastTx
+  ---
+  A=no, B=no, C=full, D=single-slot
+  ==================================================
+
+[PASS] testReentrancyAllTiers() (gas: 681394)
+Logs:
+  ==================================================
+   SECURITY MATRIX: Reentrancy Attack vs 4 Tier     
+  ==================================================
+  [A] Unoptimized: Reentrancy BERHASIL (vulnerable)
+  [B] Static Only: Reentrancy DITOLAK oleh CEI
+  [C] Full Dynamic: Reentrancy DIBLOKIR oleh EWS
+  [D] Lightweight: Reentrancy DIBLOKIR oleh EIP-1153 inline
+  ---
+  A=vulnerable, B=CEI, C=EWS, D=inline EIP-1153
+  ==================================================
+
+[PASS] testSecurityPerGasUnit() (gas: 329552)
+Logs:
+  ==================================================
+   SECURITY PER GAS UNIT: Ranking                    
+  ==================================================
+  [A] Unoptimized  : 0 SPG
+  [B] Static Only  : 59 SPG
+  [C] Full Dynamic : 53 SPG
+  [D] Lightweight  : 98 SPG
+  ---
+  SPG = Security Points per Gas (x1000000)
+  Ranking: Tier D (best) > Tier B > Tier C > Tier A (worst)
+  ==================================================
+
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 41.92ms (22.40ms CPU time)
 
 Ran 14 tests for test/MultiContractTest.t.sol:MultiContractTest
 [PASS] testEconomicDeterrence_AttackerLoses() (gas: 18311)
@@ -318,146 +510,7 @@ Logs:
   -> TSTORE/TLOAD langsung di bridge mendeteksi callDepth > 0.
   ==================================================
 
-Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 79.08ms (18.98ms CPU time)
-
-Ran 25 tests for test/EconomicDeterrenceTest.t.sol:EconomicDeterrenceTest
-[PASS] testAttackerLoses_GasOnFailedAttack_C() (gas: 629119)
-[PASS] testAttackerLoses_GasOnFailedAttack_D() (gas: 215008)
-[PASS] testConsecutiveReentrancy_AllBlocked_C() (gas: 1248680)
-[PASS] testConsecutiveReentrancy_AllBlocked_D() (gas: 684254)
-[PASS] testConsecutiveReentrancy_TierA_ExploitsMultipleTimes() (gas: 488330)
-[PASS] testEconomicMatrix_AllTiers_Summary() (gas: 971246)
-[PASS] testMonitorParam_HigherLambda_MorePenalty() (gas: 18765)
-[PASS] testMonitorParam_HigherPDetect_HigherScore() (gas: 160709)
-[PASS] testPenalty_AtVariousScores() (gas: 11905)
-[PASS] testPenalty_CalculatedCorrectly_C() (gas: 8395)
-[PASS] testPenalty_CappedAtAmount_C() (gas: 8162)
-[PASS] testPenalty_CappedAtAmount_D() (gas: 825)
-[PASS] testPenalty_FormulaConsistency_CvsD() (gas: 8463)
-[PASS] testPenalty_LargeAmount_NotCapped() (gas: 8591)
-[PASS] testPenalty_MinimumAmount_C() (gas: 8237)
-[PASS] testPenalty_MinimumAmount_D() (gas: 574)
-[PASS] testPenalty_ZeroScore_NoPenalty_C() (gas: 5717)
-[PASS] testPenalty_ZeroScore_NoPenalty_D() (gas: 382)
-[PASS] testROI_TierA_AttackerROI100Percent() (gas: 167889)
-[PASS] testROI_TierB_CEIPreventsProfit() (gas: 81423)
-[PASS] testROI_TierC_PenaltyMakesUnprofitable() (gas: 628589)
-[PASS] testROI_TierD_PenaltyMakesUnprofitable() (gas: 214645)
-[PASS] testRealisticScenario_LargeAttackerVsSmallPool() (gas: 440726)
-[PASS] testRealisticScenario_RapidFireAttacks() (gas: 928124)
-[PASS] testRealisticScenario_SmallAttackerVsLargePool() (gas: 440814)
-Suite result: ok. 25 passed; 0 failed; 0 skipped; finished in 79.70ms (19.41ms CPU time)
-
-Ran 23 tests for test/VictimBridgeSecurityTest.t.sol:VictimBridgeSecurityTest
-[PASS] testDeposit_NormalWorks() (gas: 159835)
-[PASS] testPauseUnpause_TierD_Works() (gas: 103982)
-[PASS] testPause_CannotPauseTwice() (gas: 15656)
-[PASS] testPause_DepositRevertsWhenPaused() (gas: 25447)
-[PASS] testPause_EventEmitted() (gas: 16035)
-[PASS] testPause_OnlyAdminCanPause() (gas: 10916)
-[PASS] testPause_SwapRevertsWhenPaused() (gas: 171288)
-[PASS] testPause_TierD_DepositRevertsWhenPaused() (gas: 42750)
-[PASS] testPause_WithdrawRevertsWhenPaused() (gas: 165194)
-[PASS] testReentrancy_AttackRevertsEntireTx() (gas: 554990)
-[PASS] testReentrancy_AttackerDoesNotProfit() (gas: 555553)
-[PASS] testReentrancy_BridgeBalanceUnchangedAfterAttack() (gas: 555654)
-[PASS] testReentrancy_CallDepthResetsAfterAttack() (gas: 557896)
-[PASS] testReentrancy_ConsecutiveAttacksAllFail() (gas: 1343773)
-[PASS] testReentrancy_TierD_AttackReverts() (gas: 211259)
-[PASS] testReentrancy_TierD_BridgeBalanceUnchanged() (gas: 211739)
-[PASS] testUnpause_CannotUnpauseWhenNotPaused() (gas: 10675)
-[PASS] testUnpause_DepositWorksAfterUnpause() (gas: 163169)
-[PASS] testUnpause_EventEmitted() (gas: 15578)
-[PASS] testUnpause_OnlyAdminCanUnpause() (gas: 18050)
-[PASS] testUnpause_SwapWorksAfterUnpause() (gas: 272182)
-[PASS] testUnpause_WithdrawWorksAfterUnpause() (gas: 293533)
-[PASS] testWithdraw_NormalWorks() (gas: 290229)
-Suite result: ok. 23 passed; 0 failed; 0 skipped; finished in 80.06ms (19.39ms CPU time)
-
-Ran 6 tests for test/SecurityComparisonTest.t.sol:SecurityComparisonTest
-[PASS] testEconomicPenaltyAllTiers() (gas: 17608)
-Logs:
-  ==================================================
-   SECURITY MATRIX: Economic Penalty vs 4 Tier      
-  ==================================================
-  [A] Unoptimized: NO penalty
-  [B] Static Only: NO penalty
-  [C] Full Dynamic: Penalty = 10 ETH
-  [D] Lightweight: Penalty = 10 ETH
-  ---
-  A=no, B=no, C=dynamic, D=dynamic (same formula)
-  ==================================================
-
-[PASS] testEmergencyPauseAllTiers() (gas: 41894)
-Logs:
-  ==================================================
-   SECURITY MATRIX: Emergency Pause vs 4 Tier       
-  ==================================================
-  [A] Unoptimized: NO pause mechanism
-  [B] Static Only: NO pause mechanism
-  [C] Full Dynamic: Pause/Unpause works
-  [D] Lightweight: Pause/Unpause works
-  ---
-  A=no, B=no, C=yes, D=yes
-  ==================================================
-
-[PASS] testGasVsSecurityMatrix() (gas: 329282)
-Logs:
-  ==================================================
-   GAS vs SECURITY MATRIX: 4-Tier Comparison        
-  ==================================================
-  Tier | Gas    | Security
-  A    | 35745 | 0/8
-  B    | 33827 | 4/8
-  C    | 150734 | 8/8
-  D    | 80915 | 7/8
-  ---
-  Best value: Tier D (7/8 security at Tier B+131% gas)
-  ==================================================
-
-[PASS] testMEVDetectionAllTiers() (gas: 319188)
-Logs:
-  ==================================================
-   SECURITY MATRIX: MEV Detection vs 4 Tier         
-  ==================================================
-  [A] Unoptimized: NO MEV detection
-  [B] Static Only: NO MEV detection
-  [C] Full Dynamic: Full MEV detection (txRecords array)
-    -> Detected and penalty applied
-  [D] Lightweight: Single-slot MEV detection
-    -> Detected via single-slot lastTx
-  ---
-  A=no, B=no, C=full, D=single-slot
-  ==================================================
-
-[PASS] testReentrancyAllTiers() (gas: 681394)
-Logs:
-  ==================================================
-   SECURITY MATRIX: Reentrancy Attack vs 4 Tier     
-  ==================================================
-  [A] Unoptimized: Reentrancy BERHASIL (vulnerable)
-  [B] Static Only: Reentrancy DITOLAK oleh CEI
-  [C] Full Dynamic: Reentrancy DIBLOKIR oleh EWS
-  [D] Lightweight: Reentrancy DIBLOKIR oleh EIP-1153 inline
-  ---
-  A=vulnerable, B=CEI, C=EWS, D=inline EIP-1153
-  ==================================================
-
-[PASS] testSecurityPerGasUnit() (gas: 329552)
-Logs:
-  ==================================================
-   SECURITY PER GAS UNIT: Ranking                    
-  ==================================================
-  [A] Unoptimized  : 0 SPG
-  [B] Static Only  : 118 SPG
-  [C] Full Dynamic : 53 SPG
-  [D] Lightweight  : 86 SPG
-  ---
-  SPG = Security Points per Gas (x1000000)
-  Ranking: Tier D (best) > Tier B > Tier C > Tier A (worst)
-  ==================================================
-
-Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 285.94ms (27.79ms CPU time)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 181.95ms (32.75ms CPU time)
 
 Ran 9 tests for test/CostAnalysisTest.t.sol:CostAnalysisTest
 [PASS] testCostEffectiveness() (gas: 329505)
@@ -606,7 +659,7 @@ Logs:
   Gas= 150 Gwei: D=$ 0
   ==================================================
 
-Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 498.30ms (167.02ms CPU time)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 400.28ms (92.10ms CPU time)
 
 Ran 3 tests for test/GasStatsTest.t.sol:GasStatsTest
 [PASS] testGasDeposit_100Samples() (gas: 12382062)
@@ -642,158 +695,105 @@ Logs:
   Range  : 0 gas
   ==================================================
 
-Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 526.22ms (60.02ms CPU time)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 400.30ms (47.68ms CPU time)
 
 Ran 8 tests for test/FuzzTest.t.sol:FuzzTest
 [PASS] testFuzz_DepositRevertOnZero(uint256) (runs: 256, ╬╝: 13449, ~: 13449)
 [PASS] testFuzz_DepositValidAmount(uint96) (runs: 256, ╬╝: 160731, ~: 160731)
-[PASS] testFuzz_PenaltyNeverExceedsAmount(uint256,uint256) (runs: 256, ╬╝: 11796, ~: 11863)
+[PASS] testFuzz_PenaltyNeverExceedsAmount(uint256,uint256) (runs: 256, ╬╝: 11824, ~: 11863)
 [PASS] testFuzz_PenaltyZeroWhenScoreZero(uint256) (runs: 256, ╬╝: 5757, ~: 5757)
-[PASS] testFuzz_StaticBridge_DepositWithdraw(uint96,uint96) (runs: 256, ╬╝: 57742, ~: 44977)
+[PASS] testFuzz_StaticBridge_DepositWithdraw(uint96,uint96) (runs: 256, ╬╝: 59100, ~: 44977)
 [PASS] testFuzz_SwapFormulaCorrectness(uint96) (runs: 256, ╬╝: 269720, ~: 269720)
 [PASS] testFuzz_UnoptimizedBridge_Deposit(uint256) (runs: 256, ╬╝: 45451, ~: 45451)
-[PASS] testFuzz_WithdrawCannotExceedBalance(uint96,uint96) (runs: 256, ╬╝: 267038, ~: 252702)
-Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 526.22ms (1.42s CPU time)
-
-Ran 50 tests for test/TierComparisonTest.t.sol:TierComparisonTest
-[PASS] testAdmin_SetToDeployer_AllTiers() (gas: 26959)
-[PASS] testConstants_Immutable_D() (gas: 6364)
-[PASS] testDepositWithdraw_RoundTrip_KeepsBridgeSOLVENCY() (gas: 329804)
-[PASS] testDeposit_1Wei_AllTiers() (gas: 320283)
-[PASS] testDeposit_BalanceIncreases_AllTiers() (gas: 323795)
-[PASS] testDeposit_EventEmission_AllTiers() (gas: 324488)
-[PASS] testDeposit_RevertsWhenPaused_C() (gas: 25348)
-[PASS] testDeposit_RevertsWhenPaused_D() (gas: 42401)
-[PASS] testDeposit_WorksAfterUnpause_C() (gas: 164243)
-[PASS] testDeposit_WorksAfterUnpause_D() (gas: 94410)
-[PASS] testDoubleWithdraw_ShouldFail_AllTiers() (gas: 527629)
-[PASS] testLastTx_DifferentBlock_NoAnomaly_D() (gas: 336781)
-[PASS] testLastTx_UpdatedAfterDeposit_D() (gas: 90740)
-[PASS] testLastTx_UpdatedAfterSwap_D() (gas: 333862)
-[PASS] testLastTx_UpdatedAfterWithdraw_D() (gas: 328654)
-[PASS] testLifecycle_DepositSwapWithdraw_AllTiers() (gas: 613488)
-[PASS] testLifecycle_FullPauseUnpauseCycle_D() (gas: 138260)
-[PASS] testMultiUser_IsolatedBalances_AllTiers() (gas: 544741)
-[PASS] testMultiUser_OneWithdraw_DoesNotAffectOther() (gas: 550406)
-[PASS] testMultiUser_SimultaneousDeposit_SameBlock() (gas: 164072)
-[PASS] testNoPauseFunction_B() (gas: 5524)
-[PASS] testNoUnpauseFunction_B() (gas: 5503)
-[PASS] testPause_CannotPauseTwice_C() (gas: 15622)
-[PASS] testPause_CannotPauseTwice_D() (gas: 32741)
-[PASS] testPause_EmergencyPausedEvent_CandD() (gas: 48736)
-[PASS] testPause_OnlyAdmin_C() (gas: 10909)
-[PASS] testPause_OnlyAdmin_D() (gas: 10976)
-[PASS] testPause_PreservesUserBalances_C() (gas: 321971)
-[PASS] testPause_PreservesUserBalances_D() (gas: 322058)
-[PASS] testRecordFrontrun_CanBeCalledByAnyone_D() (gas: 58475)
-[PASS] testRecordFrontrun_Permissionless_D() (gas: 58628)
-[PASS] testRecordFrontrun_UpdatesLastTx_D() (gas: 54484)
-[PASS] testSwap_EventEmission_AllTiers() (gas: 457454)
-[PASS] testSwap_ReservesUpdate_AllTiers() (gas: 464824)
-[PASS] testSwap_RevertsWhenPaused_C() (gas: 328198)
-[PASS] testSwap_RevertsWhenPaused_D() (gas: 345267)
-[PASS] testUnpause_CannotUnpauseWhenNotPaused_C() (gas: 10579)
-[PASS] testUnpause_CannotUnpauseWhenNotPaused_D() (gas: 10583)
-[PASS] testUnpause_EmergencyUnpausedEvent_CandD() (gas: 38352)
-[PASS] testUnpause_OnlyAdmin_C() (gas: 18038)
-[PASS] testUnpause_OnlyAdmin_D() (gas: 35066)
-[PASS] testWithdraw_1Wei_AllTiers() (gas: 457642)
-[PASS] testWithdraw_BalanceDecreases_AllTiers() (gas: 460656)
-[PASS] testWithdraw_EntireBalance_AllTiers() (gas: 437817)
-[PASS] testWithdraw_EventEmission_AllTiers() (gas: 463818)
-[PASS] testWithdraw_NeverDeposited_ShouldFail_AllTiers() (gas: 149149)
-[PASS] testWithdraw_RevertsWhenPaused_C() (gas: 321535)
-[PASS] testWithdraw_RevertsWhenPaused_D() (gas: 338589)
-[PASS] testZeroAmount_Deposit_ShouldFail_BCD() (gas: 27525)
-[PASS] testZeroAmount_Swap_ShouldFail_BCD() (gas: 319543)
-Suite result: ok. 50 passed; 0 failed; 0 skipped; finished in 9.22s (28.54ms CPU time)
+[PASS] testFuzz_WithdrawCannotExceedBalance(uint96,uint96) (runs: 256, ╬╝: 268563, ~: 252702)
+Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 436.77ms (1.49s CPU time)
 
 Ran 4 tests for test/InvariantTest.t.sol:InvariantTest
-[PASS] invariant_balancesAlwaysNonNegative() (runs: 256, calls: 128000, reverts: 79136)
+[PASS] invariant_balancesAlwaysNonNegative() (runs: 256, calls: 128000, reverts: 78705)
 
 Ôò¡--------------+-------------------+-------+---------+----------Ôò«
 | Contract     | Selector          | Calls | Reverts | Discards |
 +===============================================================+
-| MonitorMock  | checkAnomaly      | 11627 | 0       | 0        |
+| MonitorMock  | checkAnomaly      | 11743 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | clearRecords      | 11628 | 11623   | 0        |
+| MonitorMock  | clearRecords      | 11538 | 11526   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | enterCall         | 11433 | 0       | 0        |
+| MonitorMock  | enterCall         | 11554 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | exitCall          | 11694 | 0       | 0        |
+| MonitorMock  | exitCall          | 11783 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | recordTransaction | 11575 | 0       | 0        |
+| MonitorMock  | recordTransaction | 11720 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | updateParameters  | 11832 | 11831   | 0        |
+| MonitorMock  | updateParameters  | 11594 | 11582   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | deposit           | 11616 | 11616   | 0        |
+| VictimBridge | deposit           | 11646 | 11646   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | pause             | 11771 | 11769   | 0        |
+| VictimBridge | pause             | 11583 | 11572   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | swapETHForTokens  | 11553 | 11553   | 0        |
+| VictimBridge | swapETHForTokens  | 11611 | 11611   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | unpause           | 11736 | 11736   | 0        |
+| VictimBridge | unpause           | 11533 | 11533   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | withdraw          | 11535 | 9008    | 0        |
+| VictimBridge | withdraw          | 11695 | 9235    | 0        |
 Ôò░--------------+-------------------+-------+---------+----------Ôò»
 
-[PASS] invariant_callDepthNonNegative() (runs: 256, calls: 128000, reverts: 79132)
+[PASS] invariant_callDepthNonNegative() (runs: 256, calls: 128000, reverts: 78709)
 
 Ôò¡--------------+-------------------+-------+---------+----------Ôò«
 | Contract     | Selector          | Calls | Reverts | Discards |
 +===============================================================+
-| MonitorMock  | checkAnomaly      | 11627 | 0       | 0        |
+| MonitorMock  | checkAnomaly      | 11743 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | clearRecords      | 11628 | 11626   | 0        |
+| MonitorMock  | clearRecords      | 11538 | 11523   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | enterCall         | 11433 | 0       | 0        |
+| MonitorMock  | enterCall         | 11554 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | exitCall          | 11694 | 0       | 0        |
+| MonitorMock  | exitCall          | 11783 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | recordTransaction | 11575 | 0       | 0        |
+| MonitorMock  | recordTransaction | 11720 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | updateParameters  | 11832 | 11831   | 0        |
+| MonitorMock  | updateParameters  | 11594 | 11584   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | deposit           | 11616 | 11616   | 0        |
+| VictimBridge | deposit           | 11646 | 11646   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | pause             | 11771 | 11770   | 0        |
+| VictimBridge | pause             | 11583 | 11572   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | swapETHForTokens  | 11553 | 11553   | 0        |
+| VictimBridge | swapETHForTokens  | 11611 | 11611   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | unpause           | 11736 | 11736   | 0        |
+| VictimBridge | unpause           | 11533 | 11533   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | withdraw          | 11535 | 9000    | 0        |
+| VictimBridge | withdraw          | 11695 | 9240    | 0        |
 Ôò░--------------+-------------------+-------+---------+----------Ôò»
 
-[PASS] invariant_callDepthResetsAfterTransaction() (runs: 256, calls: 128000, reverts: 79139)
+[PASS] invariant_callDepthResetsAfterTransaction() (runs: 256, calls: 128000, reverts: 78695)
 
 Ôò¡--------------+-------------------+-------+---------+----------Ôò«
 | Contract     | Selector          | Calls | Reverts | Discards |
 +===============================================================+
-| MonitorMock  | checkAnomaly      | 11627 | 0       | 0        |
+| MonitorMock  | checkAnomaly      | 11743 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | clearRecords      | 11628 | 11625   | 0        |
+| MonitorMock  | clearRecords      | 11538 | 11524   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | enterCall         | 11433 | 0       | 0        |
+| MonitorMock  | enterCall         | 11554 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | exitCall          | 11694 | 0       | 0        |
+| MonitorMock  | exitCall          | 11783 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | recordTransaction | 11575 | 0       | 0        |
+| MonitorMock  | recordTransaction | 11720 | 0       | 0        |
 |--------------+-------------------+-------+---------+----------|
-| MonitorMock  | updateParameters  | 11832 | 11832   | 0        |
+| MonitorMock  | updateParameters  | 11594 | 11581   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | deposit           | 11616 | 11616   | 0        |
+| VictimBridge | deposit           | 11646 | 11646   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | pause             | 11771 | 11769   | 0        |
+| VictimBridge | pause             | 11583 | 11572   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | swapETHForTokens  | 11553 | 11553   | 0        |
+| VictimBridge | swapETHForTokens  | 11611 | 11611   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | unpause           | 11736 | 11736   | 0        |
+| VictimBridge | unpause           | 11533 | 11533   | 0        |
 |--------------+-------------------+-------+---------+----------|
-| VictimBridge | withdraw          | 11535 | 9008    | 0        |
+| VictimBridge | withdraw          | 11695 | 9228    | 0        |
 Ôò░--------------+-------------------+-------+---------+----------Ôò»
 
 [PASS] test_reentrancyGuardWorks() (gas: 265902)
-Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 11.31s (29.51s CPU time)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 17.46s (45.69s CPU time)
 
-Ran 13 test suites in 11.36s (22.90s CPU time): 216 tests passed, 0 failed, 0 skipped (216 total tests)
+Ran 13 test suites in 17.48s (19.14s CPU time): 216 tests passed, 0 failed, 0 skipped (216 total tests)

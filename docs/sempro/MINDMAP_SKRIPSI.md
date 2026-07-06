@@ -69,18 +69,18 @@ graph TD
     D1 --> D1d["Tier D: 34,156 gas"]
     
     D2 --> D2a["Tier A: 0/8"]
-    D2 --> D2b["Tier B: 4/8"]
+    D2 --> D2b["Tier B: 2/8"]
     D2 --> D2c["Tier C: 8/8"]
-    D2 --> D2d["Tier D: 7/8"]
+    D2 --> D2d["Tier D: 8/8"]
     
-    D3 --> D3a["Tier D: SPG 205 (Terbaik)"]
-    D3 --> D3b["Tier C: SPG 65"]
-    D3 --> D3c["Tier B: SPG 127"]
+    D3 --> D3a["Tier D: SPG 220.1 (Terbaik)"]
+    D3 --> D3b["Tier C: SPG 65.2"]
+    D3 --> D3c["Tier B: SPG 63.6"]
     
     E["BAB V: KESIMPULAN"] --> E1["5.1 Kesimpulan"]
     E --> E2["5.2 Saran"]
     
-    E1 --> E1a["Tier D optimal: 7/8 + SPG 205"]
+    E1 --> E1a["Tier D optimal: 8/8 + SPG 220.1"]
     E1 --> E1b["EIP-1153 inline = -72% gas"]
     E1 --> E1c["Statistically significant"]
     

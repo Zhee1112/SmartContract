@@ -55,7 +55,7 @@ graph TD
     G --> G3["Metrik SPG"]
     G --> G4["Validasi statistik"]
     
-    G1 --> H["OUTCOME<br/>Tier D: SPG 205 (Terbaik)<br/>7/8 skor keamanan<br/>-72% gas vs Tier C"]
+    G1 --> H["OUTCOME<br/>Tier D: SPG 220.1 (Terbaik)<br/>8/8 skor keamanan<br/>-72% gas vs Tier C"]
     G2 --> H
     G3 --> H
     G4 --> H

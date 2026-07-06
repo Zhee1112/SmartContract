@@ -9,11 +9,11 @@ graph TD
     B --> C["APPROACH<br/>4-Tier Comparative Analysis"]
     
     C --> C1["Tier A: Baseline<br/>0/8 keamanan"]
-    C --> C2["Tier B: Static<br/>4/8 keamanan"]
+    C --> C2["Tier B: Static<br/>2/8 keamanan"]
     C --> C3["Tier C: Full Dynamic<br/>8/8 keamanan"]
-    C --> C4["Tier D: Lightweight<br/>7/8 keamanan"]
+    C --> C4["Tier D: Lightweight<br/>8/8 keamanan"]
     
-    C1 --> D["TESTING<br/>215 Foundry Tests<br/>100 sampel/operasi"]
+    C1 --> D["TESTING<br/>216 Foundry Tests<br/>100 sampel/operasi"]
     C2 --> D
     C3 --> D
     C4 --> D
@@ -26,10 +26,10 @@ graph TD
     D2 --> E
     D3 --> E
     
-    E --> E1["Tier D = SPG 205<br/>(Cost-Effectiveness #1)"]
+    E --> E1["Tier D = SPG 220.1<br/>(Cost-Effectiveness #1)"]
     E --> E2["Tier D vs C<br/>-72% gas deposit<br/>-88% gas withdraw<br/>-87% gas swap"]
     E --> E3["Cohen's d = 1.28<br/>(Large effect size)"]
-    E --> E4["215/215 tests PASS<br/>Semua fitur berfungsi"]
+    E --> E4["216/216 tests PASS<br/>Semua fitur berfungsi"]
     
     E1 --> F["CONTRIBUTION"]
     E2 --> F
@@ -60,9 +60,9 @@ graph TD
 ```mermaid
 graph LR
     subgraph "SKOR KEAMANAN"
-        SA["Tier A<br/>0/8"] --> SB["Tier B<br/>4/8"]
+        SA["Tier A<br/>0/8"] --> SB["Tier B<br/>2/8"]
         SB --> SC["Tier C<br/>8/8"]
-        SC --> SD["Tier D<br/>7/8"]
+        SC --> SD["Tier D<br/>8/8"]
     end
     
     subgraph "GAS (DEPOSIT)"
@@ -72,9 +72,9 @@ graph LR
     end
     
     subgraph "SPG (EFISIENSI)"
-        SPA["Tier A<br/>0"] --> SPB["Tier B<br/>127"]
-        SPB --> SPC["Tier C<br/>65"]
-        SPC --> SPD["Tier D<br/>205"]
+        SPA["Tier A<br/>0"] --> SPB["Tier B<br/>63.6"]
+        SPB --> SPC["Tier C<br/>65.2"]
+        SPC --> SPD["Tier D<br/>220.1"]
     end
     
     SA -.-> GA
@@ -97,7 +97,7 @@ graph LR
 
 | Metrik | Tier A | Tier B | Tier C | Tier D | Winner |
 |--------|--------|--------|--------|--------|--------|
-| Skor Keamanan | 0/8 | 4/8 | 8/8 | 7/8 | Tier C |
+| Skor Keamanan | 0/8 | 2/8 | 8/8 | 8/8 | Tier C & D |
 | Gas Deposit | 31,412 | 31,427 | 122,769 | 34,156 | Tier B |
-| SPG | 0 | 127 | 65 | **205** | **Tier D** |
+| SPG | 0 | 63.6 | 65.2 | **220.1** | **Tier D** |
 | Ranking | 4 | 2 | 3 | **1** | **Tier D** |
