@@ -1,117 +1,192 @@
 # MIND MAP SKRIPSI
 
-## Flowchart Metodologi Lengkap
+## Alur Penelitian Lengkap: BAB I - BAB V
 
 ```mermaid
 graph TD
-    A["BAB I: PENDAHULUAN"] --> A1["1.1 Latar Belakang"]
-    A --> A2["1.2 Identifikasi Masalah"]
-    A --> A3["1.3 Rumusan Masalah"]
-    A --> A4["1.4 Batasan Masalah"]
-    A --> A5["1.5 Tujuan Penelitian"]
-    A --> A6["1.6 Manfaat Penelitian"]
+    JUDUL["JUDUL: Optimalisasi Gas dan Keamanan<br/>Smart Contract Bridge<br/>Berbasis EIP-1153 Transient Storage<br/>pada Arsitektur 4-Tier"]
     
-    A1 --> A1a["DeFi + Bridge"]
-    A1 --> A1b["Masalah Keamanan"]
-    A1 --> A1c["EIP-1153 Solusi"]
+    JUDUL --> BAB1
+    JUDUL --> BAB2
+    JUDUL --> BAB3
+    JUDUL --> BAB4
+    JUDUL --> BAB5
     
-    A2 --> A2a["Gas mahal (22,900)"]
-    A2 --> A2b["External calls overhead"]
-    A2 --> A2c["EIP-1153 belum optimal"]
-    A2 --> A2d["Belum ada framework"]
+    subgraph BAB1["BAB I: PENDAHULUAN<br/>Mengapa?"]
+        B1A["1.1 Latar Belakang"]
+        B1B["1.2 Rumusan Masalah"]
+        B1C["1.3 Tujuan"]
+    end
     
-    A3 --> A3a["RM1: Optimasi gas + penghematan"]
-    A3 --> A3b["RM2: Membandingkan 4-tier"]
-    A3 --> A3c["RM3: Cost-effectiveness SPG"]
+    subgraph BAB2["BAB II: TINJAUAN PUSTAKA<br/>Apa yang sudah ada?"]
+        B2A["2.1 20 Paper Terdahulu"]
+        B2B["2.2 Tabel Perbandingan"]
+        B2C["2.3 Gap Penelitian"]
+    end
     
-    B["BAB II: TINJAUAN PUSTAKA"] --> B1["2.1 Penelitian Terdahulu"]
-    B --> B2["2.2 Tabel Perbandingan"]
-    B --> B3["2.3 Kesimpulan Perbandingan"]
+    subgraph BAB3["BAB III: METODOLOGI<br/>Bagaimana membuktikan?"]
+        B3A["3.1 Paradigma Empiris"]
+        B3B["3.2 Rancangan 4-Tier"]
+        B3C["3.3 Tools: Foundry"]
+        B3D["3.4 Pengujian: 216 tests"]
+    end
     
-    B1 --> B1a["20 paper relevan"]
-    B2 --> B2a["Gap: Belum ada framework komparatif"]
+    subgraph BAB4["BAB IV: HASIL DAN PEMBAHASAN<br/>Apa yang ditemukan?"]
+        B4A["4.1 Gas Measurement<br/>100 sampel/operasi"]
+        B4B["4.2 Security Test<br/>8 fitur keamanan"]
+        B4C["4.3 SPG Analysis<br/>Cost-effectiveness"]
+        B4D["4.4 Statistical Test<br/>Welch + Cohen's d"]
+    end
     
-    C["BAB III: METODOLOGI"] --> C1["8.1 Metode Pengumpulan Data"]
-    C --> C2["8.2 Perancangan Sistem"]
-    C --> C3["8.3 Pengujian Sistem"]
-    C --> C4["8.4 Analisis Data"]
-    C --> C5["8.5 Platform Pengembangan"]
+    subgraph BAB5["BAB V: KESIMPULAN<br/>Apa artinya?"]
+        B5A["5.1 Kesimpulan<br/>Tier D optimal"]
+        B5B["5.2 Saran<br/>Pengembangan"]
+    end
     
-    C1 --> C1a["Studi Literatur"]
-    C1 --> C1b["Implementasi Kontrak"]
-    C1 --> C1c["Pengukuran Gas"]
+    BAB1 --> OUTPUT
+    BAB2 --> OUTPUT
+    BAB3 --> OUTPUT
+    BAB4 --> OUTPUT
+    BAB5 --> OUTPUT
     
-    C2 --> C2a["Analisis Kebutuhan"]
-    C2 --> C2b["Arsitektur 4-Tier"]
-    C2 --> C2c["Optimasi Statis"]
-    C2 --> C2d["Optimasi Dinamis EIP-1153"]
-    
-    C3 --> C3a["Gas Measurement<br/>100 sampel/operasi"]
-    C3 --> C3b["Security Test<br/>8 fitur keamanan"]
-    C3 --> C3c["Statistical Test<br/>Welch's t-test + Cohen's d"]
-    
-    C4 --> C4a["Statistik Deskriptif"]
-    C4 --> C4b["Metrik SPG"]
-    C4 --> C4c["Effect Size"]
-    
-    C5 --> C5a["Solidity 0.8.28"]
-    C5 --> C5b["Foundry v1.7.1"]
-    C5 --> C5c["EVM Cancun"]
-    
-    D["BAB IV: HASIL DAN PEMBAHASAN"] --> D1["Gas Measurement Results"]
-    D --> D2["Security Test Results"]
-    D --> D3["SPG Analysis"]
-    D --> D4["Statistical Validation"]
-    
-    D1 --> D1a["Tier A: 31,412 gas"]
-    D1 --> D1b["Tier B: 31,427 gas"]
-    D1 --> D1c["Tier C: 122,769 gas"]
-    D1 --> D1d["Tier D: 34,156 gas"]
-    
-    D2 --> D2a["Tier A: 0/8"]
-    D2 --> D2b["Tier B: 2/8"]
-    D2 --> D2c["Tier C: 8/8"]
-    D2 --> D2d["Tier D: 8/8"]
-    
-    D3 --> D3a["Tier D: SPG 220.1 (Terbaik)"]
-    D3 --> D3b["Tier C: SPG 65.2"]
-    D3 --> D3c["Tier B: SPG 63.6"]
-    
-    E["BAB V: KESIMPULAN"] --> E1["5.1 Kesimpulan"]
-    E --> E2["5.2 Saran"]
-    
-    E1 --> E1a["Tier D optimal: 8/8 + SPG 220.1"]
-    E1 --> E1b["EIP-1153 inline = -72% gas"]
-    E1 --> E1c["Statistically significant"]
-    
-    E2 --> E2a["Pengembangan lebih lanjut"]
-    E2 --> E2b["Implementasi production"]
+    OUTPUT["SKRIPSI<br/>Tercetak + Sidang"]
 
-    style A fill:#ff6b6b,color:#fff
-    style B fill:#4ecdc4,color:#fff
-    style C fill:#45b7d1,color:#fff
-    style D fill:#f9ca24,color:#333
-    style E fill:#96ceb4,color:#fff
+    style JUDUL fill:#2c3e50,color:#fff
+    style BAB1 fill:#e74c3c,color:#fff
+    style BAB2 fill:#f39c12,color:#fff
+    style BAB3 fill:#3498db,color:#fff
+    style BAB4 fill:#2ecc71,color:#fff
+    style BAB5 fill:#9b59b6,color:#fff
+    style OUTPUT fill:#1abc9c,color:#fff
 ```
 
-## Alur Penelitian
+---
 
-```mermaid
-graph LR
-    A["Identifikasi<br/>Masalah"] --> B["Tinjauan<br/>Pustaka"]
-    B --> C["Perancangan<br/>Sistem"]
-    C --> D["Implementasi<br/>4-Tier"]
-    D --> E["Pengujian<br/>215 Tests"]
-    E --> F["Analisis<br/>Data"]
-    F --> G["Validasi<br/>Statistik"]
-    G --> H["Kesimpulan<br/>+ Saran"]
+## Detail Setiap BAB
 
-    style A fill:#ff6b6b,color:#fff
-    style B fill:#4ecdc4,color:#fff
-    style C fill:#45b7d1,color:#fff
-    style D fill:#96ceb4,color:#fff
-    style E fill:#f9ca24,color:#333
-    style F fill:#ff9ff3,color:#fff
-    style G fill:#54a0ff,color:#fff
-    style H fill:#5f27cd,color:#fff
+### BAB I: PENDAHULUAN
+**Pertanyaan: "Mengapa penelitian ini ada?"**
+
+```
+1.1 Latar Belakang
+    ├── Fakta: DeFi TVL > $100M
+    ├── Masalah: Bridge attacks = $1.13B kerugian
+    └── Solusi: EIP-1153 bisa hemat gas
+
+1.2 Rumusan Masalah
+    ├── RM1: Berapa penghematan gas?
+    ├── RM2: Tier mana terbaik?
+    └── RM3: Apakah Tier D seaman Tier C?
+
+1.3 Tujuan Penelitian
+    ├── Tujuan 1: Mengukur gas 4 tier
+    ├── Tujuan 2: Membandingkan keamanan
+    └── Tujuan 3: Membuktikan Tier D optimal
+```
+
+### BAB II: TINJAUAN PUSTAKA
+**Pertanyaan: "Apa yang sudah dilakukan orang lain?"**
+
+```
+2.1 Penelitian Terdahulu
+    ├── 10 paper: Gas optimization
+    ├── 5 paper: Security analysis
+    ├── 3 paper: EIP-1153 implementation
+    └── 2 paper: Bridge security
+
+2.2 Tabel Perbandingan
+    ├── Metode: Literature review
+    └── Output: Gap analysis
+
+2.3 Gap Penelitian
+    ├── Gap 1: Tidak ada framework komparatif
+    ├── Gap 2: Tidak ada metrik SPG
+    └── Gap 3: EIP-1153 belum multi-fungsi
+```
+
+### BAB III: METODOLOGI
+**Pertanyaan: "Bagaimana cara membuktikan?"**
+
+```
+3.1 Paradigma
+    └── Empiris-kuantitatif (ukur fakta)
+
+3.2 Rancangan Sistem
+    ├── Tier A: Unoptimized (baseline)
+    ├── Tier B: Static (CEI + packing)
+    ├── Tier C: Dynamic (external calls)
+    └── Tier D: Lightweight (inline EIP-1153)
+
+3.3 Alat & Bahan
+    ├── Foundry v1.7.1
+    ├── Solidity 0.8.28
+    └── EVM Cancun
+
+3.4 Pengujian
+    ├── Gas: 100 sampel/operasi
+    ├── Security: 8 fitur
+    └── Total: 216 test
+
+3.5 Analisis Data
+    ├── Statistik deskriptif
+    ├── SPG metric
+    └── Effect size (Cohen's d)
+```
+
+### BAB IV: HASIL DAN PEMBAHASAN
+**Pertanyaan: "Apa yang ditemukan?"**
+
+```
+4.1 Gas Measurement
+    ├── Deposit: A=58,829 | B=56,707 | C=173,461 | D=103,652
+    ├── Withdraw: A=37,799 | B=35,791 | C=140,237 | D=44,188
+    └── Swap: A=43,144 | B=36,192 | C=154,581 | D=84,134
+
+4.2 Security Test
+    ├── Tier A: 0/8 (vulnerable)
+    ├── Tier B: 2/8 (CEI only)
+    ├── Tier C: 8/8 (full protection)
+    └── Tier D: 8/8 (inline protection)
+
+4.3 SPG Analysis
+    ├── Tier D: 220.1 (terbaik)
+    ├── Tier C: 65.2
+    ├── Tier B: 63.6
+    └── Tier A: 0
+
+4.4 Statistical Validation
+    ├── Welch's t-test: significant
+    └── Cohen's d: 1.28 (large effect)
+```
+
+### BAB V: KESIMPULAN
+**Pertanyaan: "Apa artinya?"**
+
+```
+5.1 Kesimpulan
+    ├── Tier D: 8/8 security + 72% gas hemat
+    ├── EIP-1153 bisa multi-fungsi
+    └── Tidak perlu tradeoff
+
+5.2 Saran
+    ├── Untuk peneliti: Eksplorasi EIP-1153 lebih lanjut
+    └── Untuk industri: Pertimbangkan Tier D untuk production
+```
+
+---
+
+## Flow Logika Penulisan
+
+```
+MULAI: "Mengapa penting?" (BAB I)
+  ↓
+LANJUT: "Apa yang sudah ada?" (BAB II)
+  ↓
+BUKTIKAN: "Bagaimana cara membuktikan?" (BAB III)
+  ↓
+TEMUKAN: "Apa hasilnya?" (BAB IV)
+  ↓
+SELESAI: "Apa artinya?" (BAB V)
+  ↓
+SELESAI
 ```

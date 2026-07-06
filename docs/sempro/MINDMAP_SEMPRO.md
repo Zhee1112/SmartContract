@@ -1,78 +1,121 @@
-# MIND MAP SEMINAR PROPOSAL
+# MIND MAP SEMPRO
 
-## Flowchart Rencana Penelitian
+## Alur Penelitian: Dari Masalah Sampai Solusi
 
 ```mermaid
 graph TD
-    A["PROBLEM DISCOVERY<br/>Bridge blockchain rentan serangan<br/>Gas mahal untuk keamanan"] --> B["ANALISIS MASALAH"]
+    START["Awal: Mengapa Penelitian Ini Ada?"] --> MASALAH
     
-    B --> B1["Reentrancy attack = $1.13M kerugian"]
-    B --> B2["MEV sandwich = ancaman struktural"]
-    B --> B3["Gas SSTORE = 22,900 per tx"]
-    B --> B4["External calls = overhead biaya"]
+    subgraph MASALAH["FAKTA DI LAPANGAN"]
+        M1["Bridge blockchain sering diserang<br/>contoh: Ronin $620M, Wormhole $320M"]
+        M2["Gas SSTORE mahal = 22,900 gas<br/>untuk setiap operasi keamanan"]
+        M3["EIP-1153 (TSTORE) hanya dipakai<br/>untuk reentrancy guard saja"]
+    end
     
-    B1 --> C["GAP PENELITIAN"]
-    B2 --> C
-    B3 --> C
-    B4 --> C
+    MASALAH --> GAP
     
-    C --> C1["Belum ada framework komparatif"]
-    C --> C2["EIP-1153 belum optimal untuk multi-fungsi"]
-    C --> C3["Belum ada metrik cost-effectiveness"]
+    subgraph GAP["YANG BELUM ADA"]
+        G1["Tidak ada framework komparatif<br/>untuk bandingkan pendekatan bridge"]
+        G2["Tidak ada metrik cost-effectiveness<br/>untuk ukur efisiensi gas vs keamanan"]
+        G3["EIP-1153 belum dimanfaatkan<br/>untuk multi-fungsi keamanan"]
+    end
     
-    C1 --> D["SOLUSI<br/>4-Tier Architecture"]
-    C2 --> D
-    C3 --> D
+    GAP --> SOLUSI
     
-    D --> D1["Tier A: Unoptimized<br/>(Baseline)"]
-    D --> D2["Tier B: Static Only<br/>(CEI + Variable Packing)"]
-    D --> D3["Tier C: Full Dynamic<br/>(EIP-1153 + External Calls)"]
-    D --> D4["Tier D: Lightweight<br/>(EIP-1153 Inline)"]
+    subgraph SOLUSI["RANCANGAN PENELITIAN"]
+        S1["Buat 4 arsitektur bridge<br/>Tier A/B/C/D"]
+        S2["Uji semua dengan<br/>216 test Foundry"]
+        S3["Ukur gas 100 sampel<br/>per operasi"]
+    end
     
-    D1 --> E["PENGUKURAN"]
-    D2 --> E
-    D3 --> E
-    D4 --> E
+    SOLUSI --> METODE
     
-    E --> E1["Gas Measurement<br/>100 sampel/operasi<br/>Foundry + gasleft()"]
-    E --> E2["Security Test<br/>8 fitur keamanan<br/>Reentrancy + MEV + Pause"]
-    E --> E3["Statistical Test<br/>Welch's t-test<br/>Cohen's d"]
+    subgraph BAB3["BAB III: METODOLOGI"]
+        direction TB
+        MTD1["Paradigma: Empiris-kuantitatif<br/>Fakta diukur, bukan opini"]
+        MTD2["Data: Gas measurement<br/>+ Security test"]
+        MTD3["Alat: Foundry + Solidity 0.8.28"]
+        MTD4["Analisis: Statistik deskriptif<br/>+ SPG metric"]
+    end
     
-    E1 --> F["ANALISIS"]
-    E2 --> F
-    E3 --> F
+    METODE --> HASIL
+    HASIL --> KESIMPULAN
     
-    F --> F1["Statistik Deskriptif<br/>Mean, Min, Max, StdDev"]
-    F --> F2["Metrik SPG<br/>Security Points per Gas"]
-    F --> F3["Perbandingan Tier<br/>Tier C vs Tier D"]
+    subgraph HASIL["HASIL YANG DITEMUKAN"]
+        H1["Tier D = 8/8 security<br/>seperti Tier C"]
+        H2["Tier D gas 72% lebih murah<br/>dari Tier C"]
+        H3["SPG Tier D = 220.1<br/>paling efisien"]
+    end
     
-    F1 --> G["KONTRIBUSI"]
-    F2 --> G
-    F3 --> G
+    subgraph KESIMPULAN["KESIMPULAN"]
+        K1["EIP-1153 inline bisa<br/>multi-fungsi keamanan"]
+        K2["Tidak perlu tradeoff<br/>gas vs keamanan"]
+    end
     
-    G --> G1["Framework komparatif pertama"]
-    G --> G2["Implementasi keamanan inline"]
-    G --> G3["Metrik SPG"]
-    G --> G4["Validasi statistik"]
-    
-    G1 --> H["OUTCOME<br/>Tier D: SPG 220.1 (Terbaik)<br/>8/8 skor keamanan<br/>-72% gas vs Tier C"]
-    G2 --> H
-    G3 --> H
-    G4 --> H
+    START --> MASALAH
 
-    style A fill:#ff6b6b,color:#fff
-    style D fill:#4ecdc4,color:#fff
-    style E fill:#45b7d1,color:#fff
-    style G fill:#96ceb4,color:#fff
-    style H fill:#f9ca24,color:#333
+    style START fill:#ff6b6b,color:#fff
+    style MASALAH fill:#feca57,color:#333
+    style GAP fill:#ff9ff3,color:#333
+    style SOLUSI fill:#48dbfb,color:#333
+    style BAB3 fill:#0abde3,color:#fff
+    style HASIL fill:#10ac84,color:#fff
+    style KESIMPULAN fill:#5f27cd,color:#fff
 ```
 
-## Legenda
+## Penjelasan Alur
 
-| Warna | Keterangan |
-|-------|------------|
-| Merah | Problem Discovery |
-| Hijau | Solusi (4-Tier) |
-| Biru | Pengukuran |
-| Hijau Muda | Kontribusi |
-| Kuning | Outcome |
+### Step 1: MASALAH (BAB I)
+> "Mengapa penelitian ini penting?"
+- Bridge sering diserang (miliaran dollar hilang)
+- Gas untuk keamanan mahal
+- EIP-1153 belum optimal
+
+### Step 2: GAP (BAB I → BAB II)
+> "Apa yang belum diteliti orang lain?"
+- Tidak ada yang membandingkan 4 arsitektur bridge
+- Tidak ada metrik untuk ukur gas vs keamanan
+- EIP-1153 hanya dipakai untuk 1 fungsi
+
+### Step 3: SOLUSI (BAB III)
+> "Bagaimana cara membuktikan?"
+- Rancang 4 tier bridge (A/B/C/D)
+- Uji dengan Foundry (216 test)
+- Ukur gas (100 sampel)
+- Bandingkan hasilnya
+
+### Step 4: HASIL (BAB IV)
+> "Apa yang ditemukan?"
+- Tier D: keamanan sama (8/8), gas 72% lebih murah
+- SPG Tier D paling tinggi (220.1)
+
+### Step 5: KESIMPULAN (BAB V)
+> "Apa artinya?"
+- EIP-1153 bisa jadi platform keamanan multi-fungsi
+- Tidak perlu pilih antara gas murah atau keamanan
+
+---
+
+## Struktur Penulisan
+
+```
+BAB I: PENDAHULUAN (1.1 - 1.6)
+├── 1.1 Latar Belakang → Fakta masalah
+├── 1.2 Identifikasi Masalah → 4 masalah
+├── 1.3 Rumusan Masalah → 3 pertanyaan
+├── 1.4 Batasan Masalah → Fokus EIP-1153
+├── 1.5 Tujuan Penelitian → 3 tujuan
+└── 1.6 Manfaat Penelitian → Akademis + Industri
+
+BAB II: TINJAUAN PUSTAKA (2.1 - 2.3)
+├── 2.1 Penelitian Terdahulu → 20 paper
+├── 2.2 Tabel Perbandingan → Gap analysis
+└── 2.3 Kesimpulan Perbandingan → Belum ada framework
+
+BAB III: METODOLOGI (3.1 - 3.5)
+├── 3.1 Paradigma → Empiris-kuantitatif
+├── 3.2 Data → Gas + Security
+├── 3.3 Alat → Foundry
+├── 3.4 Rancangan → 4-Tier
+└── 3.5 Analisis → Statistik + SPG
+```

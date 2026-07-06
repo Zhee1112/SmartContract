@@ -1,103 +1,132 @@
 # MIND MAP JURNAL
 
-## Flowchart Fokus Kontribusi dan Hasil
+## Fokus: Kontribusi & Hasil Penelitian
 
 ```mermaid
 graph TD
-    A["PROBLEM<br/>Gas mahal untuk keamanan bridge<br/>SSTORE = 22,900 gas"] --> B["SOLUSI<br/>EIP-1153 Transient Storage<br/>TSTORE/TLOAD = 100 gas"]
+    JUDUL["JURNAL: EIP-1153 Transient Storage<br/>untuk Gas Optimization & Security<br/>pada Smart Contract Bridge"]
     
-    B --> C["APPROACH<br/>4-Tier Comparative Analysis"]
+    JUDUL --> PROBLEM
+    JUDUL --> CONTRIBUTION
+    JUDUL --> METHOD
+    JUDUL --> RESULT
     
-    C --> C1["Tier A: Baseline<br/>0/8 keamanan"]
-    C --> C2["Tier B: Static<br/>2/8 keamanan"]
-    C --> C3["Tier C: Full Dynamic<br/>8/8 keamanan"]
-    C --> C4["Tier D: Lightweight<br/>8/8 keamanan"]
+    subgraph PROBLEM["MASALAH"]
+        P1["Gas SSTORE = 22,900 gas<br/>terlalu mahal untuk keamanan"]
+        P2["EIP-1153 hanya dipakai<br/>untuk reentrancy guard"]
+    end
     
-    C1 --> D["TESTING<br/>216 Foundry Tests<br/>100 sampel/operasi"]
-    C2 --> D
-    C3 --> D
-    C4 --> D
+    subgraph CONTRIBUTION["KONTRIBUSI"]
+        C1["4-Tier Comparative Framework"]
+        C2["Inline EIP-1153<br/>multi-fungsi keamanan"]
+        C3["Metrik SPG<br/>Security Points per Gas"]
+    end
     
-    D --> D1["Gas Measurement"]
-    D --> D2["Security Test"]
-    D --> D3["Statistical Validation"]
+    subgraph METHOD["METODE"]
+        M1["Foundry Testing<br/>216 tests"]
+        M2["Gas Measurement<br/>100 samples"]
+        M3["Security Test<br/>8 features"]
+    end
     
-    D1 --> E["RESULTS"]
-    D2 --> E
-    D3 --> E
+    subgraph RESULT["HASIL"]
+        R1["Tier D: 8/8 security<br/>72% gas lebih murah"]
+        R2["SPG: 220.1<br/>3.4x lebih efisien"]
+        R3["Statistically significant<br/>Cohen's d = 1.28"]
+    end
     
-    E --> E1["Tier D = SPG 220.1<br/>(Cost-Effectiveness #1)"]
-    E --> E2["Tier D vs C<br/>-72% gas deposit<br/>-88% gas withdraw<br/>-87% gas swap"]
-    E --> E3["Cohen's d = 1.28<br/>(Large effect size)"]
-    E --> E4["216/216 tests PASS<br/>Semua fitur berfungsi"]
-    
-    E1 --> F["CONTRIBUTION"]
-    E2 --> F
-    E3 --> F
-    E4 --> F
-    
-    F --> F1["Framework komparatif<br/>pertama untuk bridge"]
-    F --> F2["Inline EIP-1153<br/>keamanan multi-fungsi"]
-    F --> F3["Metrik SPG<br/>cost-effectiveness"]
-    F --> F4["Empirical validation<br/>statistically significant"]
-    
-    F1 --> G["IMPACT<br/>Bridge hemat gas + aman<br/>Tidak perlu tradeoff"]
-    F2 --> G
-    F3 --> G
-    F4 --> G
+    PROBLEM --> CONTRIBUTION
+    CONTRIBUTION --> METHOD
+    METHOD --> RESULT
 
-    style A fill:#ff6b6b,color:#fff
-    style B fill:#4ecdc4,color:#fff
-    style C fill:#45b7d1,color:#fff
-    style D fill:#f9ca24,color:#333
-    style E fill:#96ceb4,color:#fff
-    style F fill:#ff9ff3,color:#fff
-    style G fill:#5f27cd,color:#fff
+    style JUDUL fill:#2c3e50,color:#fff
+    style PROBLEM fill:#e74c3c,color:#fff
+    style CONTRIBUTION fill:#f39c12,color:#fff
+    style METHOD fill:#3498db,color:#fff
+    style RESULT fill:#2ecc71,color:#fff
 ```
 
-## Flowchart Perbandingan Tier
+---
 
-```mermaid
-graph LR
-    subgraph "SKOR KEAMANAN"
-        SA["Tier A<br/>0/8"] --> SB["Tier B<br/>2/8"]
-        SB --> SC["Tier C<br/>8/8"]
-        SC --> SD["Tier D<br/>8/8"]
-    end
-    
-    subgraph "GAS (DEPOSIT)"
-        GA["Tier A<br/>31,412"] --> GB["Tier B<br/>31,427"]
-        GB --> GC["Tier C<br/>122,769"]
-        GC --> GD["Tier D<br/>34,156"]
-    end
-    
-    subgraph "SPG (EFISIENSI)"
-        SPA["Tier A<br/>0"] --> SPB["Tier B<br/>63.6"]
-        SPB --> SPC["Tier C<br/>65.2"]
-        SPC --> SPD["Tier D<br/>220.1"]
-    end
-    
-    SA -.-> GA
-    SB -.-> GB
-    SC -.-> GC
-    SD -.-> GD
-    
-    GA -.-> SPA
-    GB -.-> SPB
-    GC -.-> SPC
-    GD -.-> SPD
+## Struktur Paper (IEEE Format)
 
-    style SA fill:#ff6b6b,color:#fff
-    style SB fill:#feca57,color:#333
-    style SC fill:#48dbfb,color:#333
-    style SD fill:#0abde3,color:#fff
+### 1. INTRODUCTION
+```
+1.1 Background
+    ├── DeFi growth + bridge importance
+    ├── Security challenges (reentrancy, MEV)
+    └── Gas cost problem
+
+1.2 Problem Statement
+    ├── No comparative framework for bridge security
+    ├── EIP-1153 underutilized
+    └── No cost-effectiveness metric
+
+1.3 Research Objectives
+    ├── Compare 4-tier architecture
+    ├── Prove Tier D efficiency
+    └── Introduce SPG metric
 ```
 
-## Ringkasan Temuan
+### 2. METHODOLOGY
+```
+2.1 Research Paradigm
+    └── Empirical-quantitative
 
-| Metrik | Tier A | Tier B | Tier C | Tier D | Winner |
+2.2 System Design
+    ├── Tier A: Unoptimized
+    ├── Tier B: Static optimization
+    ├── Tier C: External dynamic
+    └── Tier D: Inline EIP-1153
+
+2.3 Testing Framework
+    ├── Foundry v1.7.1
+    ├── Solidity 0.8.28
+    └── 216 test cases
+
+2.4 Measurement
+    ├── Gas: 100 samples/operation
+    └── Security: 8 features
+```
+
+### 3. RESULTS AND DISCUSSION
+```
+3.1 Gas Comparison
+    ├── Table: Gas per tier per function
+    └── Figure: Gas reduction chart
+
+3.2 Security Analysis
+    ├── Table: Security features per tier
+    └── Figure: Security score comparison
+
+3.3 SPG Analysis
+    ├── Table: SPG per tier
+    └── Figure: SPG ranking
+
+3.4 Statistical Validation
+    ├── Welch's t-test results
+    └── Cohen's d effect size
+```
+
+### 4. CONCLUSION
+```
+4.1 Key Findings
+    ├── Tier D achieves 8/8 security
+    ├── 72-88% gas reduction vs Tier C
+    └── SPG 220.1 (best cost-effectiveness)
+
+4.2 Contributions
+    ├── First comparative framework
+    ├── Inline EIP-1153 multi-function
+    └── SPG metric introduction
+```
+
+---
+
+## Summary Table
+
+| Metric | Tier A | Tier B | Tier C | Tier D | Winner |
 |--------|--------|--------|--------|--------|--------|
-| Skor Keamanan | 0/8 | 2/8 | 8/8 | 8/8 | Tier C & D |
-| Gas Deposit | 31,412 | 31,427 | 122,769 | 34,156 | Tier B |
-| SPG | 0 | 63.6 | 65.2 | **220.1** | **Tier D** |
-| Ranking | 4 | 2 | 3 | **1** | **Tier D** |
+| Security | 0/8 | 2/8 | 8/8 | 8/8 | C & D |
+| Gas Deposit | 58,829 | 56,707 | 173,461 | 103,652 | B |
+| SPG | 0 | 63.6 | 65.2 | **220.1** | **D** |
+| Ranking | 4 | 3 | 2 | **1** | **D** |
