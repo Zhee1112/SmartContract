@@ -394,6 +394,27 @@ Foundry [5] dipilih sebagai framework pengujian karena mendukung [16], [21]:
 - Invariant testing [18]
 - Cheat codes untuk manipulasi state (`vm.deal`, `vm.prank`, `vm.warp`, `vm.roll`)
 
+### 2.7.3 Tools analisis keamanan:
+
+Selain Foundry, penelitian ini menggunakan tiga tools tambahan untuk analisis keamanan dan kualitas kode:
+
+**Tabel 11. Tools Analisis Keamanan**
+
+| No | Tools | Fungsi | Hasil |
+|----|-------|--------|-------|
+| 1 | Slither v0.11.5 | Static analysis untuk deteksi vulnerability | 45 findings, 0 critical vulnerabilities |
+| 2 | Solhint | Linting untuk validasi Solidity best practices | 0 errors, 260 warnings |
+| 3 | forge coverage | Code coverage measurement | 88.86% lines, 98.04% functions |
+| 4 | forge --gas-report | Gas profiling detail per fungsi | Gas report per tier per operasi |
+
+**Slither** digunakan untuk mendeteksi pola vulnerability yang dikenal seperti reentrancy, integer overflow, dangerous equality, dan low-level calls. Slither bekerja sebagai static analysis yang menganalisis kode tanpa menjalankannya.
+
+**Solhint** digunakan untuk memvalidasi kode sesuai Solidity best practices dan security rules, termasuk penggunaan natspec documentation, gas optimization suggestions, dan naming conventions.
+
+**forge coverage** digunakan untuk mengukur persentase kode yang teruji oleh test suite, memastikan cakupan pengujian yang memadai.
+
+**forge --gas-report** digunakan untuk pengukuran gas detail per fungsi pada setiap tier, menghasilkan data yang digunakan untuk analisis cost-effectiveness.
+
 ### 2.7.3 Komposisi sumber daya pengujian:
 
 **Tabel 9. Komposisi Sumber Daya Pengujian**

@@ -76,6 +76,10 @@ b. Tools
 4. Sistem operasi yang digunakan adalah Windows 11 dengan WSL Ubuntu.
 5. IDE yang digunakan adalah VS Code dengan opencode CLI.
 6. EIP-1153 transient storage hanya bisa dijalankan pada EVM Cancun ke atas.
+7. Static analysis menggunakan Slither v0.11.5 untuk deteksi vulnerability (reentrancy, integer overflow, dangerous equality).
+8. Linting menggunakan Solhint untuk validasi kode sesuai Solidity best practices dan security rules.
+9. Code coverage menggunakan forge coverage untuk mengukur persentase kode yang teruji.
+10. Gas profiling menggunakan forge --gas-report untuk pengukuran gas detail per fungsi.
 
 c. Proses
 
