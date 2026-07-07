@@ -85,6 +85,8 @@ c. Proses
 4. Perbandingan antara Tier C dan Tier D dilakukan menggunakan Welch's t-test untuk menentukan signifikansi statistik.
 5. Metrik SPG digunakan untuk mengevaluasi efisiensi konversi gas menjadi keamanan.
 6. Semua pengujian dilakukan pada lingkungan EVM simulasi menggunakan Foundry.
+7. Pengujian menggunakan 13 file test dengan total 216 test cases.
+8. Metode pengujian meliputi unit test, integration test, fuzz testing, invariant testing, gas benchmark, statistical analysis, attack simulation, economic simulation, state machine testing, dan edge case testing.
 
 ## 1.5 Tujuan Penelitian
 

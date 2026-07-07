@@ -91,7 +91,7 @@ Tier C mengimplementasikan keamanan dinamis penuh melalui external calls ke kont
 | D | Transient Storage in the wild: An impact study on EIP-1153 | A. Zhang & M. Debono, 2024 | Studi komprehensif penggunaan TSTORE/TLOAD di Ethereum | Transient storage masih baru; belum ada studi empiris tentang penggunaannya di production | 250+ kontrak dianalisis; 50%+ digunakan untuk reentrancy guards; penghematan gas rata-rata 91,59% vs storage |
 | D | Transient Storage Opcodes in Solidity 0.8.24 | Solidity Team, 2024 | Dokumentasi resmi EIP-1153 untuk Solidity | Developer membutuhkan panduan resmi untuk mengimplementasikan TSTORE/TLOAD dengan aman | Dukungan resmi Solidity untuk TSTORE/TLOAD; reentrancy lock sebagai use case utama; harga 100 gas per operasi |
 
-**R. Al Farizy (2026):** Tier D merupakan kontribusi utama penelitian ini, yang membuktikan bahwa semua fitur keamanan dapat diimplementasikan secara inline menggunakan TSTORE/TLOAD tanpa external calls. Zhang & Debono [31] melalui studi empiris pada 250+ kontrak menemukan bahwa lebih dari 50% penggunaan EIP-1153 hanya untuk reentrancy guard — belum ada yang memanfaatkannya untuk keamanan multi-fungsi. Solidity Team [32] mendokumentasikan bahwa TSTORE dan TLOAD berharga 100 gas per operasi, jauh lebih murah dari SSTORE (20.000 gas) namun belum dieksplorasi potensinya secara luas. Penelitian ini memanfaatkan kedua findings tersebut untuk membuktikan bahwa EIP-1153 dapat dimodifikasi dari fungsi tunggal menjadi 5 fungsi keamanan bridge, menghasilkan pengurangan gas 48,5�, dari Tier C tanpa mengorbankan skor keamanan.
+**R. Al Farizy (2026):** Tier D merupakan kontribusi utama penelitian ini, yang membuktikan bahwa semua fitur keamanan dapat diimplementasikan secara inline menggunakan TSTORE/TLOAD tanpa external calls. Zhang & Debono [31] melalui studi empiris pada 250+ kontrak menemukan bahwa lebih dari 50% penggunaan EIP-1153 hanya untuk reentrancy guard — belum ada yang memanfaatkannya untuk keamanan multi-fungsi. Solidity Team [32] mendokumentasikan bahwa TSTORE dan TLOAD berharga 100 gas per operasi, jauh lebih murah dari SSTORE (20.000 gas) namun belum dieksplorasi potensinya secara luas. Penelitian ini memanfaatkan kedua findings tersebut untuk membuktikan bahwa EIP-1153 dapat dimodifikasi dari fungsi tunggal menjadi 5 fungsi keamanan bridge, menghasilkan pengurangan gas 48,5�, dari Tier C tanpa mengorbankan skor keamanan.
 
 ### 2.1.4 Asumsi sistem:
 
@@ -148,7 +148,7 @@ Komponen storage merupakan biaya terbesar dalam bridge contract. Model biaya sto
 Variable packing mengurangi jumlah slot storage yang digunakan. Penghematan gas dihitung sebagai:
 
 ```
-ΔG_packing = (N_before - N_after) �, SSTORE_cold
+ΔG_packing = (N_before - N_after) �, SSTORE_cold
 ```
 
 Di mana `N_before` dan `N_after` masing-masing adalah jumlah slot sebelum dan sesudah packing.
@@ -207,7 +207,7 @@ Profit_a = Ta2.output - Ta1.input
 Untuk model Constant Product (x * y = k), keuntungan dapat disederhanakan:
 
 ```
-Profit_a ≈ (Δv² �, x) / ((reserve_ETH + x)² �, reserve_ETH)
+Profit_a ≈ (Δv² �, x) / ((reserve_ETH + x)² �, reserve_ETH)
 ```
 
 Di mana:
@@ -220,7 +220,7 @@ Dengan EWS + Penalty:
 ```
 Profit_a' = Ta2.output - Ta1.input - Penalty
 
-Penalty = amount �, (λ �, P_detect / 100.000.000)
+Penalty = amount �, (λ �, P_detect / 100.000.000)
 ```
 
 ### 2.2.5 Model biaya dynamic rollup submission:
@@ -230,10 +230,10 @@ Dynamic engine memilih rute termurah antara blob dan calldata:
 ```
 C_dynamic = min(C_calldata, C_blob)
 
-C_calldata = beff_bytes �, 16 �, L1_fee
-C_blob = BLOB_GAS_SIZE �, blob_fee
+C_calldata = beff_bytes �, 16 �, L1_fee
+C_blob = BLOB_GAS_SIZE �, blob_fee
 
-beff_bytes = tx_count �, tx_size �, α
+beff_bytes = tx_count �, tx_size �, α
 BLOB_GAS_SIZE = 131.072 gas
 ```
 
@@ -248,7 +248,7 @@ Penalti ekonomi didefinisikan sebagai:
 
 ```
 Penalty(amount, anomalyScore) = min(
-  amount �, λ �, anomalyScore / 100.000.000,
+  amount �, λ �, anomalyScore / 100.000.000,
   amount
 )
 ```
@@ -260,13 +260,13 @@ Di Mana:
 Analisis Incentive Compatibility:
 
 ```
-U(a) = P(undetected) �, Profit - P(detected) �, Penalty
-     = 0,04 �, Profit - 0,96 �, Penalty
+U(a) = P(undetected) �, Profit - P(detected) �, Penalty
+     = 0,04 �, Profit - 0,96 �, Penalty
 ```
 
 Kondisi agar serangan tidak menguntungkan:
 ```
-Profit > 24 �, Penalty (untuk P_detect = 96%)
+Profit > 24 �, Penalty (untuk P_detect = 96%)
 ```
 
 ## 2.3 Model ancaman formal
@@ -372,7 +372,7 @@ Kondisi yang dikontrol selama pengujian:
 Setiap pengukuran gas dilakukan dengan 100 sampel per operasi [15]. Jumlah sampel ini dipilih berdasarkan Central Limit Theorem (CLT) yang menyatakan bahwa distribusi mean akan mendekati normal untuk n ≥ 30 [1], dan diperkuat hingga 100 untuk menghasilkan confidence interval yang lebih sempit dan statistik yang lebih robust [19].
 
 Protokol replikasi:
-1. Untuk setiap kombinasi (tier �, tipe transaksi), generate 100 alamat unik menggunakan `keccak256(abi.encode(i))`.
+1. Untuk setiap kombinasi (tier �, tipe transaksi), generate 100 alamat unik menggunakan `keccak256(abi.encode(i))`.
 2. Setiap alamat melakukan satu transaksi dengan jumlah yang sama (1 ether untuk deposit, 0.1 ether untuk swap).
 3. Gas usage dicatat menggunakan `gasleft()` sebelum dan sesudah transaksi.
 4. Statistik deskriptif (mean, min, max, std dev, 95% CI) dihitung dari 100 sampel.
@@ -396,6 +396,68 @@ Pengukuran ini mencakup seluruh komponen gas termasuk:
 - Emit event
 
 Untuk pengukuran deployment, gas dihitung dari perbedaan `gasleft()` sebelum dan sesudah `new Contract()`.
+
+### 2.4.5 Komposisi test suite:
+
+Penelitian ini menggunakan 13 file test dengan total 216 test cases yang mencakup berbagai metode pengujian komprehensif:
+
+**Tabel 15. Komposisi Test Suite**
+
+| No | File Test | Metode | Jumlah Test | Deskripsi |
+|----|-----------|--------|-------------|-----------|
+| 1 | TierComparisonTest.t.sol | Unit + State Machine | 30 | Transisi state, event, akses control, lifecycle |
+| 2 | EdgeCaseTest.t.sol | Edge Case | 28 | Zero amount, overflow, reentrancy, slippage |
+| 3 | EconomicDeterrenceTest.t.sol | Economic + ROI | 19 | Profitabilitas serangan, penalty formula |
+| 4 | MEVSimulationTest.t.sol | Attack Simulation | 19 | Sandwich attack, cross-block MEV |
+| 5 | VictimBridgeSecurityTest.t.sol | Security Verification | 17 | Reentrancy, pause/unpause, Tier C/D |
+| 6 | MultiContractTest.t.sol | Integration | 14 | Benchmark 4-tier, gas, reentrancy, MEV |
+| 7 | CostAnalysisTest.t.sol | Statistical + Gas | 8 | 100 sampel gas, cost-effectiveness |
+| 8 | FuzzTest.t.sol | Fuzz Testing | 8 | Property-based testing dengan input acak |
+| 9 | SecurityComparisonTest.t.sol | Comparative Analysis | 6 | Security matrix, SPG ranking |
+| 10 | EIP1153Benchmark.t.sol | Gas Benchmark | 7 | TSTORE vs SSTORE opcode-level |
+| 11 | GasStatsTest.t.sol | Statistical Analysis | 3 | 100 sampel deposit/withdraw/swap |
+| 12 | InvariantTest.t.sol | Invariant Testing | 4 | Balance non-negative, callDepth reset |
+| 13 | OZGuardComparison.t.sol | Comparative Analysis | 1 | SSTORE vs EIP-1153 head-to-head |
+
+**Total: 13 file test, 216 test cases**
+
+### 2.4.6 Metode pengujian detail:
+
+**a. Unit Test (~100 tests)**
+
+Unit test menguji fungsi individual pada setiap tier bridge (deposit, withdraw, swap) untuk memastikan setiap fungsi bekerja sesuai spesifikasi. Pengujian mencakup verifikasi state transition, event emission, dan access control.
+
+**b. Integration Test (~50 tests)**
+
+Integration test menguji interaksi antar komponen dalam satu skenario lengkap. Contohnya, pengujian MEV sandwich attack melibatkan interaksi antara attacker, victim, dan monitor dalam satu transaksi.
+
+**c. Fuzz Testing (8 tests)**
+
+Fuzz testing menggunakan Foundry fuzzer untuk menghasilkan input acak dan memverifikasi properti sistem. Properti yang diuji meliputi deposit dengan amount valid selalu berhasil, withdraw tidak pernah melebihi balance, formula swap selalu benar (constant product), penalty tidak pernah melebihi deposited amount, dan penalty = 0 ketika anomaly score = 0.
+
+**d. Invariant Testing (3 invariants)**
+
+Invariant testing memverifikasi properti sistem yang harus selalu benar di semua transisi state: user balance selalu non-negatif, call depth selalu non-negatif, dan call depth reset ke 0 setelah transaksi selesai.
+
+**e. Gas Benchmark (~25 tests)**
+
+Gas benchmark mengukur konsumsi gas secara detail menggunakan tiga pendekatan: 100-sample statistical analysis dengan perhitungan mean, min, max, standar deviasi, dan confidence interval 95%; opcode-level micro-benchmark perbandingan murni TSTORE/TLOAD vs SSTORE/SLOAD tanpa overhead bridge logic; dan deployment cost pengukuran biaya deploy untuk setiap kontrak.
+
+**f. Attack Simulation (~30 tests)**
+
+Attack simulation menguji skenario serangan nyata pada setiap tier: reentrancy attack (single-function, cross-function, dan consecutive), MEV sandwich attack (simulasi frontrun-victim-backrun dalam satu blok), cross-block MEV (serangan lintas blok), reentrancy via swap (reekskusi melalui path swap), dan consecutive attacks (serangan beruntun untuk menguji state reset).
+
+**g. Economic Simulation (~8 tests)**
+
+Economic simulation menganalisis profitabilitas serangan menggunakan expected utility formula: E[utility] = P(tidak terdeteksi) x profit - P(terdeteksi) x penalty. Jika E[utility] < 0, maka serangan tidak menguntungkan secara ekonomi.
+
+**h. State Machine Testing (14 tests)**
+
+State machine testing memverifikasi transisi state pause/unpause: pause hanya bisa dilakukan oleh admin, unpause hanya bisa dilakukan oleh admin, tidak bisa pause dua kali berturut-turut, deposit/withdraw/swap revert saat paused, dan semua fungsi bekerja normal setelah unpause.
+
+**i. Edge Case Testing (28 tests)**
+
+Edge case testing menguji kondisi batas dan error handling: zero amount deposit/withdraw/swap, withdraw melebihi balance (overflow), unauthorized access (non-admin), reentrancy pada semua tier, swap melebihi liquidity, slippage terlalu tinggi, dan multi-user isolation.
 
 ## 2.5 Kerangka analisis statistik
 
@@ -431,7 +493,7 @@ df = (s₁²/n₁ + s₂²/n₂)² / [(s₁²/n₁)²/(n₁-1) + (s₂²/n₂)²
 Interval kepercayaan 95% untuk perbedaan mean:
 
 ```
-CI_95% = (x̄₁ - x̄₂) ± t_α/2 �, √(s₁²/n₁ + s₂²/n₂)
+CI_95% = (x̄₁ - x̄₂) ± t_α/2 �, √(s₁²/n₁ + s₂²/n₂)
 ```
 
 Di Mana `t_α/2` adalah nilai kritis t-tabel untuk α = 0,05 (two-tailed) dengan df yang sesuai.
@@ -466,7 +528,7 @@ Interpretasi Cohen's d:
 SPG (Security Points per Gas) mengukur efisiensi bridge dalam mengubah biaya gas menjadi keamanan:
 
 ```
-SPG = (Skor Keamanan / Gas Deposit) �, 1.000.000
+SPG = (Skor Keamanan / Gas Deposit) �, 1.000.000
 ```
 
 Di Mana:
@@ -483,14 +545,14 @@ Keamanan dinilai berdasarkan delapan fitur keamanan [13], [14]:
 
 | No | Fitur | A | B | C | D |
 |----|-------|---|---|---|---|
-| 1 | Reentrancy Single-function | �, | ✓ | ✓ | ✓ |
-| 2 | Reentrancy Cross-function | �, | �, | ✓ | ✓ |
-| 3 | Reentrancy Consecutive | �, | �, | ✓ | ✓ |
-| 4 | MEV Sandwich Detection | �, | �, | ✓ | ✓ |
-| 5 | Economic Penalty | �, | �, | ✓ | ✓ |
-| 6 | Emergency Pause | �, | �, | ✓ | ✓ |
-| 7 | Block Tracking | �, | �, | ✓ | ✓ |
-| 8 | Custom Errors | �, | ✓ | ✓ | ✓ |
+| 1 | Reentrancy Single-function | �, | ✓ | ✓ | ✓ |
+| 2 | Reentrancy Cross-function | �, | �, | ✓ | ✓ |
+| 3 | Reentrancy Consecutive | �, | �, | ✓ | ✓ |
+| 4 | MEV Sandwich Detection | �, | �, | ✓ | ✓ |
+| 5 | Economic Penalty | �, | �, | ✓ | ✓ |
+| 6 | Emergency Pause | �, | �, | ✓ | ✓ |
+| 7 | Block Tracking | �, | �, | ✓ | ✓ |
+| 8 | Custom Errors | �, | ✓ | ✓ | ✓ |
 | **Total** | | **0/8** | **2/8** | **8/8** | **8/8** |
 
 ### 2.6.2 Reentrancy resistance score (RRS):
