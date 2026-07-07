@@ -28,7 +28,7 @@ Peningkatan keamanan Tier D dibandingkan Tier B (optimasi statis) adalah sebesar
 
 Metrik Security Points per Gas (SPG) membuktikan bahwa Tier D mencapai efisiensi biaya-keamanan terbaik di antara seluruh tier yang dievaluasi. Dengan skor SPG sebesar 220,1, Tier D 3,4 kali lebih efisien dibandingkan Tier C yang memiliki SPG 65,2 (lihat BAB 4, Bagian 4.4.1).
 
-| Tier | Skor Keamanan | Gas (Deposit) | SPG (× 1.000.000) | Ranking |
+| Tier | Skor Keamanan | Gas (Deposit) | SPG (�, 1.000.000) | Ranking |
 |------|--------------|---------------|---------------------|---------|
 | A | 0/8 | 31.412 | 0 | 4 |
 | B | 2/8 | 31.427 | 63,6 | 3 |
@@ -55,7 +55,7 @@ Sementara itu, overhead gas Tier D dibandingkan Tier B (baseline tanpa keamanan 
 Hasil pengukuran gas antara Tier C dan Tier D divalidasi secara statistik menggunakan Welch's t-test dengan 100 sampel per operasi. Hasil uji memperlihatkan:
 
 - t-statistic: 1.680,67
-- p-value: 2,25 × 10⁻²²² (sangat mencolok, jauh di bawah α = 0,05)
+- p-value: 2,25 �, 10⁻²²² (sangat mencolok, jauh di bawah α = 0,05)
 - Cohen's d: 220,64 (effect size LARGE, melebihi ambang 0,8 secara drastis)
 - Confidence Interval 95%: [98,18%, 98,23%] (sangat sempit, menunjukkan konsistensi yang tinggi)
 - Cost Ratio: 55,7x (Tier C 55,7 kali lebih mahal dari Tier D)
@@ -106,7 +106,7 @@ Early Warning System (EWS) yang diimplementasikan dalam penelitian ini menggunak
 
 Pattern detection MEV pada EWS terbatas pada pola sandwich dasar Ta1→Tv (frontrun → victim) dalam satu blok. Pola serangan yang lebih kompleks — seperti Ta1→Tv→Ta2 (sandwich lengkap), cross-contract sandwich, flash loan sandwich, dan time-bandit attack — belum terdeteksi oleh mekanisme yang diusulkan (lihat LIMITATIONS.md, Bagian 2.1).
 
-Model penalti ekonomi menggunakan formula linear (λ × P_detect × amount) yang tidak mempertimbangkan faktor-faktor kontekstual seperti volume transaksi historis, kondisi pasar, atau sumber modal penyerang (flash loan vs modal sendiri). Hal ini mengakibatkan penalti mungkin kurang efektif bagi penyerang dengan modal besar atau terlalu besar untuk false positive (lihat LIMITATIONS.md, Bagian 2.2).
+Model penalti ekonomi menggunakan formula linear (λ �, P_detect �, amount) yang tidak mempertimbangkan faktor-faktor kontekstual seperti volume transaksi historis, kondisi pasar, atau sumber modal penyerang (flash loan vs modal sendiri). Hal ini mengakibatkan penalti mungkin kurang efektif bagi penyerang dengan modal besar atau terlalu besar untuk false positive (lihat LIMITATIONS.md, Bagian 2.2).
 
 ### 6.3.3 Keterbatasan Skala
 

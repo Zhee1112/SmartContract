@@ -1196,23 +1196,23 @@ occur during the cast to uint96. By casting to uint96 before shifting, we ensure
 liquidityDeltaD8 fits within 96 bits.
 Shifting a uint96 value left by 8 bits results in a value that fits within 104 bits, which
 is safely accommodated by the final cast to uint128.
-In Solidity 1e18 means 1 Ã— 10
+In Solidity 1e18 means 1 Ã, 10
 18
 . In code before the commit shown in Fig. 14, is cal-
 culated amount0Min and amount1Min by multiplying amount0 and amount1 by
-0.9999 âˆ— 10
+0.9999 âˆ, 10
 18 
-(written as 0.9999e18) and then dividing by 1 âˆ— 10
+(written as 0.9999e18) and then dividing by 1 âˆ, 10
 18 
 (written as 1e18).
 This approach was intended to compute 99.99% of amount0 and amount1. However,
 when dealing with large numbers of type uint128, multiplying them by 0.9999e18
 could cause an overflow because the intermediate result becomes too large to fit within a
 uint128 variable. To fix this issue, the updated code changes the scaling factors from
-0.9999e18 and 1e18 to 0.9999e4 and 1e4. Now, they multiply by 0.9999 âˆ— 10
+0.9999e18 and 1e18 to 0.9999e4 and 1e4. Now, they multiply by 0.9999 âˆ, 10
 4 
 (i.e.,
-0.9999e4) and divide by 1 âˆ— 10
+0.9999e4) and divide by 1 âˆ, 10
 4 
 (i.e., 1e4). This adjustment still computes 99.99% of
 amount0 and amount1, but using much smaller numbers.

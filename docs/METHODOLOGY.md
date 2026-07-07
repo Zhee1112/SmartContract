@@ -37,22 +37,22 @@ slot_1: uint256 totalDeposits (32 bytes)
 slot_2: address admin      (20 bytes)
 slot_3: uint32 depositNonce (4 bytes, pakai slot sendiri)
 slot_4: uint256 padding     (32 bytes)
-Total: 5 slots = 5 × SSTORE = 100,000 gas (cold)
+Total: 5 slots = 5 �, SSTORE = 100,000 gas (cold)
 ```
 
 **Dengan Packing (BridgeStaticOnly/VictimBridge):**
 ```
 slot_0: UserBalance struct (address 20B + uint96 12B = 32B)
 slot_1: PoolReserves struct (uint96 12B + uint96 12B = 24B)
-Total: 2 slots = 2 × SSTORE = 40,000 gas (cold)
+Total: 2 slots = 2 �, SSTORE = 40,000 gas (cold)
 
 Savings: 60,000 gas (60%)
 ```
 
 **Formula Penghematan:**
 ```
-ΔG_packing = (N_before - N_after) × SSTORE_cold
-            = (5 - 2) × 20,000
+ΔG_packing = (N_before - N_after) �, SSTORE_cold
+            = (5 - 2) �, 20,000
             = 60,000 gas
 ```
 
@@ -92,14 +92,14 @@ Dimana:
 Ta1.input  = x ETH (frontrun buy)
 Ta2.output = y ETH (backrun sell)
 x = amountIn (frontrun)
-y = (reserve_token × x) / (reserve_ETH + x) × (reserve_ETH) / (reserve_token + Δv)
+y = (reserve_token �, x) / (reserve_ETH + x) �, (reserve_ETH) / (reserve_token + Δv)
 
 Δv = victim.amountIn (transaksi korban)
 ```
 
 **Simplified (Constant Product):**
 ```
-Profit_a ≈ (Δv² × x) / ((reserve_ETH + x)² × reserve_ETH)
+Profit_a ≈ (Δv² �, x) / ((reserve_ETH + x)² �, reserve_ETH)
 ```
 
 ### 2.2 Attacker Profit (Dengan EWS + Penalty)
@@ -107,7 +107,7 @@ Profit_a ≈ (Δv² × x) / ((reserve_ETH + x)² × reserve_ETH)
 ```
 Profit_a' = Ta2.output - Ta1.input - Penalty
 
-Penalty = Victim.amountOut × (λ × P_detect / 100,000,000)
+Penalty = Victim.amountOut �, (λ �, P_detect / 100,000,000)
 
 Dimana:
 λ = 15000 (faktor penalti 1.5x)
@@ -117,22 +117,22 @@ P_detect = 9600 (probabilitas deteksi 96%)
 ### 2.3 Expected Value Analysis
 
 ```
-E[Profit_a] = P(not detected) × Profit_a + P(detected) × Profit_a'
+E[Profit_a] = P(not detected) �, Profit_a + P(detected) �, Profit_a'
 
 P(not detected) = 1 - P_detect/10000 = 0.04 (4%)
 P(detected) = P_detect/10000 = 0.96 (96%)
 
-E[Profit_a] = 0.04 × Profit_a + 0.96 × (Profit_a - Penalty)
-            = Profit_a - 0.96 × Penalty
+E[Profit_a] = 0.04 �, Profit_a + 0.96 �, (Profit_a - Penalty)
+            = Profit_a - 0.96 �, Penalty
 ```
 
 **Kondisi Profitable:**
 ```
 Profit_a > Penalty
-(Δv² × x) / ((reserve_ETH + x)² × reserve_ETH) > Δv × (λ × P_detect / 100,000,000)
+(Δv² �, x) / ((reserve_ETH + x)² �, reserve_ETH) > Δv �, (λ �, P_detect / 100,000,000)
 
 Jika λ = 1.5 dan P_detect = 0.96:
-Profit_a > Δv × 1.44 × 10⁻⁵
+Profit_a > Δv �, 1.44 �, 10⁻⁵
 ```
 
 ---
@@ -142,10 +142,10 @@ Profit_a > Δv × 1.44 × 10⁻⁵
 ### 3.1 Static Batching (Calldata)
 
 ```
-C_static = Σ (batch_bytes × 16 × L1_fee)
+C_static = Σ (batch_bytes �, 16 �, L1_fee)
 
 Dimana:
-batch_bytes = tx_count × tx_size (tanpa kompresi)
+batch_bytes = tx_count �, tx_size (tanpa kompresi)
 L1_fee = L1 base fee (Gwei)
 ```
 
@@ -154,10 +154,10 @@ L1_fee = L1 base fee (Gwei)
 ```
 C_dynamic = min(C_calldata, C_blob)
 
-C_calldata = beff_bytes × 16 × L1_fee
-C_blob = BLOB_GAS_SIZE × blob_fee
+C_calldata = beff_bytes �, 16 �, L1_fee
+C_blob = BLOB_GAS_SIZE �, blob_fee
 
-beff_bytes = tx_count × tx_size × α (compression factor)
+beff_bytes = tx_count �, tx_size �, α (compression factor)
 BLOB_GAS_SIZE = 131,072 gas (128 KB)
 ```
 
@@ -180,7 +180,7 @@ Trigger WHEN:
   OR blocks_since_last_batch ≥ MAX_DELAY (25 blok)
 
 Dimana:
-beff_bytes = pending_txs × TX_SIZE × α
+beff_bytes = pending_txs �, TX_SIZE �, α
 ```
 
 ---
@@ -191,7 +191,7 @@ beff_bytes = pending_txs × TX_SIZE × α
 
 ```
 Penalty(amount, anomalyScore) = min(
-  amount × λ × anomalyScore / 100,000,000,
+  amount �, λ �, anomalyScore / 100,000,000,
   amount
 )
 
@@ -213,12 +213,12 @@ anomalyScore = 0 - 10000 (skor deteksi)
 ```
 Attacker utility = Expected profit - Expected penalty
 
-U(a) = P(undetected) × Profit - P(detected) × Penalty
-     = 0.04 × Profit - 0.96 × Penalty
+U(a) = P(undetected) �, Profit - P(detected) �, Penalty
+     = 0.04 �, Profit - 0.96 �, Penalty
 
 Attacker profitable IFF:
 U(a) > 0
-Profit > 24 × Penalty (untuk P_detect = 96%)
+Profit > 24 �, Penalty (untuk P_detect = 96%)
 ```
 
 ---
@@ -246,7 +246,7 @@ n = jumlah sampel
 ### 5.2 Confidence Interval
 
 ```
-CI_95% = (x̄_diff - t_α/2 × s_d/√n, x̄_diff + t_α/2 × s_d/√n)
+CI_95% = (x̄_diff - t_α/2 �, s_d/√n, x̄_diff + t_α/2 �, s_d/√n)
 ```
 
 ### 5.3 Effect Size (Cohen's d)

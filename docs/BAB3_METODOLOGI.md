@@ -82,7 +82,7 @@ Komponen storage merupakan biaya terbesar dalam bridge contract. Model biaya sto
 Variable packing mengurangi jumlah slot storage yang digunakan. Penghematan gas dihitung sebagai:
 
 ```
-ΔG_packing = (N_before - N_after) × SSTORE_cold
+ΔG_packing = (N_before - N_after) �, SSTORE_cold
 ```
 
 Di mana `N_before` dan `N_after` masing-masing adalah jumlah slot sebelum dan sesudah packing.
@@ -141,7 +141,7 @@ Profit_a = Ta2.output - Ta1.input
 Untuk model Constant Product (x * y = k), keuntungan dapat disederhanakan:
 
 ```
-Profit_a ≈ (Δv² × x) / ((reserve_ETH + x)² × reserve_ETH)
+Profit_a ≈ (Δv² �, x) / ((reserve_ETH + x)² �, reserve_ETH)
 ```
 
 Di mana:
@@ -154,7 +154,7 @@ Dengan EWS + Penalty:
 ```
 Profit_a' = Ta2.output - Ta1.input - Penalty
 
-Penalty = amount × (λ × P_detect / 100.000.000)
+Penalty = amount �, (λ �, P_detect / 100.000.000)
 ```
 
 ### 3.2.5 Model Biaya Dynamic Rollup Submission
@@ -164,10 +164,10 @@ Dynamic engine memilih rute termurah antara blob dan calldata:
 ```
 C_dynamic = min(C_calldata, C_blob)
 
-C_calldata = beff_bytes × 16 × L1_fee
-C_blob = BLOB_GAS_SIZE × blob_fee
+C_calldata = beff_bytes �, 16 �, L1_fee
+C_blob = BLOB_GAS_SIZE �, blob_fee
 
-beff_bytes = tx_count × tx_size × α
+beff_bytes = tx_count �, tx_size �, α
 BLOB_GAS_SIZE = 131.072 gas
 ```
 
@@ -182,7 +182,7 @@ Penalti ekonomi didefinisikan sebagai:
 
 ```
 Penalty(amount, anomalyScore) = min(
-  amount × λ × anomalyScore / 100.000.000,
+  amount �, λ �, anomalyScore / 100.000.000,
   amount
 )
 ```
@@ -194,13 +194,13 @@ Di mana:
 Analisis Incentive Compatibility:
 
 ```
-U(a) = P(undetected) × Profit - P(detected) × Penalty
-     = 0,04 × Profit - 0,96 × Penalty
+U(a) = P(undetected) �, Profit - P(detected) �, Penalty
+     = 0,04 �, Profit - 0,96 �, Penalty
 ```
 
 Kondisi agar serangan tidak menguntungkan:
 ```
-Profit > 24 × Penalty (untuk P_detect = 96%)
+Profit > 24 �, Penalty (untuk P_detect = 96%)
 ```
 
 ## 3.3 Model Ancaman Formal
@@ -300,7 +300,7 @@ Kondisi yang dikontrol selama pengujian:
 Setiap pengukuran gas dilakukan dengan 100 sampel per operasi (Lagouvardos et al., 2024). Jumlah sampel ini dipilih berdasarkan Central Limit Theorem (CLT) yang menyatakan bahwa distribusi mean akan mendekati normal untuk n ≥ 30 (Cochran, 1977), dan diperkuat hingga 100 untuk menghasilkan confidence interval yang lebih sempit dan statistik yang lebih robust (Li, 2025).
 
 Protokol replikasi:
-1. Untuk setiap kombinasi (tier × tipe transaksi), generate 100 alamat unik menggunakan `keccak256(abi.encode(i))`.
+1. Untuk setiap kombinasi (tier �, tipe transaksi), generate 100 alamat unik menggunakan `keccak256(abi.encode(i))`.
 2. Setiap alamat melakukan satu transaksi dengan jumlah yang sama (1 ether untuk deposit, 0.1 ether untuk swap).
 3. Gas usage dicatat menggunakan `gasleft()` sebelum dan sesudah transaksi.
 4. Statistik deskriptif (mean, min, max, std dev, 95% CI) dihitung dari 100 sampel.
@@ -359,7 +359,7 @@ df = (s₁²/n₁ + s₂²/n₂)² / [(s₁²/n₁)²/(n₁-1) + (s₂²/n₂)²
 Interval kepercayaan 95% untuk perbedaan mean:
 
 ```
-CI_95% = (x̄₁ - x̄₂) ± t_α/2 × √(s₁²/n₁ + s₂²/n₂)
+CI_95% = (x̄₁ - x̄₂) ± t_α/2 �, √(s₁²/n₁ + s₂²/n₂)
 ```
 
 Di mana `t_α/2` adalah nilai kritis t-tabel untuk α = 0,05 (two-tailed) dengan df yang sesuai.
@@ -391,7 +391,7 @@ Interpretasi Cohen's d:
 SPG (Security Points per Gas) mengukur efisiensi bridge dalam mengubah biaya gas menjadi keamanan:
 
 ```
-SPG = (Skor Keamanan / Gas Deposit) × 1.000.000
+SPG = (Skor Keamanan / Gas Deposit) �, 1.000.000
 ```
 
 Di mana:
@@ -406,14 +406,14 @@ Keamanan dinilai berdasarkan delapan fitur keamanan (Zheng et al., 2023; Wang et
 
 | No | Fitur | A | B | C | D |
 |----|-------|---|---|---|---|
-| 1 | Reentrancy Single-function | ✗ | ✓ | ✓ | ✓ |
-| 2 | Reentrancy Cross-function | ✗ | ✗ | ✓ | ✓ |
-| 3 | Reentrancy Consecutive | ✗ | ✗ | ✓ | ✓ |
-| 4 | MEV Sandwich Detection | ✗ | ✗ | ✓ | ✓ |
-| 5 | Economic Penalty | ✗ | ✗ | ✓ | ✓ |
-| 6 | Emergency Pause | ✗ | ✗ | ✓ | ✓ |
-| 7 | Block Tracking | ✗ | ✗ | ✓ | ✓ |
-| 8 | Custom Errors | ✗ | ✓ | ✓ | ✓ |
+| 1 | Reentrancy Single-function | �, | ✓ | ✓ | ✓ |
+| 2 | Reentrancy Cross-function | �, | �, | ✓ | ✓ |
+| 3 | Reentrancy Consecutive | �, | �, | ✓ | ✓ |
+| 4 | MEV Sandwich Detection | �, | �, | ✓ | ✓ |
+| 5 | Economic Penalty | �, | �, | ✓ | ✓ |
+| 6 | Emergency Pause | �, | �, | ✓ | ✓ |
+| 7 | Block Tracking | �, | �, | ✓ | ✓ |
+| 8 | Custom Errors | �, | ✓ | ✓ | ✓ |
 | **Total** | | **0/8** | **2/8** | **8/8** | **8/8** |
 
 ### 3.6.2 Reentrancy Resistance Score (RRS)

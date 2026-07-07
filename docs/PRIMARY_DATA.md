@@ -141,7 +141,7 @@
 
 | Test | Tier C | Tier D | Hasil |
 |------|--------|--------|-------|
-| Penalty formula | (amount × lambda × score) / 1e8 | Same | ✅ Identik |
+| Penalty formula | (amount �, lambda �, score) / 1e8 | Same | ✅ Identik |
 | Penalty capped at amount | ✅ | ✅ | ✅ |
 | Zero score = zero penalty | ✅ | ✅ | ✅ |
 | Penalty decreases ROI | ✅ | ✅ | ✅ |
@@ -155,7 +155,7 @@
 | Metric | Nilai |
 |--------|-------|
 | t-statistic | 1680.67 |
-| p-value | 2.25 × 10⁻²²² |
+| p-value | 2.25 �, 10⁻²²² |
 | Significance | p << 0.05 (Sangat signifikan) |
 | Cohen's d | 220.64 (LARGE) |
 | 95% Confidence Interval | [98.18%, 98.23%] |
@@ -164,7 +164,7 @@
 ### 7.2 Interpretasi Statistik
 
 - **t = 1680.67**: Perbedaan antara Tier C dan Tier D sangat besar secara statistik
-- **p = 2.25 × 10⁻²²²**: Kemungkinan perbedaan ini terjadi secara kebetulan hampir nol
+- **p = 2.25 �, 10⁻²²²**: Kemungkinan perbedaan ini terjadi secara kebetulan hampir nol
 - **Cohen's d = 220.64**: Effect size jauh di atas threshold "large" (0.8)
 - **Cost Ratio = 55.7x**: Tier C 55.7x lebih mahal dari Tier D untuk fitur keamanan serupa
 
@@ -221,7 +221,7 @@
 | Total assertions | ~800+ |
 | Fuzz test runs | 256 per function (8 functions) |
 | Invariant test calls | 128,000 per function (4 functions) |
-| Gas measurements | 100 samples × 4 tiers × 3 operasi = 360 measurements |
+| Gas measurements | 100 samples �, 4 tiers �, 3 operasi = 360 measurements |
 | Security scenarios tested | 50+ unique attack vectors |
 | Test pass rate | 100% |
 

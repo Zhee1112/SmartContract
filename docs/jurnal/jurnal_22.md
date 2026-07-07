@@ -21,7 +21,7 @@ quantitatively shown to deteriorate the blockchain‚Äôs consensus se-
 curity, BEV relayers endanger the ledger security by incentivizing
 rational miners to fork the chain. For example, a rational miner
 with  a10%  hashrate  will  fork  Ethereum  if  a  BEV  opportunity
-exceeds4√óthe  block  reward.
+exceeds4√,the  block  reward.
 However,  related  work  is  currently  missing  quantitative  in-
 sights  on  past  BEV  extraction  to  assess  the  practical  risks  of
 BEV  objectively.  In  this  work,  we  allow  to  quantify  the  BEV
@@ -30,7 +30,7 @@ liquidations, and decentralized exchange arbitrage. We estimate
 that over32months, BEV yielded540.54M USD in profit, divided
 among11,289addresses when capturing49,691cryptocurrencies
 and60,830on-chain markets. The highest BEV instance we find
-amounts  to4.1M  USD,616.6√óthe  Ethereum  block  reward.
+amounts  to4.1M  USD,616.6√,the  Ethereum  block  reward.
 Moreover,  while  the  practitioner‚Äôs  community  has  discussed
 the  existence  of  generalized  trading  bots,  we  are,  to  our  knowl-
 edge, the first to provide a concrete algorithm. Our algorithm can
@@ -1084,7 +1084,7 @@ When  measuring  the  profitability,  we  count  the  replay  and
 exchange transaction fees as cost.
 We  perform  our  evaluation  on  a  Ubuntu20.04.1LTS
 machine  with  AMD  Ryzen  Threadripper3990X(64-core,
-2.9GHz),256GB  of  RAM  and4√ó2TB  NVMe  SSD  in
+2.9GHz),256GB  of  RAM  and4√,2TB  NVMe  SSD  in
 Raid0configuration. To execute a replay transaction in a past
 block, we download the blockchain state from an Ethereum
 full archive node running on the same machine. On average,
@@ -1713,7 +1713,7 @@ BEV relay mechanisms do not substantially reduce the P2P
 network overhead. That is despite the fact that a BEV relayer
 introduces an intermediary which increases the centralization
 of a permissionless blockchain.
-## 0.5√ó1√ó2√ó4√ó8√ó16√ó32√ó64√ó128√ó256√ó512√ó
+## 0.5√,1√,2√,4√,8√,16√,32√,64√,128√,256√,512√,
 BEV / Block Reward
 ## 0%
 ## 10%
@@ -1737,7 +1737,7 @@ BEV Forking Threshold
 ## 1
 # BEV Opportunities
 Fig. 13: Minimum mining power on Ethereum that is incen-
-tivized to fork the chain to extract a BEV opportunity ofx√ó
+tivized to fork the chain to extract a BEV opportunity ofx√,
 the block reward (i.e., BEV forking threshold). We present the
 number of historical BEV opportunities per reward multiplier.
 ## VII.  SECURITYINSIGHTS OFBEV
@@ -1764,7 +1764,7 @@ consensus security, we follow the MDP framework in [11] and
 similar to Zhouet al.[8] derive theBEV forking threshold(cf.
 Fig. 13). The BEV forking threshold captures the minimum
 mining  power  that  is  incentivized  to  fork  the  blockchain
-to  extract  a  BEV  opportunity  ofx√óblock  reward.  Fig.  13
+to  extract  a  BEV  opportunity  ofx√,block  reward.  Fig.  13
 further classifies each empirically identified BEV opportunity
 depending on its size with respect to the block reward.
 BEV  moreover  provides  miners  an  additional  financial
@@ -2140,7 +2140,7 @@ each subsequential bid must raise the gas price by10%. After
 five rounds of bidding, the adversary needs to pay a gas price
 of at least(110%)
 ## 4
-√ó(GasPrice
+√,(GasPrice
 ## V
 +1)Wei. Fig. 4a visualizes
 the number of adversarial sandwich attack smart contracts we

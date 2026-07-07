@@ -3,7 +3,7 @@
 Jingyi Zheng
 * 
 Zifan Peng
-∗ 
+�, 
 Yule Liu Junfeng Wang Yifan Liao Wenhan Dong Xinlei He
 †
 The Hong Kong University of Science and Technology (Guangzhou)

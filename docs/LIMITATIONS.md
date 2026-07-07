@@ -102,10 +102,10 @@ Dokumen ini mendefinisikan batasan-batasan penelitian yang harus diakui dan diba
 
 ### 2.2 Model Ekonomi Penalti Sederhana
 
-**Status:** linear scaling (Î» Ã— P_detect Ã— amount)
+**Status:** linear scaling (Î» Ã, P_detect Ã, amount)
 
 **Penjelasan:**
-- Formula penalti: `Penalty = amount Ã— (Î» Ã— P_detect / 100,000,000)`
+- Formula penalti: `Penalty = amount Ã, (Î» Ã, P_detect / 100,000,000)`
 - Model linear tidak mempertimbangkan:
   - Volume transaksi historical
   - Frequency of suspicious activity
@@ -146,7 +146,7 @@ Dokumen ini mendefinisikan batasan-batasan penelitian yang harus diakui dan diba
 
 **Penjelasan:**
 - Gas benchmark: 100 sampel per operasi (memenuhi Central Limit Theorem)
-- Monte Carlo: 100 runs Ã— 1000 blocks
+- Monte Carlo: 100 runs Ã, 1000 blocks
 - Lebih banyak sampel memberikan keyakinan lebih tinggi
 
 **Dampak:**

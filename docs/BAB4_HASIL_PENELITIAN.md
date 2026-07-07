@@ -96,7 +96,7 @@ Perbedaan mencolok terlihat pada mekanisme penyimpanan: Tier C menggunakan dynam
 
 Metrik SPG dikembangkan untuk mengukur cost-effectiveness keamanan (Rodler et al., 2023):
 
-| Tier | Skor Keamanan | Gas (Deposit) | SPG (×1,000,000) | Ranking |
+| Tier | Skor Keamanan | Gas (Deposit) | SPG (�,1,000,000) | Ranking |
 |------|--------------|---------------|-------------------|---------|
 | A | 0/8 | 31,412 | 0 | 4 |
 | B | 4/8 | 31,427 | 127 | 2 |
@@ -134,7 +134,7 @@ Metrik SPG dikembangkan untuk mengukur cost-effectiveness keamanan (Rodler et al
 | TSTORE/TLOAD Reentrancy Guard | Proteksi reentrancy | 200 | _enterCall() + _callDepth() + _exitCall() |
 | Single-slot MEV Detection | Deteksi sandwich | 4,400 | lastTx.sender + lastTx.txType di 1 slot |
 | Block Number Tracking | Batas waktu deteksi | 2,100 | lastTxBlock SLOAD + comparison |
-| Inline Penalty Calculation | Deterrence ekonomi | 300 | Pure math: (amount × lambda × score) / 1e8 |
+| Inline Penalty Calculation | Deterrence ekonomi | 300 | Pure math: (amount �, lambda �, score) / 1e8 |
 | Emergency Pause | Emergency stop | 2,900 | SSTORE paused flag |
 
 Modifikasi EIP-1153 pada Tier D menambah 4 fungsi keamanan tambahan dengan biaya tambahan hanya 9,700 gas—48.5x lebih murah dari Tier C.
@@ -150,7 +150,7 @@ Uji statistik dilakukan menggunakan Welch's t-test (Welch, 1947) dengan ukuran s
 | Metric | Nilai | Interpretasi |
 |--------|-------|-------------|
 | t-statistic | 1680.67 | Perbedaan sangat besar |
-| p-value | 2.25 × 10⁻²²² | Sangat signifikan (p << 0.05) |
+| p-value | 2.25 �, 10⁻²²² | Sangat signifikan (p << 0.05) |
 | Cohen's d | 220.64 | Effect size LARGE (Cohen, 1988) |
 | 95% CI | [98.18%, 98.23%] | Sangat sempit → konsisten |
 | Cost Ratio | 55.7x | Tier C 55.7x lebih mahal |

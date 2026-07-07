@@ -13,9 +13,9 @@ Secara rinci, komponen keamanan inline pada Tier D memiliki rincian biaya sebaga
 | Komponen | Mekanisme | Gas |
 |----------|-----------|-----|
 | Reentrancy guard | TSTORE + TLOAD + TSTORE | 300 |
-| Anomaly check | SLOAD × 2 (warm) | 4.400 |
+| Anomaly check | SLOAD �, 2 (warm) | 4.400 |
 | Penalty calculation | Pure math (tanpa storage) | 300 |
-| Transaction recording | SSTORE × 2 (warm write) | 5.800 |
+| Transaction recording | SSTORE �, 2 (warm write) | 5.800 |
 | **Total overhead keamanan** | | **~10.800** |
 
 Jumlah ini sangat kompak dan terlokalisasi dalam satu kontrak. Tidak ada komponen yang memerlukan akses storage silang kontrak (*cross-contract storage access*), yang merupakan salah satu sumber biaya terbesar dalam arsitektur konvensional.
@@ -74,14 +74,14 @@ Berdasarkan matrix keamanan yang disajikan pada BAB III (Bagian 3.6.1), delapan 
 
 | No | Fitur Keamanan | Tier A | Tier B | Tier C | Tier D |
 |----|---------------|--------|--------|--------|--------|
-| 1 | Reentrancy Single-function | ✗ | ✓ | ✓ | ✓ |
-| 2 | Reentrancy Cross-function | ✗ | ✗ | ✓ | ✓ |
-| 3 | Reentrancy Consecutive | ✗ | ✗ | ✓ | ✓ |
-| 4 | MEV Sandwich Detection | ✗ | ✗ | ✓ | ✓ |
-| 5 | Economic Penalty | ✗ | ✗ | ✓ | ✓ |
-| 6 | Emergency Pause | ✗ | ✗ | ✓ | ✓ |
-| 7 | Block Tracking | ✗ | ✗ | ✓ | ✓ |
-| 8 | Custom Errors | ✗ | ✓ | ✓ | ✓ |
+| 1 | Reentrancy Single-function | �, | ✓ | ✓ | ✓ |
+| 2 | Reentrancy Cross-function | �, | �, | ✓ | ✓ |
+| 3 | Reentrancy Consecutive | �, | �, | ✓ | ✓ |
+| 4 | MEV Sandwich Detection | �, | �, | ✓ | ✓ |
+| 5 | Economic Penalty | �, | �, | ✓ | ✓ |
+| 6 | Emergency Pause | �, | �, | ✓ | ✓ |
+| 7 | Block Tracking | �, | �, | ✓ | ✓ |
+| 8 | Custom Errors | �, | ✓ | ✓ | ✓ |
 | **Total** | | **0/8** | **2/8** | **8/8** | **8/8** |
 
 Tier D mencapai skor 8/8 melalui implementasi yang sepenuhnya berbeda dari Tier C.
@@ -133,12 +133,12 @@ Bukti ini memperkuat klaim bahwa mekanisme inline pada Tier D setidaknya seefekt
 Metrik Security Points per Gas (SPG) dirancang khusus untuk mengukur efisiensi konversi biaya gas menjadi keamanan ([10], [17]). Rumus SPG didefinisikan sebagai:
 
 ```
-SPG = (Skor Keamanan / Gas Deposit) × 1.000.000
+SPG = (Skor Keamanan / Gas Deposit) �, 1.000.000
 ```
 
 Berdasarkan data pengukuran:
 
-| Tier | Skor Keamanan | Gas (Deposit) | SPG (×1.000.000) | Ranking |
+| Tier | Skor Keamanan | Gas (Deposit) | SPG (�,1.000.000) | Ranking |
 |------|--------------|---------------|-------------------|---------|
 | A | 0/8 | 31.412 | 0 | 4 |
 | B | 2/8 | 31.427 | 63,6 | 3 |
@@ -267,14 +267,14 @@ Uji hipotesis Welch's t-test ([14]) dilakukan untuk menguji apakah terdapat perb
 | Metrik | Nilai | Interpretasi |
 |--------|-------|-------------|
 | t-statistic | 1.680,67 | Perbedaan sangat besar secara statistik |
-| p-value | 2,25 × 10⁻²²² | Jauh di bawah α = 0,05 |
+| p-value | 2,25 �, 10⁻²²² | Jauh di bawah α = 0,05 |
 | Keputusan | **TOLAK H₀** | Perbedaan sangat signifikan |
 
 **H₀ (Null Hypothesis):** Tidak ada perbedaan signifikan gas cost antara Tier C dan Tier D.
 
 **Keputusan:** H₀ ditolak dengan tingkat keyakinan yang sangat tinggi (p ≈ 0). Perbedaan gas antara Tier C (122.769) dan Tier D (34.156) bukan merupakan kebetulan statistik, melainkan perbedaan nyata yang konsisten di seluruh 100 sampel.
 
-Tingkat signifikasi ini sangat kuat — p-value sekecil 2,25 × 10⁻²²² jauh melampaui threshold α = 0,05 yang lazim digunakan dalam penelitian. Bahkan dengan threshold yang sangat ketat sekalipun (α = 0,001), H₀ tetap ditolak. Bukti statistik ini memperkuat keyakinan bahwa modifikasi inline EIP-1153 pada Tier D menghasilkan penghematan gas yang nyata dan konsisten.
+Tingkat signifikasi ini sangat kuat — p-value sekecil 2,25 �, 10⁻²²² jauh melampaui threshold α = 0,05 yang lazim digunakan dalam penelitian. Bahkan dengan threshold yang sangat ketat sekalipun (α = 0,001), H₀ tetap ditolak. Bukti statistik ini memperkuat keyakinan bahwa modifikasi inline EIP-1153 pada Tier D menghasilkan penghematan gas yang nyata dan konsisten.
 
 ### 4.6.2 Confidence interval 95%: presisi tinggi
 
@@ -445,7 +445,7 @@ Ethereum menerapkan batas ukuran kontrak sebesar 24.576 bytes (EIP-170). Seluruh
 Formula penalti pada Tier C dan Tier D menggunakan formula yang identik:
 
 ```
-Penalty = Amount × (λ × P_detect) / 100.000.000
+Penalty = Amount �, (λ �, P_detect) / 100.000.000
 ```
 
 | Parameter | Nilai | Makna |

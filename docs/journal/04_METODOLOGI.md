@@ -4,6 +4,26 @@ Metode yang digunakan dalam penelitian ini terbagi atas tiga bagian utama, yaitu
 
 ## 2.1 Desain penelitian
 
+### 2.1.0 Paradigma penelitian:
+
+Penelitian ini didasarkan pada **paradigma positivisme** dengan pendekatan kuantitatif eksperimental [1], [2]. Paradigma positivisme memandang bahwa realitas bersifat objektif dan dapat diukur melalui observasi serta eksperimen terkontrol [3]. Dalam konteks pengembangan perangkat lunak, pendekatan ini memungkinkan pengukuran empiris kinerja sistem secara presisi dan reproduktibel.
+
+Desain komparatif dipilih sebagai kerangka utama karena memungkinkan perbandingan langsung antara beberapa arsitektur dalam kondisi yang terkontrol [11], [12]. Pendekatan ini telah digunakan secara luas dalam penelitian smart contract, termasuk:
+
+**Tabel 1. Rujukan Metodologis Penelitian Serupa**
+
+| Paper | Metodologi | Apa yang Dibandingkan | Temuan Kunci |
+|-------|------------|----------------------|--------------|
+| Benedetti et al. (2024) | Comparative gas measurement | Proxy vs Diamond pattern | Tradeoff deployment vs execution cost [11] |
+| Di Sorbo et al. (2022) | Statistical correlation (Spearman) | 19 code smells vs gas consumption | Korelasi signifikan antara code metrics dan gas [12] |
+| Zheng et al. (2023) | Large-scale evaluation (139.424 kontrak) | 5 reentrancy detection tools | 99.8% false positive rate [13] |
+| Wang et al. (2024) | F1-score comparison (8 tools) | SliSE vs 7 tool lainnya | F1: 78.65% vs 9.26% [14] |
+| Albert et al. (2021) | Gas-bound analysis | Gastap vs manual profiling | 15% kontrak melebihi block gas limit [24] |
+| Zheng et al. (2024) | Multi-agent + ablation study | 4 agent vs single agent | 25-40% gas reduction [23] |
+| Park et al. (2024) | VAR statistical modeling | Pre vs post EIP-4844 | Fork rate +116.5%, gas -54.53% [20] |
+
+Penelitian ini mengadopsi prinsip dari ketujuh paper tersebut: (1) pengukuran empiris dengan sampel yang memadai, (2) desain komparatif antar arsitektur, (3) validasi statistik untuk membuktikan signifikansi, serta (4) evaluasi multi-dimensi (gas, keamanan, cost-effectiveness).
+
 ### 2.1.1 Pendekatan penelitian:
 
 Penelitian ini menggunakan pendekatan kuantitatif eksperimental dengan desain comparative study [11], [12]. Pendekatan ini dipilih karena penelitian bertujuan mengukur dan membandingkan kinerja gas serta tingkat keamanan pada empat arsitektur bridge yang berbeda secara sistematis dan terkontrol [14].
@@ -20,6 +40,8 @@ Desain penelitian terdiri dari tiga tahap utama:
 
 Penelitian ini mengimplementasikan empat tier bridge dalam satu arsitektur komparatif:
 
+**Tabel 2. Arsitektur 4-Tier Bridge**
+
 | Tier | Kontrak | Deskripsi | Karakteristik |
 |------|---------|-----------|---------------|
 | A | `UnoptimizedBridge` | Baseline tanpa optimasi | Gas termurah, 0 keamanan |
@@ -29,7 +51,49 @@ Penelitian ini mengimplementasikan empat tier bridge dalam satu arsitektur kompa
 
 Tier D merupakan kontribusi utama penelitian, yang membuktikan bahwa semua fitur keamanan Tier C dapat diimplementasikan secara inline tanpa external calls, menghasilkan biaya gas yang jauh lebih rendah.
 
-### 2.1.3 Asumsi sistem:
+### 2.1.3 Dasar rujukan arsitektur
+
+Setiap tier dalam penelitian ini dirancang berdasarkan literatur akademis yang relevan. Berikut rincian rujukan yang mendasari desain masing-masing tier:
+
+**Tier A: Baseline (Tanpa Optimasi)**
+
+**Tabel 3. Rujukan Akademis Tier A: Baseline**
+
+| Tier | Paper | Penulis & Tahun | Temuan Utama | Permasalahan | Hasil Penelitian |
+|------|-------|-----------------|--------------|--------------|------------------|
+| A | How to Save My Gas Fees: Understanding and Detecting Real-world Gas Issues in Solidity Programs | M. He et al., 2024 | Identifikasi 302 gas waste pada kontrak Solidity real-world | Developer tidak menyadari kode yang boros gas; compiler optimasi tidak cukup efektif mendeteksi semua gas waste | PeCatch mendeteksi 302 gas waste; penghematan potensial $0,76 juta per hari; 6 pattern gas waste baru ditemukan |
+| A | Verification Assisted Gas Reduction for Smart Contracts | L. He et al., 2021 | sOptimize: optimasi gas melalui verifikasi statis tanpa mengorbankan keamanan | Banyak kontrak memiliki redundant code yang tidak perlu tetapi tetap menghabiskan gas | 1.152 kontrak dianalisis; 43% berhasil dioptimasi; penghematan deployment 2,0% dan transaksi 1,2% (hingga 954.201 gas per kontrak) |
+
+Tier A merepresentasikan kondisi kontrak bridge tanpa optimasi gas maupun fitur keamanan, yang menjadi baseline perbandingan dalam penelitian ini. He et al. [26] mengidentifikasi 302 gas waste pada kontrak real-world, membuktikan bahwa sebagian besar kontrak yang berjalan di Ethereum belum teroptimasi secara optimal. Lebih lanjut, He et al. [27] menunjukkan bahwa 43% dari 1.152 kontrak masih memiliki redundant code yang dapat dihapus tanpa mengubah fungsi. Temuan ini mengkonfirmasi bahwa kondisi "tanpa optimasi" (seperti Tier A) benar-benar ada di ekosistem nyata, sehingga tier ini menjadi baseline yang valid untuk mengukur efektivitas optimasi pada tier-tier berikutnya.
+
+**Tabel 4. Rujukan Akademis Tier B: Optimasi Statis**
+
+| Tier | Paper | Penulis & Tahun | Temuan Utama | Permasalahan | Hasil Penelitian |
+|------|-------|-----------------|--------------|--------------|------------------|
+| B | Profiling Gas Consumption in Solidity Smart Contracts | A. Di Sorbo et al., 2022 | 19 code smells Solidity berkontribusi terhadap pemborosan gas | Pengembang tidak memiliki tools untuk mengidentifikasi pola kode yang tidak efisien gas sebelum deployment | Metrics suite GasMet pada 2.186 kontrak; korelasi langsung antara code metrics dan deployment costs |
+| B | Characterizing Efficiency Optimizations in Solidity Smart Contracts | S. Schulte et al., 2020 | python-solidity-optimizer untuk optimasi statis otomatis | Tidak ada tools otomatis yang dapat mendeteksi dan mengoptimasi pola statis pada Solidity | Studi pada 25.000+ kontrak; penghematan gas rata-rata 1.213 gas per deployment dan 123 gas per invocation |
+
+Tier B mengimplementasikan optimasi statis berupa CEI pattern, variable packing, dan custom errors — tiga teknik yang paling sering direkomendasikan oleh komunitas Solidity. Di Sorbo et al. [12] mengidentifikasi 19 code smells yang berkontribusi terhadap pemborosan gas, termasuk pola-pola yang dapat dimitigasi oleh ketiga teknik optimasi tersebut. Schulte et al. [28] mengembangkan python-solidity-optimizer yang membuktikan optimasi statis dapat menghasilkan penghematan rata-rata 1.213 gas per deployment dan 123 gas per invocation pada 25.000+ kontrak. Kedua paper ini menjadi dasar empiris bahwa optimasi statis efektif mengurangi gas tanpa mengubah arsitektur kontrak, sehingga Tier B menjadi representasi yang tepat dari pendekatan ini.
+
+**Tabel 5. Rujukan Akademis Tier C: Dynamic Penuh**
+
+| Tier | Paper | Penulis & Tahun | Temuan Utama | Permasalahan | Hasil Penelitian |
+|------|-------|-----------------|--------------|--------------|------------------|
+| C | TSTORE Low Gas Reentrancy | Chainsecurity, 2023 | EIP-1153 memungkinkan reentrancy dengan 2300 gas | TSTORE tidak memiliki batas gas minimum seperti SSTORE, sehingga transfer() tidak lagi aman dari reentrancy | Analisis mendalam tentang TSTORE vs SSTORE; identifikasi serangan reentrancy baru pada low-gas execution |
+| C | Analyzing and Preventing Sandwich Attacks in Ethereum | P. Zust, 2021 | Analisis large-scale sandwich attacks selama 12 bulan | Sandwich attack menyebabkan kerugian signifikan; belum ada solusi mitigasi yang efektif | 480.276 serangan terdeteksi; akumulasi keuntungan 64.217 ETH ($189M); order splitting dapat mencegah 70,67% serangan |
+
+Tier C mengimplementasikan keamanan dinamis penuh melalui external calls ke kontrak terpisah (MonitorMock), termasuk reentrancy guard, early warning system, dan economic penalty. Chainsecurity [29] membuktikan bahwa EIP-1153 memungkinkan reentrancy dengan 2300 gas karena TSTORE tidak memiliki batas gas minimum seperti SSTORE — artinya transfer() yang sebelumnya dianggap aman tidak lagi cukup untuk melindungi kontrak. Zust [30] melalui analisis 12 bulan mengkonfirmasi bahwa sandwich attack menyebabkan kerugian $189M (480.276 serangan), membuktikan bahwa deteksi dan mitigasi secara dinamis sangat diperlukan. Temuan ini menjadi justifikasi bahwa Tier C harus mengadopsi pendekatan external calls untuk keamanan, meskipun mengorbankan efisiensi gas.
+
+**Tabel 6. Rujukan Akademis Tier D: Kontribusi Penelitian**
+
+| Tier | Paper | Penulis & Tahun | Temuan Utama | Permasalahan | Hasil Penelitian |
+|------|-------|-----------------|--------------|--------------|------------------|
+| D | Transient Storage in the wild: An impact study on EIP-1153 | A. Zhang & M. Debono, 2024 | Studi komprehensif penggunaan TSTORE/TLOAD di Ethereum | Transient storage masih baru; belum ada studi empiris tentang penggunaannya di production | 250+ kontrak dianalisis; 50%+ digunakan untuk reentrancy guards; penghematan gas rata-rata 91,59% vs storage |
+| D | Transient Storage Opcodes in Solidity 0.8.24 | Solidity Team, 2024 | Dokumentasi resmi EIP-1153 untuk Solidity | Developer membutuhkan panduan resmi untuk mengimplementasikan TSTORE/TLOAD dengan aman | Dukungan resmi Solidity untuk TSTORE/TLOAD; reentrancy lock sebagai use case utama; harga 100 gas per operasi |
+
+**R. Al Farizy (2026):** Tier D merupakan kontribusi utama penelitian ini, yang membuktikan bahwa semua fitur keamanan dapat diimplementasikan secara inline menggunakan TSTORE/TLOAD tanpa external calls. Zhang & Debono [31] melalui studi empiris pada 250+ kontrak menemukan bahwa lebih dari 50% penggunaan EIP-1153 hanya untuk reentrancy guard — belum ada yang memanfaatkannya untuk keamanan multi-fungsi. Solidity Team [32] mendokumentasikan bahwa TSTORE dan TLOAD berharga 100 gas per operasi, jauh lebih murah dari SSTORE (20.000 gas) namun belum dieksplorasi potensinya secara luas. Penelitian ini memanfaatkan kedua findings tersebut untuk membuktikan bahwa EIP-1153 dapat dimodifikasi dari fungsi tunggal menjadi 5 fungsi keamanan bridge, menghasilkan pengurangan gas 48,5�, dari Tier C tanpa mengorbankan skor keamanan.
+
+### 2.1.4 Asumsi sistem:
 
 Penelitian ini dibangun atas beberapa asumsi sistem yang perlu dinyatakan secara eksplisit:
 
@@ -68,6 +132,8 @@ Di mana:
 
 Komponen storage merupakan biaya terbesar dalam bridge contract. Model biaya storage didasarkan pada spesifikasi EVM [4]:
 
+**Tabel 7. Biaya Gas Operasi EVM**
+
 | Operasi | Biaya Gas | Keterangan |
 |---------|-----------|------------|
 | SSTORE cold write | 20.000 | Penulisan awal ke slot baru |
@@ -82,7 +148,7 @@ Komponen storage merupakan biaya terbesar dalam bridge contract. Model biaya sto
 Variable packing mengurangi jumlah slot storage yang digunakan. Penghematan gas dihitung sebagai:
 
 ```
-ΔG_packing = (N_before - N_after) × SSTORE_cold
+ΔG_packing = (N_before - N_after) �, SSTORE_cold
 ```
 
 Di mana `N_before` dan `N_after` masing-masing adalah jumlah slot sebelum dan sesudah packing.
@@ -141,7 +207,7 @@ Profit_a = Ta2.output - Ta1.input
 Untuk model Constant Product (x * y = k), keuntungan dapat disederhanakan:
 
 ```
-Profit_a ≈ (Δv² × x) / ((reserve_ETH + x)² × reserve_ETH)
+Profit_a ≈ (Δv² �, x) / ((reserve_ETH + x)² �, reserve_ETH)
 ```
 
 Di mana:
@@ -154,7 +220,7 @@ Dengan EWS + Penalty:
 ```
 Profit_a' = Ta2.output - Ta1.input - Penalty
 
-Penalty = amount × (λ × P_detect / 100.000.000)
+Penalty = amount �, (λ �, P_detect / 100.000.000)
 ```
 
 ### 2.2.5 Model biaya dynamic rollup submission:
@@ -164,10 +230,10 @@ Dynamic engine memilih rute termurah antara blob dan calldata:
 ```
 C_dynamic = min(C_calldata, C_blob)
 
-C_calldata = beff_bytes × 16 × L1_fee
-C_blob = BLOB_GAS_SIZE × blob_fee
+C_calldata = beff_bytes �, 16 �, L1_fee
+C_blob = BLOB_GAS_SIZE �, blob_fee
 
-beff_bytes = tx_count × tx_size × α
+beff_bytes = tx_count �, tx_size �, α
 BLOB_GAS_SIZE = 131.072 gas
 ```
 
@@ -182,7 +248,7 @@ Penalti ekonomi didefinisikan sebagai:
 
 ```
 Penalty(amount, anomalyScore) = min(
-  amount × λ × anomalyScore / 100.000.000,
+  amount �, λ �, anomalyScore / 100.000.000,
   amount
 )
 ```
@@ -194,13 +260,13 @@ Di Mana:
 Analisis Incentive Compatibility:
 
 ```
-U(a) = P(undetected) × Profit - P(detected) × Penalty
-     = 0,04 × Profit - 0,96 × Penalty
+U(a) = P(undetected) �, Profit - P(detected) �, Penalty
+     = 0,04 �, Profit - 0,96 �, Penalty
 ```
 
 Kondisi agar serangan tidak menguntungkan:
 ```
-Profit > 24 × Penalty (untuk P_detect = 96%)
+Profit > 24 �, Penalty (untuk P_detect = 96%)
 ```
 
 ## 2.3 Model ancaman formal
@@ -208,6 +274,8 @@ Profit > 24 × Penalty (untuk P_detect = 96%)
 ### 2.3.1 Asumsi aktor:
 
 Penelitian ini mendefinisikan lima tipe aktor dalam model ancaman:
+
+**Tabel 8. Model Aktor**
 
 | Aktor | Deskripsi | Keterangan |
 |-------|-----------|------------|
@@ -264,6 +332,8 @@ Status keamanan:
 
 ### 2.3.4 Matrix mitigasi ancaman:
 
+**Tabel 9. Matrix Mitigasi Ancaman**
+
 | Ancaman | Probabilitas | Dampak | Mitigasi | Residual Risk |
 |---------|-------------|--------|----------|---------------|
 | Reentrancy | Medium | Critical | CEI + EIP-1153 | Low |
@@ -275,6 +345,8 @@ Status keamanan:
 ## 2.4 Desain eksperimental
 
 ### 2.4.1 Variabel penelitian:
+
+**Tabel 10. Variabel Penelitian**
 
 | Variabel | Tipe | Deskripsi |
 |----------|------|-----------|
@@ -300,7 +372,7 @@ Kondisi yang dikontrol selama pengujian:
 Setiap pengukuran gas dilakukan dengan 100 sampel per operasi [15]. Jumlah sampel ini dipilih berdasarkan Central Limit Theorem (CLT) yang menyatakan bahwa distribusi mean akan mendekati normal untuk n ≥ 30 [1], dan diperkuat hingga 100 untuk menghasilkan confidence interval yang lebih sempit dan statistik yang lebih robust [19].
 
 Protokol replikasi:
-1. Untuk setiap kombinasi (tier × tipe transaksi), generate 100 alamat unik menggunakan `keccak256(abi.encode(i))`.
+1. Untuk setiap kombinasi (tier �, tipe transaksi), generate 100 alamat unik menggunakan `keccak256(abi.encode(i))`.
 2. Setiap alamat melakukan satu transaksi dengan jumlah yang sama (1 ether untuk deposit, 0.1 ether untuk swap).
 3. Gas usage dicatat menggunakan `gasleft()` sebelum dan sesudah transaksi.
 4. Statistik deskriptif (mean, min, max, std dev, 95% CI) dihitung dari 100 sampel.
@@ -359,7 +431,7 @@ df = (s₁²/n₁ + s₂²/n₂)² / [(s₁²/n₁)²/(n₁-1) + (s₂²/n₂)²
 Interval kepercayaan 95% untuk perbedaan mean:
 
 ```
-CI_95% = (x̄₁ - x̄₂) ± t_α/2 × √(s₁²/n₁ + s₂²/n₂)
+CI_95% = (x̄₁ - x̄₂) ± t_α/2 �, √(s₁²/n₁ + s₂²/n₂)
 ```
 
 Di Mana `t_α/2` adalah nilai kritis t-tabel untuk α = 0,05 (two-tailed) dengan df yang sesuai.
@@ -379,6 +451,9 @@ s_pooled = √[((n₁-1)s₁² + (n₂-1)s₂²) / (n₁ + n₂ - 2)]
 ```
 
 Interpretasi Cohen's d:
+
+**Tabel 11. Interpretasi Cohen's d**
+
 | Nilai d | Interpretasi |
 |---------|-------------|
 | d < 0,2 | Negligible |
@@ -391,7 +466,7 @@ Interpretasi Cohen's d:
 SPG (Security Points per Gas) mengukur efisiensi bridge dalam mengubah biaya gas menjadi keamanan:
 
 ```
-SPG = (Skor Keamanan / Gas Deposit) × 1.000.000
+SPG = (Skor Keamanan / Gas Deposit) �, 1.000.000
 ```
 
 Di Mana:
@@ -404,16 +479,18 @@ Di Mana:
 
 Keamanan dinilai berdasarkan delapan fitur keamanan [13], [14]:
 
+**Tabel 12. Skor Keamanan 4-Tier**
+
 | No | Fitur | A | B | C | D |
 |----|-------|---|---|---|---|
-| 1 | Reentrancy Single-function | ✗ | ✓ | ✓ | ✓ |
-| 2 | Reentrancy Cross-function | ✗ | ✗ | ✓ | ✓ |
-| 3 | Reentrancy Consecutive | ✗ | ✗ | ✓ | ✓ |
-| 4 | MEV Sandwich Detection | ✗ | ✗ | ✓ | ✓ |
-| 5 | Economic Penalty | ✗ | ✗ | ✓ | ✓ |
-| 6 | Emergency Pause | ✗ | ✗ | ✓ | ✓ |
-| 7 | Block Tracking | ✗ | ✗ | ✓ | ✓ |
-| 8 | Custom Errors | ✗ | ✓ | ✓ | ✓ |
+| 1 | Reentrancy Single-function | �, | ✓ | ✓ | ✓ |
+| 2 | Reentrancy Cross-function | �, | �, | ✓ | ✓ |
+| 3 | Reentrancy Consecutive | �, | �, | ✓ | ✓ |
+| 4 | MEV Sandwich Detection | �, | �, | ✓ | ✓ |
+| 5 | Economic Penalty | �, | �, | ✓ | ✓ |
+| 6 | Emergency Pause | �, | �, | ✓ | ✓ |
+| 7 | Block Tracking | �, | �, | ✓ | ✓ |
+| 8 | Custom Errors | �, | ✓ | ✓ | ✓ |
 | **Total** | | **0/8** | **2/8** | **8/8** | **8/8** |
 
 ### 2.6.2 Reentrancy resistance score (RRS):
@@ -443,6 +520,8 @@ GER > 1: Optimized lebih efisien.
 ## 2.7 Tools dan lingkungan pengujian
 
 ### 2.7.1 Platform pengembangan:
+
+**Tabel 13. Platform Pengembangan**
 
 | Komponen | Spesifikasi |
 |----------|------------|
@@ -484,6 +563,8 @@ Data gas price real-time diperoleh dari Etherscan V2 API [6]:
 - Base Fee: 0,55 Gwei (waktu pengukuran)
 
 ### 2.7.5 Komposisi sumber daya pengujian:
+
+**Tabel 14. Komposisi Sumber Daya Pengujian**
 
 | Sumber Daya | Fungsi |
 |-------------|--------|
@@ -605,3 +686,23 @@ scripts/
 [21] G. Casale-Brunet, "Secure-by-Design Smart Contract Development," *IEEE Software*, vol. 41, no. 2, pp. 1–9, 2024.
 
 [22] H. Nassirzadeh et al., "MEV Analysis: Front-Running and Sandwich Attacks in Decentralized Exchanges," in *Proc. ACM Conf. Advances in Financial Technologies (AFT)*, 2023, pp. 1–20.
+
+[23] J. Zheng, Z. Peng, Y. Liu, J. Wang, Y. Liao, W. Dong, and X. He, "GasAgent: A Multi-Agent Framework for Automated Gas Optimization in Smart Contracts," in *Proc. IEEE Int. Conf. Blockchain and Cryptocurrency (ICBC)*, 2024, pp. 1–8.
+
+[24] E. Albert, P. Gordillo, A. Rubio, and I. Sergey, "Running on Fumes: Preventing Out-of-Gas Vulnerabilities in Ethereum Smart Contracts using Static Resource Analysis," *Proc. ACM Programming Languages*, vol. 5, no. OOPSLA, pp. 1–25, 2021.
+
+[25] K. Qin, L. Zhou, and A. Gervais, "Quantifying Blockchain Extractable Value: How Dark Is the Forest?," *arXiv preprint arXiv:2101.05515*, 2021.
+
+[26] M. He, S. Xia, B. Qin, N. Yoshida, T. Yu, Y. Zhang, et al., "How to Save My Gas Fees: Understanding and Detecting Real-world Gas Issues in Solidity Programs," *arXiv preprint arXiv:2403.02661*, 2024.
+
+[27] L. He, J. Li, Y. Li, X. Li, and G. Li, "Verification Assisted Gas Reduction for Smart Contracts," in *Proc. IEEE Int. Conf. Automated Software Engineering (ASE)*, 2021, pp. 1–12.
+
+[28] S. Schulte, M. Sigwart, P. Frauenthaler, and S. Schulte, "Characterizing Efficiency Optimizations in Solidity Smart Contracts," in *Proc. IEEE Int. Conf. Blockchain (Blockchain)*, 2020, pp. 1–10.
+
+[29] ChainSecurity, "TSTORE Low Gas Reentrancy," ChainSecurity Blog, 2023. [Online]. Available: https://www.chainsecurity.com/blog/tstore-low-gas-reentrancy
+
+[30] P. Zust, "Analyzing and Preventing Sandwich Attacks in Ethereum," Master's thesis, ETH Zurich, 2021.
+
+[31] A. Zhang and M. Debono, "Transient Storage in the wild: An impact study on EIP-1153," Dedaub, 2024. [Online]. Available: https://dedaub.com/blog/transient-storage-in-the-wild-an-impact-study-on-eip-1153/
+
+[32] Solidity Team, "Transient Storage Opcodes in Solidity 0.8.24," Solidity Programming Language, 2024. [Online]. Available: https://www.soliditylang.org/blog/2024/01/26/transient-storage/

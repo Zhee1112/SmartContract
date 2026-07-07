@@ -282,7 +282,7 @@ message (iii) value and (iv) a gas budget, e.g., (simplified):
 i sender: 0xBEEFBABE receiver: 0xC0CAC01A
 ii deliverCans(amount: 10, to: 0xCAFED00D)
 iii 2 ETH (∼ $400)
-iv 10000 gas units @ 2 ∗ 10
+iv 10000 gas units @ 2 �, 10
 −7
 ETH each
 This transaction proposal is signed using the sender’s private key (i.e., one that corresponds to
@@ -434,7 +434,7 @@ syntactic inference is accepted as input.
 Etherscan.io currently contains the largest collection of smart contracts with source code. It supports the two most popular
 languages: Solidity and Vyper. As of mid-May 2020, there were a mere 74 Vyper contracts on Etherscan, compared to
 some-80,000 Solidity contracts. Though unlikely, it is conceivable that contracts with no released source code (which are still
-3-to-4× more than those with source code) are written in other languages, but, given the ever-increasing Solidity dominance,
+3-to-4�, more than those with source code) are written in other languages, but, given the ever-increasing Solidity dominance,
 it is unlikely that such languages will use memory conventions incompatible with Solidity libraries.
 Proc. ACM Program. Lang., Vol. 4, No. OOPSLA, Article 190. Publication date: November 2020.
 

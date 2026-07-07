@@ -1,7 +1,7 @@
 {
   "name": "optimalisasi-smart-contract",
   "version": "1.0.0",
-  "description": "Optimalisasi Gas dan Keamanan Smart Contract Bridge Menggunakan EIP-1153",
+  "description": "Gas Optimization and Security of Smart Contract Bridge Based on EIP-1153 Transient Storage",
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",

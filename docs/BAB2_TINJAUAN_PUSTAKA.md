@@ -93,8 +93,8 @@ Di Sorbo et al. (2022) mengidentifikasi 19 jenis *code smells* pada Solidity yan
 Dengan *variable packing*, dua variabel dapat digabungkan ke dalam satu *slot* jika total ukurannya tidak melebihi 32 *byte*. Pada penelitian ini, struct `UserBalance` memaketkan `address` (20 *byte*) dan `uint96` (12 *byte*) ke dalam satu *slot* 32-*byte*, mengurangi jumlah *slot* dari 2 menjadi 1. Penghematan gas yang dihasilkan adalah:
 
 ```
-ΔG_packing = (N_before - N_after) × SSTORE_cold
-            = (2 - 1) × 20.000
+ΔG_packing = (N_before - N_after) �, SSTORE_cold
+            = (2 - 1) �, 20.000
             = 20.000 gas per transaksi deposit pertama
 ```
 
@@ -208,7 +208,7 @@ Di mana:
 Untuk model *Constant Product* (x * y = k), keuntungan penyerang dapat disederhanakan menjadi:
 
 ```
-Profit_a ≈ (Δv² × x) / ((reserve_ETH + x)² × reserve_ETH)
+Profit_a ≈ (Δv² �, x) / ((reserve_ETH + x)² �, reserve_ETH)
 ```
 
 Di mana `Δv` adalah jumlah transaksi korban dan `x` adalah jumlah *frontrun* penyerang.
@@ -294,7 +294,7 @@ Deteksi MEV *sandwich* pada EWS didasarkan pada analisis pola transaksi beruruta
 Model penalti ekonomi pada EWS dibangun di atas prinsip *incentive compatibility*—membuat serangan menjadi tidak menguntungkan secara ekonomi. Formula penalti didefinisikan sebagai:
 
 ```
-Penalty = amount × (λ × P_detect / 100.000.000)
+Penalty = amount �, (λ �, P_detect / 100.000.000)
 ```
 
 Di Mana:
@@ -305,14 +305,14 @@ Di Mana:
 Analisis *expected value* menunjukkan bahwa untuk membuat serangan menjadi tidak menguntungkan:
 
 ```
-E[Profit_a] = P(not detected) × Profit - P(detected) × Penalty
-            = 0,04 × Profit - 0,96 × Penalty
+E[Profit_a] = P(not detected) �, Profit - P(detected) �, Penalty
+            = 0,04 �, Profit - 0,96 �, Penalty
 ```
 
 Kondisi agar serangan tidak menguntungkan:
 ```
 U(a) > 0
-Profit > 24 × Penalty (untuk P_detect = 96%)
+Profit > 24 �, Penalty (untuk P_detect = 96%)
 ```
 
 Model ini membuktikan bahwa dengan probabilitas deteksi 96%, penalti hanya perlu menjadi 1/24 dari keuntungan serangan untuk membuat serangan menjadi tidak menguntungkan secara harapan (*expected value*).
@@ -340,10 +340,10 @@ Model biaya *dynamic batching* didefinisikan sebagai:
 ```
 C_dynamic = min(C_calldata, C_blob)
 
-C_calldata = beff_bytes × 16 × L1_fee
-C_blob = BLOB_GAS_SIZE × blob_fee
+C_calldata = beff_bytes �, 16 �, L1_fee
+C_blob = BLOB_GAS_SIZE �, blob_fee
 
-beff_bytes = tx_count × tx_size × α (compression factor)
+beff_bytes = tx_count �, tx_size �, α (compression factor)
 BLOB_GAS_SIZE = 131.072 gas (128 KB)
 ```
 

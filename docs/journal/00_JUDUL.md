@@ -1,4 +1,4 @@
-# Optimalisasi Gas dan Keamanan Smart Contract Bridge Berbasis EIP-1153 Transient Storage pada Arsitektur 4-Tier
+# Gas Optimization and Security of Smart Contract Bridge Based on EIP-1153 Transient Storage in 4-Tier Architecture
 
 Razy Al Farizy
 

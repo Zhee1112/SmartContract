@@ -166,10 +166,10 @@ Penelitian ini membandingkan 4 tier arsitektur bridge secara berjenjang untuk me
 | **Inline Security (Tier D)** | | | | |
 | ├ _callDepth() (TLOAD) | - | - | - | **100** |
 | ├ _enterCall() (TSTORE) | - | - | - | **100** |
-| ├ _checkAnomaly() (SLOAD×2) | - | - | - | **4,400** |
+| ├ _checkAnomaly() (SLOAD�,2) | - | - | - | **4,400** |
 | ├ _calculatePenalty() (pure) | - | - | - | **300** |
 | ├ _exitCall() (TSTORE) | - | - | - | **100** |
-| ├ _recordTransaction() (SSTORE×2) | - | - | - | **5,800** |
+| ├ _recordTransaction() (SSTORE�,2) | - | - | - | **5,800** |
 | **Interactions** | | | | |
 | ├ msg.sender.call{value} | 2,300 | 2,300 | 2,300 | 2,300 |
 | ├ require(success) | 200 | - | - | - |
@@ -258,7 +258,7 @@ assembly {
 
 ### 6.3 Cost-Effectiveness (Biaya per Unit Keamanan)
 
-| Tier | Skor Keamanan | Gas (Deposit) | SPG (×1,000,000) | Ranking |
+| Tier | Skor Keamanan | Gas (Deposit) | SPG (�,1,000,000) | Ranking |
 |------|--------------|---------------|-------------------|---------|
 | A | 0/8 | 31,412 | 0 | 4 (Terburuk) |
 | B | 4/8 | 31,427 | 127 | 2 |

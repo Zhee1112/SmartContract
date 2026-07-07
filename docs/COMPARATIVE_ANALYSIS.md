@@ -133,7 +133,7 @@ Keamanan: 0/8             Keamanan: 4/8             Keamanan: 8/8             Ke
 
 | Metrik | Nilai | Interpretasi |
 |--------|-------|-------------|
-| Welch's t-test | t = 1680.67, p = 2.25×10⁻²²² | Sangat signifikan |
+| Welch's t-test | t = 1680.67, p = 2.25�,10⁻²²² | Sangat signifikan |
 | Cohen's d | 220.64 | Effect size LARGE |
 | 95% CI | [98.18%, 98.23%] | Sangat sempit |
 | Cost Ratio | 55.7x | Tier C 55.7x lebih mahal |

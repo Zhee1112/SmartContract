@@ -6,7 +6,7 @@ YANLIN WANG, Sun Yat-sen University, China
 YU ZHANG, Harbin Institute of Technology, China and Peng Cheng Laboratory, China
 WEIZHE ZHANG, Harbin Institute of Technology, China and Peng Cheng Laboratory, China
 ZIBIN ZHENG
-∗
+�,
 , Sun Yat-sen University, China and GuangDong Engineering Technology Research Center
 of Blockchain, China
 Reentrancy vulnerability as one of the most notorious vulnerabilities, has been a prominent topic in smart
@@ -29,7 +29,7 @@ ACM Reference Format:
 Zexu Wang, Jiachi Chen, Yanlin Wang, Yu Zhang, Weizhe Zhang, and Zibin Zheng. 2024. Efficiently Detecting
 Reentrancy Vulnerabilities in Complex Smart Contracts. Proc. ACM Softw. Eng. 1, FSE, Article 8 (July 2024),
 21 pages. https://doi.org/10.1145/3643734
-∗
+�,
 Corresponding Author
 Authors’ addresses: Zexu Wang, Sun Yat-sen University, Zhuhai, China and Peng Cheng Laboratory, Shenzhen, China,
 wangzx97@mail2.sysu.edu.cn; Jiachi Chen, Sun Yat-sen University, Zhuhai, China, chenjch86@mail.sysu.edu.cn; Yanlin
@@ -751,7 +751,7 @@ through Precision (
 𝑇 𝑃
 𝑇 𝑃+𝐹 𝑁 
 ), and F1 score ( 
-2∗𝑝𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛∗𝑟𝑒𝑐𝑎𝑙𝑙
+2�,𝑝𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛�,𝑟𝑒𝑐𝑎𝑙𝑙
 𝑝𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛+𝑟𝑒𝑐𝑎𝑙𝑙 
 ). DB1 was employed to
 answer RQ1, RQ3, and RQ4, while DB2 and DB3 were utilized to answer RQ2, RQ3, and RQ4.

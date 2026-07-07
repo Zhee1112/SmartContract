@@ -28,18 +28,18 @@ Reviewer akan tanya: "Buktinya di mana attacker rugi?"
 ## Formula yang Harus Dibuktikan
 
 ```
-Expected Utility (attacker) = P(not detected) Ã— Profit - P(detected) Ã— Penalty
+Expected Utility (attacker) = P(not detected) Ã, Profit - P(detected) Ã, Penalty
 
 Dimana:
 - P(not detected) = 1 - P_detect/10000 = 1 - 0.96 = 0.04
 - P(detected) = P_detect/10000 = 0.96
 - Profit = Keuntungan tanpa penalti
-- Penalty = Amount Ã— Î» Ã— P_detect / 100,000,000
+- Penalty = Amount Ã, Î» Ã, P_detect / 100,000,000
 
 Kondisi attacker rugi:
 Expected Utility < 0
-â†’ 0.04 Ã— Profit < 0.96 Ã— Penalty
-â†’ Profit < 24 Ã— Penalty
+â†’ 0.04 Ã, Profit < 0.96 Ã, Penalty
+â†’ Profit < 24 Ã, Penalty
 ```
 
 ---
@@ -68,7 +68,7 @@ function testEconomicDeterrence_AttackerLoses() public {
     uint256 lambda = 15000;               // 1.5x penalty multiplier
 
     // 1. Hitung Profit tanpa penalti (estimasi dari constant product)
-    //    Dalam sandwich: Profit â‰ˆ (Î”vÂ² Ã— x) / ((reserve_ETH + x)Â² Ã— reserve_ETH)
+    //    Dalam sandwich: Profit â‰ˆ (Î”vÂ² Ã, x) / ((reserve_ETH + x)Â² Ã, reserve_ETH)
     //    Simplified: Profit â‰ˆ 1-3% dari attack volume
     uint256 estimatedProfit = attackAmount * 2 / 100; // 2% profit estimate = 0.2 ETH
 
@@ -77,12 +77,12 @@ function testEconomicDeterrence_AttackerLoses() public {
     uint256 penalty = monitor.calculatePenalty(attackAmount, anomalyScore);
 
     // 3. Hitung Expected Utility
-    // EU = P(not detected) Ã— Profit - P(detected) Ã— Penalty
+    // EU = P(not detected) Ã, Profit - P(detected) Ã, Penalty
     uint256 pNotDetected = 10000 - P_detect; // 400 (4%)
     uint256 pDetected = P_detect;             // 9600 (96%)
 
-    // EU = (400/10000 Ã— Profit) - (9600/10000 Ã— Penalty)
-    // EU = (0.04 Ã— 0.2 ETH) - (0.96 Ã— penalty)
+    // EU = (400/10000 Ã, Profit) - (9600/10000 Ã, Penalty)
+    // EU = (0.04 Ã, 0.2 ETH) - (0.96 Ã, penalty)
     int256 expectedUtility = int256(pNotDetected * estimatedProfit / 10000) 
                            - int256(pDetected * penalty / 10000);
 
@@ -97,8 +97,8 @@ function testEconomicDeterrence_AttackerLoses() public {
     // Expected Utility harus NEGATIF (attacker rugi)
     assertTrue(expectedUtility < 0, "ATTACK SHOULD BE UNPROFITABLE: Expected Utility < 0");
     
-    // Penalty harus lebih besar dari profit Ã— (P_not_detected / P_detected)
-    // Untuk attacker rugi: penalty > profit Ã— (400/9600) = profit Ã— 0.0417
+    // Penalty harus lebih besar dari profit Ã, (P_not_detected / P_detected)
+    // Untuk attacker rugi: penalty > profit Ã, (400/9600) = profit Ã, 0.0417
     assertTrue(penalty > estimatedProfit * pNotDetected / pDetected, 
         "Penalty should exceed scaled profit");
 }
@@ -177,7 +177,7 @@ function testEconomicDeterrence_LargeVolume() public {
 **Cara kerja:**
 1. Hitung profit estimasi (2% dari attack volume)
 2. Hitung penalty via `monitor.calculatePenalty()`
-3. Hitung EU = 0.04 Ã— profit - 0.96 Ã— penalty
+3. Hitung EU = 0.04 Ã, profit - 0.96 Ã, penalty
 4. Assert EU < 0
 
 ### 2. `testEconomicDeterrence_Baseline_NoEWS()`

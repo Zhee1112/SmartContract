@@ -1,12 +1,12 @@
 ## Impact of EIP-4844 on Ethereum: Consensus Security, Ethereum
 ## Usage, Rollup Transaction Dynamics, and Blob Gas Fee Markets
 Seongwan Park
-∗
+�,
 sucre87@snu.ac.kr
 Seoul National University
 Seoul, Republic of Korea
 Bosul Mun
-∗
+�,
 bsbs8645@snu.ac.kr
 Seoul National University
 Seoul, Republic of Korea
@@ -59,7 +59,7 @@ as Plasma and sidechains, which struggled with data availability
 problem[38] and centralization, rollups could benefit from the ro-
 bust security of the Ethereum mainnet[34]. They process transac-
 tions off-chain and post summarized batches back to Layer 1 for
-∗
+�,
 Both authors contributed equally to the paper
 †
 Corresponding author
@@ -308,7 +308,7 @@ The blob gas base fee adjustment follows a specific formula
 aimed at maintaining an optimal number of blobs per block. The
 target number of blobs is set at three per block. The base fee is
 adjusted based on the actual usage compared to this target:
-𝐵blob gas,𝑘+1 = 𝐵blob gas,𝑘 × exp
+𝐵blob gas,𝑘+1 = 𝐵blob gas,𝑘 �, exp
 
 𝑢 − 𝑡
 8𝑡
@@ -320,7 +320,7 @@ where:
 
 Seongwan Park et al.
 • 𝑢 denotes the total blob gas used in block 𝑘,
-• 𝑡 is the target blob gas usage, set at 3 × 131, 072 blob gas
+• 𝑡 is the target blob gas usage, set at 3 �, 131, 072 blob gas
 units per block.
 2.3 VAR(Vector Autoregression)
 VAR is a statistical model designed to analyze multivariate time
@@ -529,7 +529,7 @@ Pblob gas,𝑖,𝑘 :=
 «
 (𝐸𝑖,𝑘 − 𝐵blob gas,𝑘 − median
 tx∈𝑘 
-(𝑃gas,𝑡𝑥,𝑘 )) × 𝐺𝑖,𝑘
+(𝑃gas,𝑡𝑥,𝑘 )) �, 𝐺𝑖,𝑘
 𝐷𝑖,𝑘
 ª
 ®
@@ -595,7 +595,7 @@ to synchronize new slots with preceding ones. To confirm the re-
 lationship between fork rate and sync time, we applied a logistic
 regression model. The analysis showed that an increase in sync time
 is significantly associated with the likelihood of a slot being forked,
-with a coefficient of 1.5 × 10
+with a coefficient of 1.5 �, 10
 −3 
 (p-value < 0.001) for sync time, and a
 model intercept of -10.9497 (p-value < 0.001). These results suggest
@@ -1037,7 +1037,7 @@ Pblob gas,𝑖,𝑘 =
 «
 (𝐸𝑖,𝑘 − 𝐵blob gas,𝑘 − median
 tx∈𝑘 
-(𝑃gas,𝑡𝑥,𝑘 )) × 𝐺𝑖,𝑘
+(𝑃gas,𝑡𝑥,𝑘 )) �, 𝐺𝑖,𝑘
 𝐷𝑖,𝑘
 ª
 ®
@@ -1110,13 +1110,13 @@ Table 6: Summary Statistics of Blob Gas Base Fees in our
 analysis period
 Statistic Block Gas Base Fee Blob Gas Base Fee
 Count 51,778 51,778 51,778
-Mean 19,552,890 28.25 ×10
+Mean 19,552,890 28.25 �,10
 9 
-39.60 ×10
+39.60 �,10
 9
-Std 14,947 11.73 ×10
+Std 14,947 11.73 �,10
 9 
-33.62 ×10
+33.62 �,10
 9
 5 CONCLUSION
 We have conducted a comprehensive analysis of EIP-4844 across
@@ -1324,7 +1324,7 @@ EIP-4844
 Table 8: Summary of Logistic Regression Analysis
 Parameter Coefficient Std. Error P-Value
 Constant -10.9497 0.137 <0.001
-Sync Time (×10
+Sync Time (�,10
 −3
 ) 1.5 0.0248 <0.001
 Figure 18: Average CSP time by the number of blobs
@@ -1398,9 +1398,9 @@ do not depend on time.
 Table 11: ADF test results
 Metric Base Fee Blob Gas Base Fee
 Test Statistic -6.3719 -10.5237
-p-value 2.33 × 10
+p-value 2.33 �, 10
 −8 
-9.54 × 10
+9.54 �, 10
 −19
 Number of Lags Used 62 62
 Number of Observations 69,429 69,429
@@ -1433,12 +1433,12 @@ Table 12: Summary of VAR Model Regression Results
 Metric Value
 Number of Equations 2
 Number of Observations 51,773
-Log Likelihood -2.40029 ×10
+Log Likelihood -2.40029 �,10
 6
 AIC 87.0488
 BIC 87.0526
 HQIC 87.0500
-FPE 6.38013 ×10
+FPE 6.38013 �,10
 37
 C.3 Correlation matrix of residuals
 Table 13 presents the correlation matrix of residuals for the gas base
@@ -1466,7 +1466,7 @@ Log Likelihood -2,335,520
 AIC 84.5486
 BIC 84.5530
 HQIC 84.5500
-FPE 5.23571 ×10
+FPE 5.23571 �,10
 36
 D DETAILED VAR MODEL RESULTS FOR BLOB
 GAS BASE FEE AND BLOB GAS PRIORITY

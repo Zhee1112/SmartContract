@@ -1092,10 +1092,10 @@ tracts deployed on Ethereum (i.e., a confidence level of 99%
 and a margin of error smaller than 3%). It is worth noticing that
 the margin of error was computed according to the formula for
 margin of error with finite population correction [60]:
-Margin o f error = z ∗
+Margin o f error = z �,
 √
-p ∗ (1 − p)
-(N − 1) ∗ 
+p �, (1 − p)
+(N − 1) �, 
 n
 N−n
 where z is the z-score associated with the confidence level

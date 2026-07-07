@@ -411,23 +411,23 @@ functions and variables related to the vulnerable functions
 in the contract. This information includes:
 â€¢ Target variables: Variables of the functions from vulner-
 ability detection reports, denoted as V 
-âˆ—
+âˆ,
 T arget
 .
 â€¢ Target-related variables: Variables that have a program
 dependency relationship (including control depen-
 dencies or data dependencies) with V 
-âˆ—
+âˆ,
 T arget
 , denoted
 as V 
-âˆ—
+âˆ,
 T arget Related
 .
 â€¢ Target functions: Functions that read or assign vari-
 ables that come from Target variables or Target-related
 variables, denoted as F 
-âˆ—
+âˆ,
 T arget
 .
 To collect the functions and variables related to the vulner-
@@ -436,64 +436,64 @@ on whether they have program dependencies, including data
 and control dependencies, with the vulnerable functions. The
 following process is used:
 â€¢ When V 
-âˆ—
+âˆ,
 T arget Related 
 = âˆ…, search for the function
 that operates on the variables in V 
-âˆ—
+âˆ,
 T arget
 , write the
 function into the set F 
-âˆ—
+âˆ,
 T arget
 , and write the state
 variables of the function to the set V 
-âˆ—
+âˆ,
 T arget Related
 .
 â€¢ When V 
-âˆ—
+âˆ,
 T arget Related
 Ì¸
  
 = âˆ…, search for the function that
 operates on the variables in V 
-âˆ—
+âˆ,
 T arget Related
 , write the
 function to the set F 
-âˆ—
+âˆ,
 T arget
 , write the state variables
 of that function to the set V 
-âˆ—
+âˆ,
 T arget Related
 , and con-
 tinue repeating until F 
-âˆ—
+âˆ,
 T arget 
 or V 
-âˆ—
+âˆ,
 T arget Related 
 has
 no more new elements written to it, as V 
-âˆ—
+âˆ,
 T arget 
 âˆ©
 V 
-âˆ—
+âˆ,
 T arget Related 
 = V 
-âˆ—
+âˆ,
 T arget
 .
 Algorithm 1: Generating Function Dependency
 Graph
 Input: V 
-âˆ—
+âˆ,
 T arget Related 
 as V, F 
-âˆ—
+âˆ,
 T arget 
 as F
 Output: FDG
@@ -513,11 +513,11 @@ the FDG (Function Dependency Graph) to analyze the
 dependencies between vulnerable functions to generate the
 sequence of functions. The algorithm for generating the FDG
 is presented in Algorithm 1, which takes V 
-âˆ—
+âˆ,
 T arget Related 
 and
 F 
-âˆ—
+âˆ,
 T arget 
 as inputs and produces the FDG as output. The
 algorithm examines the dependency relationships between

@@ -184,7 +184,7 @@ including gas limit and gas price. The total amount represents
 the cap that the sender is willing to pay for the execution of
 the transaction. The total amount is calculated by the gas limit
 and the gas price limit as follow.
-Gas Limit Ã— Gas Price = Total amount
+Gas Limit Ã, Gas Price = Total amount
 Any unused gas at the end of the transaction will be returned
 to the sender for redemption. If there does not exist enough gas
 to execute the transaction, the transaction will be considered

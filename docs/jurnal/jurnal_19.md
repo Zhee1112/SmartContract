@@ -188,7 +188,7 @@ independent units 𝑎𝑖 .The formula is as follows,
 F (𝑟 ) =
 𝑛Ö
 𝑖=1
-𝑎𝑖 , 𝑎𝑖 ⊥𝑎𝑗 (𝑖 ≠ 𝑗) (1)
+𝑎𝑖 , 𝑎𝑖 ⊥𝑎�, (𝑖 ≠ �,) (1)
 We assume that the size of the training dataset is positively
 correlated with task complexity, that is, |𝐷𝑆 | ∝ C(𝑟 ). As shown
 in Equation 1, if a reasoning task 𝑟 with complexity C(𝑟 ) = 𝑁
@@ -276,12 +276,12 @@ Definition 2.2 (State-update factor.). The state update (e.g.,
 𝑁 
 , 𝜙𝑆 (𝑃) [𝑖] = 1 ⇐⇒ line 𝑖 is state update. (5)
 Definition 2.3 (Dependency factor.). If the state update at
-line 𝑖 writes variables that are read by the external call at line 𝑗, a
+line 𝑖 writes variables that are read by the external call at line �,, a
 data dependency occurs and can be formulated as:
 𝜙𝐷 : P → {0, 1}
-𝑁 ×𝑁 
-, 𝜙𝐷 (𝑃) [𝑖, 𝑗] = 1 ⇐⇒
-𝜙𝑆 (𝑃) [𝑖] = 1 ∧ 𝜙𝐸 (𝑃) [ 𝑗] = 1 ∧ vars(𝑖) ∩ vars( 𝑗) ≠ 0. 
+𝑁 �,𝑁 
+, 𝜙𝐷 (𝑃) [𝑖, �,] = 1 ⇐⇒
+𝜙𝑆 (𝑃) [𝑖] = 1 ∧ 𝜙𝐸 (𝑃) [ �,] = 1 ∧ vars(𝑖) ∩ vars( �,) ≠ 0. 
 (6)
 Definition 2.4 (Ordering factor.). The relative order between
 state updates and external calls in the data flow is defined as the order
@@ -300,7 +300,7 @@ Input hidden
 Output label
 Task-aware Gating Network
 Classifier Head
-⊗⊗ ⊗⊗ ⊗⊗ ⊗⊗
+�,�, �,�, �,�, �,�,
 Sigmoid
 All branches use the same LoRA architecture, with three
 adapters updated during training and one kept frozen.
@@ -314,9 +314,9 @@ adapters updated during training and one kept frozen.
 Figure 2: Overall framework of CompFuse.
 factor:
 𝜙𝑂 : P → {−1, 0, +1}
-𝑁 ×𝑁 
+𝑁 �,𝑁 
 ,
-𝜙𝑂 (𝑃) [𝑖, 𝑗] =
+𝜙𝑂 (𝑃) [𝑖, �,] =
 
 
 
@@ -327,17 +327,17 @@ factor:
 
 
 
-+1, if 𝜙𝐷 (𝑃) [𝑖, 𝑗] = 1 ∧ 𝑖 ≺df 𝑗,
-−1, if 𝜙𝐷 (𝑃) [𝑖, 𝑗] = 1 ∧ 𝑗 ≺df 𝑖,
++1, if 𝜙𝐷 (𝑃) [𝑖, �,] = 1 ∧ 𝑖 ≺df �,,
+−1, if 𝜙𝐷 (𝑃) [𝑖, �,] = 1 ∧ �, ≺df 𝑖,
 0, otherwise.
 (7)
-where 𝑖 ≺df 𝑗 indicates that there exists a feasible path in the data
-flow graph from line 𝑖 to line 𝑗 without being overwritten.
+where 𝑖 ≺df �, indicates that there exists a feasible path in the data
+flow graph from line 𝑖 to line �, without being overwritten.
 3 Methodology
 3.1 Compositional Function Modeling
 For program 𝑃, a reentrancy vulnerability exists only when the
 following four conditions are satisfied,
-∃(𝑖, 𝑗) ∈ N ×N s.t.
+∃(𝑖, �,) ∈ N �,N s.t.
 
 
 
@@ -351,13 +351,13 @@ following four conditions are satisfied,
 
 
 𝜙𝐸 (𝑃) [𝑖] = 1
-𝜙𝑆 (𝑃) [ 𝑗] = 1
-𝜙𝐷 (𝑃) [𝑖, 𝑗] = 1
-𝜙𝑂 (𝑃) [𝑖, 𝑗] = −1
+𝜙𝑆 (𝑃) [ �,] = 1
+𝜙𝐷 (𝑃) [𝑖, �,] = 1
+𝜙𝑂 (𝑃) [𝑖, �,] = −1
 ⇒ ReVul(𝑃) = True (8)
-We map the discrete order factor 𝜙𝑂 (𝑃) [𝑖, 𝑗] ∈ −1, 0, +1 to a
+We map the discrete order factor 𝜙𝑂 (𝑃) [𝑖, �,] ∈ −1, 0, +1 to a
 continuous risk weight using a sigmoid relaxation, formulated as:
 ˜
-𝜙𝑂 (𝑃) [𝑖, 𝑗] = 
+𝜙𝑂 (𝑃) [𝑖, �,] = 
 1
 1 + exp

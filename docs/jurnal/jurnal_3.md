@@ -3,7 +3,7 @@ XIAO LIANG YU, National University of Singapore, Singapore
 OMAR AL-BATAINEH, National University of Singapore, Singapore
 DAVID LO, Singapore Management University, Singapore
 ABHIK ROYCHOUDHURY
-∗
+�,
 , National University of Singapore, Singapore
 Smart contracts are automated or self-enforcing contracts that can be used to exchange assets without having
 to place trust in third parties. Many commercial transactions use smart contracts due to their potential benefits
@@ -33,7 +33,7 @@ While smart contracts are commonly used for commercial transactions, many malici
 the past were made possible due to poorly written or vulnerable smart contracts. The code executed
 by smart contracts can be complex. There is therefore a need for testing (e.g. [16, 24]), analysis
 (e.g. [18]) and verification (e.g. [36]) of smart contracts. In this paper, we take the technology
-∗
+�,
 Corresponding Author
 Authors’ addresses: Xiao Liang Yu, National University of Singapore, Singapore, xiaoly@comp.nus.edu.sg; Omar Al-Bataineh,
 National University of Singapore, Singapore, omerdep@yahoo.com; David Lo, Singapore Management University, Singapore,
@@ -772,7 +772,7 @@ paths, we can express the expected gas usage of SCa as follows:
 GUE (SCa )(σ , μ, I ) =
 kÕ
 i=0
-Pi ∗ GUpathi 
+Pi �, GUpathi 
 (σ , μ, I ) (4)
 where Pi is the probability of pathi being visited by an arbitrary execution of SCa , GUpathi 
 is

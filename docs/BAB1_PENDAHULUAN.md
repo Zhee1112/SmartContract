@@ -34,7 +34,7 @@ Berdasarkan rumusan masalah di atas, penelitian ini memiliki empat tujuan utama:
 
 1. Mengimplementasikan optimasi gas statis (variable packing, CEI pattern, unchecked arithmetic, custom errors) dan dinamis (EIP-1153 TSTORE/TLOAD) pada smart contract bridge (Benedetti et al., 2024; Di Sorbo et al., 2021), lalu mengukur penghematan gas yang dicapai dibandingkan baseline tanpa optimasi (Wang et al., 2024).
 
-2. Mendesain dan mengimplementasikan Early Warning System (EWS) yang memanfaatkan transient storage untuk melacak call depth, mendeteksi pola MEV sandwich attack (Ta1 → Tv), dan menerapkan penalti ekonomi dinamis berdasarkan formula λ × P_detect × amount (Nassirzadeh et al., 2023; Li, 2025).
+2. Mendesain dan mengimplementasikan Early Warning System (EWS) yang memanfaatkan transient storage untuk melacak call depth, mendeteksi pola MEV sandwich attack (Ta1 → Tv), dan menerapkan penalti ekonomi dinamis berdasarkan formula λ �, P_detect �, amount (Nassirzadeh et al., 2023; Li, 2025).
 
 3. Mengembangkan Dynamic Rollup Submission Engine yang melakukan optimasi batching secara dinamis, memilih rute termurah antara Blob (EIP-4844) atau Calldata berdasarkan harga gas L1 fee vs Blob fee (Park et al., 2025; Zhou et al., 2026), serta mengukur penghematan biaya dibandingkan static engine.
 

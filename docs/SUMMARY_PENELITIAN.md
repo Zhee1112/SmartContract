@@ -1,6 +1,6 @@
 # Ringkasan Komprehensif Penelitian
 
-## Optimalisasi Gas dan Keamanan Smart Contract Bridge Berbasis EIP-1153 Transient Storage pada Arsitektur 4-Tier
+## Gas Optimization and Security of Smart Contract Bridge Based on EIP-1153 Transient Storage in 4-Tier Architecture
 ### Implementasi EIP-1153 Transient Storage pada Arsitektur 4-Tier
 
 ---
@@ -94,7 +94,7 @@ Tier A (Baseline) → Tier B (Static) → Tier C (External Dynamic) → Tier D (
 | Metrik | Nilai | Interpretasi |
 |--------|:-----:|-------------|
 | t-statistic (Welch's) | 1.680,67 | Perbedaan sangat besar |
-| p-value | 2,25 × 10⁻²²² | Sangat signifikan (p << 0,05) |
+| p-value | 2,25 �, 10⁻²²² | Sangat signifikan (p << 0,05) |
 | Cohen's d | 220,64 | Effect size LARGE (threshold: 0,8) |
 | 95% CI | [98,18%, 98,23%] | Confidence interval sangat sempit |
 | Cost Ratio | 55,7x | Tier C 55,7x lebih mahal dari Tier D |
@@ -252,7 +252,7 @@ LightweightBridge (satu kontrak, 226 baris)
 | TSTORE/TLOAD Reentrancy Guard | Proteksi reentrancy | 200 | `_enterCall()` + `_callDepth()` + `_exitCall()` |
 | Single-slot MEV Detection | Deteksi sandwich | 4.400 | `lastTx.sender` + `lastTx.txType` dalam 1 slot |
 | Block Number Tracking | Batas waktu deteksi | 2.100 | `lastTxBlock` SLOAD + perbandingan |
-| Inline Penalty Calculation | Penalti ekonomis | 300 | Pure math: `(amount × λ × score) / 10⁸` |
+| Inline Penalty Calculation | Penalti ekonomis | 300 | Pure math: `(amount �, λ �, score) / 10⁸` |
 | Emergency Pause | Jeda darurat | 2.900 | SSTORE flag `paused` |
 | **Total overhead keamanan** | | **~9.900** | |
 
@@ -293,14 +293,14 @@ LightweightBridge (satu kontrak, 226 baris)
 
 ### 6.2 Efektivitas Biaya (SPG)
 
-| Tier | Skor Keamanan | Gas (Deposit) | SPG (×1.000.000) | Peringkat |
+| Tier | Skor Keamanan | Gas (Deposit) | SPG (�,1.000.000) | Peringkat |
 |------|:------------:|:-------------:|:-----------------:|:---------:|
 | A | 0/8 | 31.412 | 0 | 4 |
 | B | 2/8 | 31.427 | 63,6 | 3 |
 | C | 8/8 | 122.769 | 65,2 | 2 |
 | **D** | **8/8** | **34.156** | **220,1** | **1** |
 
-> SPG = (Skor Keamanan ÷ Gas Deposit) × 1.000.000
+> SPG = (Skor Keamanan ÷ Gas Deposit) �, 1.000.000
 
 ### 6.3 Biaya per Fitur Keamanan Tambahan
 

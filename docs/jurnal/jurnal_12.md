@@ -186,13 +186,13 @@ with only the functions necessary to understand its operation and how, by changi
 one line, it is possible to alter the transaction outcome. This highlights a fundamental discrepancy
 between the execution model of Solidity and that on the blockchain. In the following, we analyze
 block by block (identified by the numbers in the left column of the table) the various components
-of this smart contract: 1â—‹ it identifies the Solidity compiler version used to build the smart contract
-deployed bytecode. 2â—‹ this line defines the smart contract name (i.e., like a Java class). 3â—‹ this is an
+of this smart contract: 1â,‹ it identifies the Solidity compiler version used to build the smart contract
+deployed bytecode. 2â,‹ this line defines the smart contract name (i.e., like a Java class). 3â,‹ this is an
 internal smart contract state variable that contains the ETH balance value of each mapped address.
-4â—‹ the function deposit(..) is used to deposit some ETH (i.e., defined by msg.value) on the smart
+4â,‹ the function deposit(..) is used to deposit some ETH (i.e., defined by msg.value) on the smart
 contract. This function is used to increment the caller (i.e., identified by msg.sender) balance. By
-construction requirements, the minimum deposit is 1 ETH. 5â—‹ the function daoBalance(..) is used
-to return the available ETH balance stored in the smart contract. 6â—‹ the function withdraw(..)
+construction requirements, the minimum deposit is 1 ETH. 5â,‹ the function daoBalance(..) is used
+to return the available ETH balance stored in the smart contract. 6â,‹ the function withdraw(..)
 is used to withdraw the caller (i.e., identified by msg.sender) balance and it is used to describe in
 an equivalent manner the functioning of the withdrawRewardFor(..) function [5] available in the
 original DAO.sol smart contract. The operations performed by the withdraw function are:
@@ -233,14 +233,14 @@ that do not belong to us, from DAO with the few Solidity source code lines illus
 
 6
 the following, we analyze block by block (identified by the numbers in the left column of the table)
-the various components of this smart contract: 1â—‹ it identifies the Solidity compiler version used
-to build the smart contract deployed bytecode. 2â—‹ this is the interface of the DAO smart contract,
+the various components of this smart contract: 1â,‹ it identifies the Solidity compiler version used
+to build the smart contract deployed bytecode. 2â,‹ this is the interface of the DAO smart contract,
 and it is used to define what functions of the DAO smart contract we can call from the Attacker
-smart contract . 3â—‹ this line defines the smart contract name 4â—‹ this is the handler to the DAO
-smart contract containing its public address. 5â—‹ this is the smart contract constructor function,
-used only during the deployment where the address of the DAO smart contract is provided. 6â—‹ this
+smart contract . 3â,‹ this line defines the smart contract name 4â,‹ this is the handler to the DAO
+smart contract containing its public address. 5â,‹ this is the smart contract constructor function,
+used only during the deployment where the address of the DAO smart contract is provided. 6â,‹ this
 is the fallback function, a special Solidity construct that is triggered in specific situations such as
-when the smart contract receives some ETH. 7â—‹ we implement and use the function attack(..)
+when the smart contract receives some ETH. 7â,‹ we implement and use the function attack(..)
 to launch the attack. We call the deposit function from the DAO smart contract sending it 1 ETH
 so that: a) it receives the minimum required deposit and b) it records on its balances variable that
 we have 1 ETH we can withdraw. Finally, we call the withdraw(..) function from the DAO smart
@@ -414,11 +414,11 @@ and RVC-CAL can resemble the example presented in Table 3. It is important to no
 example, we employ a guard condition as a prerequisite for executing the action (function). If the
 prerequisite is not met, the action cannot be executed. In the following sections, we will analyze
 each block, identified by the numbers in the left column of the table, to understand the various
-components of this smart contract: 1â—‹ Smart contract (actor) name. 2â—‹ Input port definition,
-the point where data can be read/received inside the actor. 3â—‹ Output port definition, the point
-where data can be written/sent outside the actor. 4â—‹ ETH balance of each mapped address. 5â—‹A
+components of this smart contract: 1â,‹ Smart contract (actor) name. 2â,‹ Input port definition,
+the point where data can be read/received inside the actor. 3â,‹ Output port definition, the point
+where data can be written/sent outside the actor. 4â,‹ ETH balance of each mapped address. 5â,‹A
 requirement for at least 1 ether available in the input port, involving popping (consuming) one
-value from the input port and updating the state variable. 6â—‹ Itâ€™s worth noting that the update of
+value from the input port and updating the state variable. 6â,‹ Itâ€™s worth noting that the update of
 the balances variable occurs after the value is pushed onto the output port. However, itâ€™s crucial
 
 ---

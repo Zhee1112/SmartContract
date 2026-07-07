@@ -167,7 +167,7 @@ gas price is the amount of Ether that the transaction sender is willing to pay f
 of gas consumed. The issuer of a transaction sets both gas limit and gas price. If the execu-
 tion of a transaction requires consuming more gas than that specified by the gas limit pa-
 rameter, such a transaction fails with an out-of-gas exception and gets rolled back [32].
-The actual transaction fee depends on the final amount of gas cost and defines as gas cost ×
+The actual transaction fee depends on the final amount of gas cost and defines as gas cost �,
 gas price. The transaction fee is also paid for failed transactions, including those with out-
 of-gas exceptions.
 Intrinsic gas cost. From a low-level perspective, the intrinsic gas cost of a transaction
@@ -270,7 +270,7 @@ instructions, this gas consumption pattern implies that extra but not expected i
 structions are executed. As a result, the actual gas consumption is larger than the
 intrinsic gas cost.
  Assume 𝐺𝑎𝑠
-௧௛௥௘௦௛௢௟ௗ 
+௧௛௥௘௦௛௢௟�, 
 ≤ 𝐺𝑎𝑠
 ௟௜௠௜௧ 
 < 𝐺𝐶
@@ -281,7 +281,7 @@ intrinsic gas cost.
 𝜎
 ௧௥௔௡ 
 = 𝑠𝑢𝑐𝑐𝑒𝑠𝑠, where 𝐺𝑎𝑠
-௧௛௥௘௦௛௢௟ௗ 
+௧௛௥௘௦௛௢௟�, 
 is the minimum threshold that enables the trans-
 action to succeed without an out-of-gas exception. This pattern implies that necessary
 

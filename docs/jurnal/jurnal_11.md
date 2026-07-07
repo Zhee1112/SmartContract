@@ -335,7 +335,7 @@ comparison waypoint (Section 4.4).
 We present the general architecture of ItyFuzz in Figure 5. To under-
 stand the architecture of ItyFuzz, recall that Solidity smart contract
 programs are executed on Ethereum Virtual Machine (EVM). EVM
-can be viewed as a function EVM : (𝑆 ×𝑇 ) → 𝑆, which maps a state
+can be viewed as a function EVM : (𝑆 �,𝑇 ) → 𝑆, which maps a state
 𝑠 ∈ 𝑆 and a transaction 𝑡 ∈ 𝑇 to a new state in 𝑆 which we denote
 by 𝑠𝑡 . Note that the target program is an immutable part of the
 initial state 𝑠. Like conventional coverage-guided fuzzers, ItyFuzz

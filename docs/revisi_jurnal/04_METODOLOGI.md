@@ -65,7 +65,7 @@ Komponen storage merupakan biaya terbesar dalam bridge contract. Model biaya sto
 Variable packing mengurangi jumlah slot storage yang digunakan. Penghematan gas dihitung sebagai:
 
 ```
-ΔG_packing = (N_before - N_after) × SSTORE_cold
+ΔG_packing = (N_before - N_after) �, SSTORE_cold
 ```
 
 Di mana `N_before` dan `N_after` masing-masing adalah jumlah slot sebelum dan sesudah packing.
@@ -110,7 +110,7 @@ Dengan EWS + Penalty:
 ```
 Profit_a' = Ta2.output - Ta1.input - Penalty
 
-Penalty = amount × (λ × P_detect / 100.000.000)
+Penalty = amount �, (λ �, P_detect / 100.000.000)
 ```
 
 ### 2.2.5 Model penalti ekonomi:
@@ -119,7 +119,7 @@ Penalti ekonomi didefinisikan sebagai:
 
 ```
 Penalty(amount, anomalyScore) = min(
-  amount × λ × anomalyScore / 100.000.000,
+  amount �, λ �, anomalyScore / 100.000.000,
   amount
 )
 ```
@@ -131,13 +131,13 @@ Di Mana:
 Analisis Incentive Compatibility:
 
 ```
-U(a) = P(undetected) × Profit - P(detected) × Penalty
-     = 0,04 × Profit - 0,96 × Penalty
+U(a) = P(undetected) �, Profit - P(detected) �, Penalty
+     = 0,04 �, Profit - 0,96 �, Penalty
 ```
 
 Kondisi agar serangan tidak menguntungkan:
 ```
-Profit > 24 × Penalty (untuk P_detect = 96%)
+Profit > 24 �, Penalty (untuk P_detect = 96%)
 ```
 
 ## 2.3 Model ancaman formal
@@ -218,7 +218,7 @@ Kondisi yang dikontrol selama pengujian:
 Setiap pengukuran gas dilakukan dengan 100 sampel per operasi [15]. Jumlah sampel ini dipilih berdasarkan Central Limit Theorem (CLT) yang menyatakan bahwa distribusi mean akan mendekati normal untuk n ≥ 30 [1], dan diperkuat hingga 100 untuk menghasilkan confidence interval yang lebih sempit dan statistik yang lebih robust [19].
 
 Protokol replikasi:
-1. Untuk setiap kombinasi (tier × tipe transaksi), generate 100 alamat unik menggunakan `keccak256(abi.encode(i))`.
+1. Untuk setiap kombinasi (tier �, tipe transaksi), generate 100 alamat unik menggunakan `keccak256(abi.encode(i))`.
 2. Setiap alamat melakukan satu transaksi dengan jumlah yang sama (1 ether untuk deposit, 0.1 ether untuk swap).
 3. Gas usage dicatat menggunakan `gasleft()` sebelum dan sesudah transaksi.
 4. Statistik deskriptif (mean, min, max, std dev, 95% CI) dihitung dari 100 sampel.
@@ -256,7 +256,7 @@ t = (x̄₁ - x̄₂) / √(s₁²/n₁ + s₂²/n₂)
 Interval kepercayaan 95% untuk perbedaan mean:
 
 ```
-CI_95% = (x̄₁ - x̄₂) ± t_α/2 × √(s₁²/n₁ + s₂²/n₂)
+CI_95% = (x̄₁ - x̄₂) ± t_α/2 �, √(s₁²/n₁ + s₂²/n₂)
 ```
 
 ### 2.5.3 Effect size (Cohen's d):
@@ -281,7 +281,7 @@ d = (x̄₁ - x̄₂) / s_pooled
 SPG (Security Points per Gas) mengukur efisiensi bridge dalam mengubah biaya gas menjadi keamanan:
 
 ```
-SPG = (Skor Keamanan / Gas Deposit) × 1.000.000
+SPG = (Skor Keamanan / Gas Deposit) �, 1.000.000
 ```
 
 Di Mana:
@@ -298,14 +298,14 @@ Keamanan dinilai berdasarkan delapan fitur keamanan [13], [14]:
 
 | No | Fitur | A | B | C | D |
 |----|-------|---|---|---|---|
-| 1 | Reentrancy Single-function | ✗ | ✓ | ✓ | ✓ |
-| 2 | Reentrancy Cross-function | ✗ | ✗ | ✓ | ✓ |
-| 3 | Reentrancy Consecutive | ✗ | ✗ | ✓ | ✓ |
-| 4 | MEV Sandwich Detection | ✗ | ✗ | ✓ | ✓ |
-| 5 | Economic Penalty | ✗ | ✗ | ✓ | ✓ |
-| 6 | Emergency Pause | ✗ | ✗ | ✓ | ✓ |
-| 7 | Block Tracking | ✗ | ✗ | ✓ | ✓ |
-| 8 | Custom Errors | ✗ | ✓ | ✓ | ✓ |
+| 1 | Reentrancy Single-function | �, | ✓ | ✓ | ✓ |
+| 2 | Reentrancy Cross-function | �, | �, | ✓ | ✓ |
+| 3 | Reentrancy Consecutive | �, | �, | ✓ | ✓ |
+| 4 | MEV Sandwich Detection | �, | �, | ✓ | ✓ |
+| 5 | Economic Penalty | �, | �, | ✓ | ✓ |
+| 6 | Emergency Pause | �, | �, | ✓ | ✓ |
+| 7 | Block Tracking | �, | �, | ✓ | ✓ |
+| 8 | Custom Errors | �, | ✓ | ✓ | ✓ |
 | **Total** | | **0/8** | **2/8** | **8/8** | **8/8** |
 
 ## 2.7 Tools dan lingkungan pengujian

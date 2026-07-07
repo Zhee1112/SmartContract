@@ -1205,18 +1205,18 @@ vulnerability (see Table 1 for a summary). Note that we
 cannot use real-world contracts here, as they do not allow
 Table 1: Capability of analysis tools to identify bugs with
 increasing transaction sequence length. X bug can be
-found, Ã— bug never found within 48 h. Type: S symbolic
+found, Ã, bug never found within 48 h. Type: S symbolic
 execution, F fuzzer, H hybrid fuzzer.
 Tool Type multi complex justlen
 2 3-7 8 9 10 5 7 9 8 64 128 256
-teEther [33] S X X Ã— Ã— Ã— X Ã— Ã— Ã— Ã— Ã— Ã—
-MAIAN [40] S X X X X X X X Ã— X Ã— Ã— Ã—
-EthBMC [23] S X Ã— Ã— Ã— Ã— Ã— Ã— Ã— X Ã— Ã— Ã—
-Manticore [37] S X X Ã— Ã— Ã— Ã— Ã— Ã— Ã— Ã— Ã— Ã—
-ConFuzzius [53] H X X Ã— Ã— Ã— Ã— Ã— Ã— X X X X
-Echidna [25] F X X X Ã— Ã— Ã— Ã— Ã— X X X X
-VeriSmart [47] S X X X X X X X Ã— X Ã— Ã— Ã—
-Smartian [10] H X X Ã— Ã— Ã— Ã— Ã— Ã— X X X X
+teEther [33] S X X Ã, Ã, Ã, X Ã, Ã, Ã, Ã, Ã, Ã,
+MAIAN [40] S X X X X X X X Ã, X Ã, Ã, Ã,
+EthBMC [23] S X Ã, Ã, Ã, Ã, Ã, Ã, Ã, X Ã, Ã, Ã,
+Manticore [37] S X X Ã, Ã, Ã, Ã, Ã, Ã, Ã, Ã, Ã, Ã,
+ConFuzzius [53] H X X Ã, Ã, Ã, Ã, Ã, Ã, X X X X
+Echidna [25] F X X X Ã, Ã, Ã, Ã, Ã, X X X X
+VeriSmart [47] S X X X X X X X Ã, X Ã, Ã, Ã,
+Smartian [10] H X X Ã, Ã, Ã, Ã, Ã, Ã, X X X X
 EFCF F X X X X X X X X X X X X
 us to scale the required number of transactions to trigger
 a bug. Each variant of multi and complex contracts is
@@ -1621,14 +1621,14 @@ the Serif static analyzer [8] to show the feasibility of
 detecting compositional security violations with EFCF.
 Table 4: Results for reentrancy issues for various analysis
 tools: False Alarms (âˆ¼), True Alarms (X), not applica-
-ble/incompatible (N/A), or as Missed Bug (Ã—).
+ble/incompatible (N/A), or as Missed Bug (Ã,).
 Contract EFCF Confuzzius Slither
 Example Figure 2 X âˆ¼ âˆ¼
-SpankChain [16] X Ã— X
+SpankChain [16] X Ã, X
 DSEthToken [43] X X N/A
 TheDAO [43] N/A X N/A
-HODLWallet [14, 64] Ã— X X
-SysEscrow [17, 64] X Ã— X
+HODLWallet [14, 64] Ã, X X
+SysEscrow [17, 64] X Ã, X
 InstaDice [15, 64] X âˆ¼ X
 Trivial-RE [55] X X X
 We adapted the contracts from Serifâ€™s evaluation set such
@@ -2377,13 +2377,13 @@ oracles. In contrast, EFCF does not feature an explicit
 detector for reentrancy but simply generates reentrant
 Table 5: Comparison of bug oracles in various fuzzing-
 based analysis tools with the bug oracles available in
-EFCF. X fully supported. Ã— not supported. X
-âˆ— 
+EFCF. X fully supported. Ã, not supported. X
+âˆ, 
 supported
 but not enabled by default. X
 â€  
 only supported for contract
-compiled with Solidity version > 0.8. Ã—
+compiled with Solidity version > 0.8. Ã,
 â€¡ 
 only if it leads
 to triggering another bug oracle.
@@ -2391,58 +2391,58 @@ Bug Name EFCF Confuzzius [53] Smartian [10] Echidna [25]
 Assertion Failure X
 â€  
 X X X
-âˆ—
-Arbitrary Write Ã—
+âˆ,
+Arbitrary Write Ã,
 â€¡ 
-Ã— X Ã—
+Ã, X Ã,
 â€¡
-Block State Dependency Ã—
+Block State Dependency Ã,
 â€¡ 
-X X Ã—
+X X Ã,
 â€¡
-Control-flow Hijack (JUMP) Ã—
+Control-flow Hijack (JUMP) Ã,
 â€¡ 
-Ã— X Ã—
+Ã, X Ã,
 â€¡
 Custom Event Oracle X
-âˆ— 
-Ã— Ã— X
-âˆ—
+âˆ, 
+Ã, Ã, X
+âˆ,
 Custom Property Checking X
-âˆ— 
-Ã— Ã— X
-âˆ—
-Ether Gains X Ã— Ã— Ã—
-Integer Overflow Ã—
+âˆ, 
+Ã, Ã, X
+âˆ,
+Ether Gains X Ã, Ã, Ã,
+Integer Overflow Ã,
 â€¡
 / X
 â€  
-X X Ã—
+X X Ã,
 â€¡
 Leaking Ether X
-âˆ— 
-X X Ã—
-Locking Ether Ã— X X Ã—
-Multiple Send Ã— Ã— X Ã—
-Reentrancy Ã—
+âˆ, 
+X X Ã,
+Locking Ether Ã, X X Ã,
+Multiple Send Ã, Ã, X Ã,
+Reentrancy Ã,
 â€¡ 
-X X Ã—
-Require Violation Ã— Ã— X
-âˆ— 
-Ã—
-Transaction Origin Use Ã—
+X X Ã,
+Require Violation Ã, Ã, X
+âˆ, 
+Ã,
+Transaction Origin Use Ã,
 â€¡ 
-Ã— X Ã—
+Ã, X Ã,
 â€¡
-Transaction Order Dependency Ã— X Ã— Ã—
-Unsafe Delegatecall X X X Ã—
+Transaction Order Dependency Ã, X Ã, Ã,
+Unsafe Delegatecall X X X Ã,
 Unprotected Selfdestruct X
-âˆ— 
+âˆ, 
 X X X
-âˆ—
-Un/Mishandled Exception Ã—
+âˆ,
+Un/Mishandled Exception Ã,
 â€¡ 
-X X Ã—
+X X Ã,
 18
 
 ---

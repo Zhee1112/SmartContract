@@ -64,7 +64,7 @@ Profit = Ta2.output - Ta1.input
 
 **Formula Penalti**:
 ```
-Penalty = Amount × (λ × P_detect / 100,000,000)
+Penalty = Amount �, (λ �, P_detect / 100,000,000)
 
 λ = Faktor Penalti Risiko (default: 15000 = 1.5x)
 P_detect = Probabilitas Deteksi (default: 9600 = 96%)

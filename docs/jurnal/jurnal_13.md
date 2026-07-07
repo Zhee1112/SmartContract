@@ -420,26 +420,26 @@ seamless upgrades by deploying new logic contracts and updating the proxy
 to point to the latest version, hence allowing for dynamic updates.
 â€“ Consequences:
 â€¢ Benefits:
-âˆ— Upgradability. Allows upgrades without the need to change the con-
+âˆ, Upgradability. Allows upgrades without the need to change the con-
 tract address nor requiring data migration;
-âˆ— Simplest Upgradeable Pattern. The upgrade process consists in de-
+âˆ, Simplest Upgradeable Pattern. The upgrade process consists in de-
 ploying a new logic contract and a proxy update pointing to it with
 a proxy administration function.
 â€¢ Drawbacks:
-âˆ— Compatibility Maintenance. Requires consistent function selectors
+âˆ, Compatibility Maintenance. Requires consistent function selectors
 and storage layouts;
-âˆ— Limited Direct Function Visibility. Logic functions visibility only ac-
+âˆ, Limited Direct Function Visibility. Logic functions visibility only ac-
 cessible in the documentation;
 
 ---
 
 Gas Cost Analysis of Proxy and Diamond Patterns 11
-âˆ— Storage Collision. It requires careful consideration of storage layout
+âˆ, Storage Collision. It requires careful consideration of storage layout
 to avoid storage overlap between the proxy and the logic contract as
 if both contracts use the same storage slot, it can lead to data loss.
 A convention is to use namespaced storage layouts for naming struct
 holding storage variables [18].
-âˆ— Function Selector Clash. Different functions having the same selector
+âˆ, Function Selector Clash. Different functions having the same selector
 can override each other [26]. This requires careful naming of func-
 tion selectors as the Solidity compiler cannot detect function selector
 clashes between the proxy and logic contracts due to cross-contract
@@ -467,34 +467,34 @@ point to multiple logic contracts. It involves the deployment of all contracts
 both to implement a diamond cut.
 â€“ Consequences:
 â€¢ Benefits:
-âˆ— Better upgradability. Possibility to deploy smaller contracts during
+âˆ, Better upgradability. Possibility to deploy smaller contracts during
 upgrades or updates to already deployed facets without requiring
 address change or data migration;
-âˆ— Modularity. Code reusable across multiple contracts. A facet can be
+âˆ, Modularity. Code reusable across multiple contracts. A facet can be
 used in multiple diamonds;
-âˆ— Contract size. Thanks to a modular structure, it can theoretically
+âˆ, Contract size. Thanks to a modular structure, it can theoretically
 support an infinite number of facets. Therefore, the whole smart
 contract system has no size limit;
-âˆ— Cheaper minor upgrades. Most of the time, only one facet is updated,
+âˆ, Cheaper minor upgrades. Most of the time, only one facet is updated,
 so only small contracts are deployed for low gas costs;
 
 ---
 
 12 A. Benedetti, T.Henry, and S.Tucci-Piergiovanni
-âˆ— Shorter compilation time. Only modified facets need to be compiled,
+âˆ, Shorter compilation time. Only modified facets need to be compiled,
 so for the same logic code, the compilation time is shorter than for
 the classic pattern and proxy pattern.
 â€¢ Drawbacks:
-âˆ— Implementation Complexity. A more complex structure compared to
+âˆ, Implementation Complexity. A more complex structure compared to
 the classic and proxy patterns, and a lack of supporting libraries.
-âˆ— Complexity in managing multiple logic contracts. Managing multiple
+âˆ, Complexity in managing multiple logic contracts. Managing multiple
 logic contracts require careful consideration during upgrades. It re-
 quires developers to manage the diamond storage manually because
 of the multiple implementation contracts.
-âˆ— Limited Direct Function Visibility. Like the proxy pattern, users de-
+âˆ, Limited Direct Function Visibility. Like the proxy pattern, users de-
 pend on documentation to identify callable functions.
-âˆ— Storage collision risks similarly to Proxy pattern
-âˆ— Function selector clash similarly to Proxy pattern
+âˆ, Storage collision risks similarly to Proxy pattern
+âˆ, Function selector clash similarly to Proxy pattern
 â€“ Related patterns: Proxy pattern.
 â€“ Known uses: Aavegotchi, a NFT-based gaming protocol; GeoWeb, a dApp
 managing digital land property rights using NFTs.

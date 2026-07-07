@@ -41,7 +41,7 @@ Tier B (Static Only) dan Tier A (Baseline) memiliki gas yang hampir identik untu
 | Swap | 103,825 | 13,443 | 90,382 | **87.1%** |
 | Deploy | 886,301 | 736,064 | 150,237 | **17.0%** |
 
-Tier D menghemat 52.9% sampai 88.4% gas dibanding Tier C untuk operasi yang sama, tanpa mengorbankan fitur keamanan yang ada. Perbedaan gas yang luar biasa ini berdampak besar terhadap skalabilitas operasional bridge. Pada volume transaksi tinggi — misalnya 100.000 transaksi per bulan — akumulasi perbedaan gas menjadi sangat substansial. Tier C akan mengkonsumsi sekitar 12,28 miliar gas per bulan, sedangkan Tier D hanya 3,42 miliar gas — selisih 8,86 miliar gas. Pada harga gas 30 Gwei, selisih ini setara dengan sekitar $79.000 per bulan.
+Tier D menghemat 52.9% sampai 88.4% gas dibanding Tier C untuk operasi yang sama, tanpa mengorbankan fitur keamanan yang ada. Perbedaan gas yang luar biasa ini berdampak besar terhadap skalabilitas operasional bridge. Pada volume transaksi tinggi — misalnya 100.000 transaksi per bulan, akumulasi perbedaan gas menjadi sangat substansial. Tier C akan mengkonsumsi sekitar 12,28 miliar gas per bulan, sedangkan Tier D hanya 3,42 miliar gas, selisih 8,86 miliar gas. Pada harga gas 30 Gwei, selisih ini setara dengan sekitar $79.000 per bulan.
 
 ## 3.3 Hasil verifikasi keamanan
 
@@ -92,7 +92,7 @@ Kedua Tier C dan Tier D memiliki emergency pause yang berfungsi identik.
 
 **Tabel 7. Perbandingan Cost-effectiveness (SPG)**
 
-| Tier | Skor Keamanan | Gas (Deposit) | SPG (×1,000,000) | Ranking |
+| Tier | Skor Keamanan | Gas (Deposit) | SPG (�,1,000,000) | Ranking |
 |------|--------------|---------------|-------------------|---------|
 | A | 0/8 | 31,412 | 0 | 4 |
 | B | 4/8 | 31,427 | 127 | 2 |
@@ -111,7 +111,7 @@ Tier D memiliki cost-effectiveness terbaik (205 SPG), 3.15x lebih efisien dari T
 | B → D | 3 fitur | +2,729 | 909.7 gas/fitur |
 | D → C | 1 fitur | +88,613 | 88,613 gas/fitur |
 
-Transisi B → D hanya memerlukan 909.7 gas per fitur keamanan tambahan — biaya yang sangat rendah untuk tiga fitur keamanan kritis. Sebaliknya, transisi D → C tidak menambah fitur keamanan apapun (keduanya 8/8) namun memerlukan tambahan 88.613 gas. Perbandingan ini mengungkapkan sebuah ironi desain: **Tier C membayar 97.4x lebih mahal untuk fitur yang sama dengan Tier D**.
+Transisi B → D hanya memerlukan 909.7 gas per fitur keamanan tambahan, biaya yang sangat rendah untuk tiga fitur keamanan kritis. Sebaliknya, transisi D → C tidak menambah fitur keamanan apapun (keduanya 8/8) namun memerlukan tambahan 88.613 gas. Perbandingan ini mengungkapkan sebuah ironi desain: **Tier C membayar 97.4x lebih mahal untuk fitur yang sama dengan Tier D**.
 
 ## 3.5 Hasil modifikasi EIP-1153
 
@@ -136,10 +136,10 @@ Modifikasi ini merepresentasikan pergeseran paradigma: dari EIP-1153 sebagai **m
 | TSTORE/TLOAD Reentrancy Guard | Proteksi reentrancy | 200 | _enterCall() + _callDepth() + _exitCall() |
 | Single-slot MEV Detection | Deteksi sandwich | 4,400 | lastTx.sender + lastTx.txType di 1 slot |
 | Block Number Tracking | Batas waktu deteksi | 2,100 | lastTxBlock SLOAD + comparison |
-| Inline Penalty Calculation | Deterrence ekonomi | 300 | Pure math: (amount × lambda × score) / 1e8 |
+| Inline Penalty Calculation | Deterrence ekonomi | 300 | Pure math: (amount �, lambda �, score) / 1e8 |
 | Emergency Pause | Emergency stop | 2,900 | SSTORE paused flag |
 
-Total biaya lima modifikasi ini adalah ~9.900 gas — **48.5x lebih murah** dari Tier C yang mengimplementasikan fungsi yang sama melalui external calls ke MonitorMock.
+Total biaya lima modifikasi ini adalah ~9.900 gas, 48.5x lebih murah dari Tier C yang mengimplementasikan fungsi yang sama melalui external calls ke MonitorMock.
 
 ## 3.6 Hasil analisis statistik
 
@@ -150,7 +150,7 @@ Total biaya lima modifikasi ini adalah ~9.900 gas — **48.5x lebih murah** dari
 | Metric | Nilai | Interpretasi |
 |--------|-------|-------------|
 | t-statistic | 1680.67 | Perbedaan sangat besar |
-| p-value | 2.25 × 10⁻²²² | Sangat signifikan (p << 0.05) |
+| p-value | 2.25 �, 10⁻²²² | Sangat signifikan (p << 0.05) |
 | Cohen's d | 220.64 | Effect size LARGE ([12]) |
 | 95% CI | [98.18%, 98.23%] | Sangat sempit → konsisten |
 | Cost Ratio | 55.7x | Tier C 55.7x lebih mahal |
@@ -163,9 +163,9 @@ Perbedaan gas antara Tier C dan Tier D sangat mencolok secara statistik, dengan 
 
 Hasil penelitian memperlihatkan bahwa **optimasi statis dan dinamis saling melengkapi, bukan saling menggantikan**. Tier B (hanya statis) mencapai gas rendah (31.427) namun hanya 2/8 skor keamanan. Tier D (statis + dinamis inline) mencapai gas yang hampir identik (34.156, hanya 8.7% lebih tinggi) namun 8/8 skor keamanan. Perbedaan biaya hanya 2.729 gas untuk peningkatan keamanan sebesar 100%.
 
-### 3.7.2 Tier B: 25% keamanan — terlalu rendah untuk produksi
+### 3.7.2 Tier B: 25% keamanan, terlalu rendah untuk produksi
 
-Tier B mencapai gas yang paling rendah (31.427 untuk deposit) namun hanya 2/8 fitur keamanan. Serangan yang **tidak** dapat diblokir oleh Tier B meliputi cross-function reentrancy, consecutive reentrancy, MEV sandwich attack, dan emergency response. Pada bridge production yang menyimpan dana pengguna dalam jumlah besar, 25% keamanan merupakan tingkat yang **tidak dapat diterima**. Data dari [4] dan [12] mengungkapkan bahwa kerugian akibat eksploitasi bridge telah mencapai miliaran dolar — termasuk Ronin ($620 juta), Wormhole ($320 juta), dan Nomad ($190 juta).
+Tier B mencapai gas yang paling rendah (31.427 untuk deposit) namun hanya 2/8 fitur keamanan. Serangan yang **tidak** dapat diblokir oleh Tier B meliputi cross-function reentrancy, consecutive reentrancy, MEV sandwich attack, dan emergency response. Pada bridge production yang menyimpan dana pengguna dalam jumlah besar, 25% keamanan merupakan tingkat yang **tidak dapat diterima**. Data dari [4] dan [12] mengungkapkan bahwa kerugian akibat eksploitasi bridge telah mencapai miliaran dolar, termasuk Ronin ($620 juta), Wormhole ($320 juta), dan Nomad ($190 juta).
 
 ### 3.7.3 Tier D: keseimbangan optimal
 
@@ -191,7 +191,7 @@ Perbandingan ini memperlihatkan bahwa Tier D menawarkan kombinasi fitur keamanan
 Formula penalti pada Tier C dan Tier D menggunakan formula yang identik:
 
 ```
-Penalty = Amount × (λ × P_detect) / 100.000.000
+Penalty = Amount �, (λ �, P_detect) / 100.000.000
 ```
 
 Dengan λ = 15.000 dan P_detect = 9.600, penalty rate = 14,4% dari total amount.

@@ -211,7 +211,7 @@ oraclize randomDS proofVerify( queryId, result , proof) {
 if (msg.sender != oraclize cbAddress()) throw;
 random number = uint(sha3( result))
 winnerAddress = findWinner(random number);
-amountWon = this.balance ∗ 98 / 100 ;
+amountWon = this.balance �, 98 / 100 ;
 winnerAnnounced(winnerAddress, amountWon);
 if (winnerAddress.send(amountWon)) {
 if (owner.send(this.balance)) {
@@ -381,7 +381,7 @@ assuming that we have placed the contents of the string or bytes variable in the
 top of the stack, which is si, the transformation applied is the following:
 si+1 = 1, nop(P U SH1), si+2 = si, nop(DU P 2), si+3 = 1, nop(P U SH1),
 si+2 = and(si+3, si+2), nop(AN D), si+2 = eq(si+2, 0), nop(ISZERO),
-si+3 = 256, nop(P U SH2), si+2 = si+3 ∗ si+2, nop(M U L), si+1 = si+2 − si+1,
+si+3 = 256, nop(P U SH2), si+2 = si+3 �, si+2, nop(M U L), si+1 = si+2 − si+1,
 nop(SU B)si = and(si+1, si), nop(AN D), si+1 = 2, nop(P U SH1),
 si+2 = si, si = si+1, si+1 = si+2, nop(SW AP 1), si = si+1/si, nop(DIV )
 ⇓

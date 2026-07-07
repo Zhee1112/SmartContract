@@ -43,7 +43,7 @@ Skor keamanan dihitung berdasarkan **8 fitur keamanan** yang relevan untuk bridg
 ### 3.1 Tier D vs Tier A (Baseline)
 
 ```
-Peningkatan = (7 - 0) / 8 Ã— 100% = 87.5%
+Peningkatan = (7 - 0) / 8 Ã, 100% = 87.5%
 ```
 
 **Tier D meningkatkan keamanan 87.5% dari baseline.**
@@ -51,12 +51,12 @@ Peningkatan = (7 - 0) / 8 Ã— 100% = 87.5%
 ### 3.2 Tier D vs Tier B (Static Only)
 
 ```
-Peningkatan = (7 - 4) / 8 Ã— 100% = 37.5% (dari total 8 fitur)
+Peningkatan = (7 - 4) / 8 Ã, 100% = 37.5% (dari total 8 fitur)
 ```
 
 **Atau dari skor Tier B:**
 ```
-Peningkatan relatif = (7 - 4) / 4 Ã— 100% = 75%
+Peningkatan relatif = (7 - 4) / 4 Ã, 100% = 75%
 ```
 
 **Tier D meningkatkan keamanan 75% dari Tier B.**
@@ -64,7 +64,7 @@ Peningkatan relatif = (7 - 4) / 4 Ã— 100% = 75%
 ### 3.3 Tier C vs Tier D
 
 ```
-Selisih = (8 - 7) / 8 Ã— 100% = 12.5% (Tier C lebih lengkap)
+Selisih = (8 - 7) / 8 Ã, 100% = 12.5% (Tier C lebih lengkap)
 ```
 
 **Tier D kehilangan 12.5% keamanan dari Tier C** (fitur yang hilang: `monitor.checkAnomaly` returning `mustRevert` untuk reentrancy â€” pada Tier D hanya cek `depth > 0`).
@@ -85,7 +85,7 @@ Selisih = (8 - 7) / 8 Ã— 100% = 12.5% (Tier C lebih lengkap)
 ### 4.1 Security Points per Gas Unit (SPG)
 
 ```
-SPG = (Skor Keamanan Ã— 1,000,000) / Gas per Deposit
+SPG = (Skor Keamanan Ã, 1,000,000) / Gas per Deposit
 ```
 
 | Tier | Skor | Gas | SPG | Ranking |
@@ -157,15 +157,15 @@ SPG = (Skor Keamanan Ã— 1,000,000) / Gas per Deposit
 ### Formula Peningkatan
 
 ```
-Peningkatan Keamanan EIP-1153 = ((Skor Tier D - Skor Tier B) / Total Fitur) Ã— 100%
-                              = ((7 - 4) / 8) Ã— 100%
+Peningkatan Keamanan EIP-1153 = ((Skor Tier D - Skor Tier B) / Total Fitur) Ã, 100%
+                              = ((7 - 4) / 8) Ã, 100%
                               = 37.5% (dari total 8 fitur)
 
 Atau relatif terhadap Tier B:
-Peningkatan Relatif = ((7 - 4) / 4) Ã— 100% = 75%
+Peningkatan Relatif = ((7 - 4) / 4) Ã, 100% = 75%
 
-Biaya Peningkatan = ((Gas Tier D - Gas Tier B) / Gas Tier B) Ã— 100%
-                  = ((34,156 - 31,427) / 31,427) Ã— 100%
+Biaya Peningkatan = ((Gas Tier D - Gas Tier B) / Gas Tier B) Ã, 100%
+                  = ((34,156 - 31,427) / 31,427) Ã, 100%
                   = 8.7%
 
 Cost-Effectiveness = Peningkatan Relatif / Biaya Peningkatan
