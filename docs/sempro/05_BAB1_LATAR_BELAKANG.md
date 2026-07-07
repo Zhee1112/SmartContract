@@ -67,12 +67,6 @@ a. Metode
 5. Pengukuran gas dilakukan menggunakan framework Foundry dengan 100 sampel per operasi pada lingkungan EVM simulasi.
 6. Evaluasi keamanan dilakukan berdasarkan delapan fitur keamanan yang telah ditentukan.
 7. Validasi statistik menggunakan Welch's t-test dan Cohen's d effect size.
-8. Pengujian menggunakan 13 file test dengan total 216 test cases.
-9. Metode pengujian meliputi unit test (~100 tests), integration test (~50 tests), fuzz testing (8 tests), invariant testing (3 invariants), gas benchmark (~25 tests), statistical analysis (100 sampel), attack simulation (~30 tests), economic simulation (~8 tests), state machine testing (14 tests), dan edge case testing (28 tests).
-10. Static analysis menggunakan Slither untuk deteksi vulnerability (reentrancy, integer overflow, dangerous equality).
-11. Linting menggunakan Solhint untuk validasi kode sesuai Solidity best practices.
-12. Code coverage menggunakan forge coverage untuk mengukur persentase kode yang teruji (88.86% lines, 98.04% functions).
-13. Gas profiling menggunakan forge --gas-report untuk pengukuran gas detail per fungsi.
 
 b. Tools
 
@@ -84,7 +78,7 @@ b. Tools
 6. EIP-1153 transient storage hanya bisa dijalankan pada EVM Cancun ke atas.
 7. Static analysis menggunakan Slither v0.11.5 untuk deteksi vulnerability (reentrancy, integer overflow, dangerous equality).
 8. Linting menggunakan Solhint untuk validasi kode sesuai Solidity best practices dan security rules.
-9. Code coverage menggunakan forge coverage untuk mengukur persentase kode yang teruji.
+9. Code coverage menggunakan forge coverage untuk mengukur persentase kode yang teruji (88.86% lines, 98.04% functions).
 10. Gas profiling menggunakan forge --gas-report untuk pengukuran gas detail per fungsi.
 
 c. Proses
@@ -94,9 +88,9 @@ c. Proses
 3. Analisis gas cost menggunakan statistik deskriptif: mean, minimum, maximum, standar deviasi, dan confidence interval 95%.
 4. Perbandingan antara Tier C dan Tier D dilakukan menggunakan Welch's t-test untuk menentukan signifikansi statistik.
 5. Metrik SPG digunakan untuk mengevaluasi efisiensi konversi gas menjadi keamanan.
-6. Semua pengujian dilakukan pada lingkungan EVM simulasi menggunakan Foundry.
-7. Pengujian menggunakan 13 file test dengan total 216 test cases.
-8. Metode pengujian meliputi unit test, integration test, fuzz testing, invariant testing, gas benchmark, statistical analysis, attack simulation, economic simulation, state machine testing, dan edge case testing.
+6. Pengujian menggunakan 13 file test dengan total 216 test cases melalui berbagai metode: unit test (~100), integration test (~50), fuzz testing (8), invariant testing (3), gas benchmark (~25), attack simulation (~30), economic simulation (~8), state machine testing (14), dan edge case testing (28).
+7. Static analysis menggunakan Slither untuk mendeteksi vulnerability, linting menggunakan Solhint untuk validasi best practices, code coverage menggunakan forge coverage, dan gas profiling menggunakan forge --gas-report.
+8. Semua pengujian dilakukan pada lingkungan EVM simulasi menggunakan Foundry.
 
 ## 1.5 Tujuan Penelitian
 
