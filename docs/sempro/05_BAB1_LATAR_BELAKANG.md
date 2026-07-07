@@ -67,6 +67,12 @@ a. Metode
 5. Pengukuran gas dilakukan menggunakan framework Foundry dengan 100 sampel per operasi pada lingkungan EVM simulasi.
 6. Evaluasi keamanan dilakukan berdasarkan delapan fitur keamanan yang telah ditentukan.
 7. Validasi statistik menggunakan Welch's t-test dan Cohen's d effect size.
+8. Pengujian menggunakan 13 file test dengan total 216 test cases.
+9. Metode pengujian meliputi unit test (~100 tests), integration test (~50 tests), fuzz testing (8 tests), invariant testing (3 invariants), gas benchmark (~25 tests), statistical analysis (100 sampel), attack simulation (~30 tests), economic simulation (~8 tests), state machine testing (14 tests), dan edge case testing (28 tests).
+10. Static analysis menggunakan Slither untuk deteksi vulnerability (reentrancy, integer overflow, dangerous equality).
+11. Linting menggunakan Solhint untuk validasi kode sesuai Solidity best practices.
+12. Code coverage menggunakan forge coverage untuk mengukur persentase kode yang teruji (88.86% lines, 98.04% functions).
+13. Gas profiling menggunakan forge --gas-report untuk pengukuran gas detail per fungsi.
 
 b. Tools
 
