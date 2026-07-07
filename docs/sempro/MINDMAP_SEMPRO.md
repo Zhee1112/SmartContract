@@ -1,116 +1,186 @@
-# MIND MAP SEMPRO (BAB 1-3)
+# MIND MAP ALUR PENELITIAN
 
-## Alur Penelitian: Dari Masalah Sampai Metodologi
+## Alur Penelitian: Dari Masalah Sampai Solusi
 
 ```mermaid
 graph TD
-    JUDUL["JUDUL: Optimalisasi Gas dan Keamanan<br/>Smart Contract Bridge<br/>Berbasis EIP-1153 Transient Storage<br/>pada Arsitektur 4-Tier"]
+    START["MEMULAI PENELITIAN"] --> M1
 
-    JUDUL --> BAB1
-    JUDUL --> BAB2
-    JUDUL --> BAB3
-
-    subgraph BAB1["BAB I: PENDAHULUAN"]
-        B1A["1.1 Latar Belakang<br/>DeFi growth + bridge attacks"]
-        B1B["1.2 Identifikasi Masalah<br/>4 permasalahan"]
-        B1C["1.3 Rumusan Masalah<br/>3 pertanyaan penelitian"]
-        B1D["1.4 Batasan Masalah<br/>Metode + Tools + Proses"]
-        B1E["1.5 Tujuan Penelitian<br/>4 tujuan"]
-        B1F["1.6 Manfaat Penelitian<br/>Akademis + Industri"]
+    subgraph M1["LANGKAH 1: IDENTIFIKASI MASALAH"]
+        M1A["Bridge blockchain sering diserang<br/>Ronin $620M, Wormhole $320M"]
+        M1B["Gas SSTORE mahal<br/>22.900 gas per transaksi"]
+        M1C["EIP-1153 belum optimal<br/>50%+ hanya untuk reentrancy guard"]
     end
 
-    subgraph BAB2["BAB II: TINJAUAN PUSTAKA"]
-        B2A["2.1 Penelitian Terdahulu<br/>20 paper"]
-        B2B["2.2 Tabel Perbandingan<br/>Gap analysis"]
-        B2C["2.3 Kesimpulan<br/>Belum ada framework"]
+    M1 --> M2
+
+    subgraph M2["LANGKAH 2: TINJAUAN PUSTAKA"]
+        M2A["Kumpulkan 20 paper<br/>gas optimization + security"]
+        M2B["Identifikasi gap<br/>belum ada framework komparatif"]
+        M2C["Rumusan masalah<br/>3 pertanyaan penelitian"]
     end
 
-    subgraph BAB3["BAB III: METODOLOGI"]
-        B3A["3.1 Paradigma<br/>Empiris-kuantitatif"]
-        B3B["3.2 Data<br/>Primer + Sekunder"]
-        B3C["3.3 Perancangan Sistem<br/>4-Tier Architecture"]
-        B3D["3.4 Platform<br/>Foundry + Solidity"]
-        B3E["3.5 Metode Pengujian<br/>10 metode, 216 tests"]
-        B3F["3.6 Pengukuran Gas<br/>100 sampel/operasi"]
-        B3G["3.7 Pengujian Keamanan<br/>8 fitur keamanan"]
-        B3H["3.8 Validasi Statistik<br/>Welch + Cohen's d"]
-        B3I["3.9 Analisis Data<br/>SPG + ROI"]
+    M2 --> M3
+
+    subgraph M3["LANGKAH 3: RANCANG ARSITEKTUR"]
+        M3A["Tier A: Unoptimized<br/>baseline tanpa optimasi"]
+        M3B["Tier B: Static Only<br/>CEI + variable packing"]
+        M3C["Tier C: Full Dynamic<br/>external calls + MonitorMock"]
+        M3D["Tier D: Lightweight<br/>inline EIP-1153 (kontribusi)"]
     end
 
-    BAB1 --> OUTPUT
-    BAB2 --> OUTPUT
-    BAB3 --> OUTPUT
+    M3 --> M4
 
-    OUTPUT["OUTPUT: Proposal Sempro<br/>BAB 1-3 Selesai"]
+    subgraph M4["LANGKAH 4: IMPLEMENTASI KONTRAK"]
+        M4A["Implementasi 4 kontrak<br/>Solidity 0.8.28"]
+        M4B["Implementasi keamanan<br/>8 fitur keamanan"]
+        M4C["Implementasi EIP-1153<br/>TSTORE/TLOAD inline"]
+    end
 
-    style JUDUL fill:#2c3e50,color:#fff
-    style BAB1 fill:#e74c3c,color:#fff
-    style BAB2 fill:#f39c12,color:#fff
-    style BAB3 fill:#3498db,color:#fff
-    style OUTPUT fill:#1abc9c,color:#fff
+    M4 --> M5
+
+    subgraph M5["LANGKAH 5: TULIS TEST CASES"]
+        M5A["13 file test<br/>216 test cases"]
+        M5B["10 metode pengujian<br/>unit, fuzz, invariant, dll"]
+        M5C["Attack simulation<br/>reentrancy + MEV"]
+    end
+
+    M5 --> M6
+
+    subgraph M6["LANGKAH 6: JALANKAN TESTS"]
+        M6A["Foundry test<br/>216 tests PASS"]
+        M6B["Gas measurement<br/>100 sampel/operasi"]
+        M6C["Security verification<br/>8 fitur per tier"]
+    end
+
+    M6 --> M7
+
+    subgraph M7["LANGKAH 7: ANALISIS KEAMANAN"]
+        M7A["Slither<br/>45 findings, 0 critical"]
+        M7B["Solhint<br/>0 errors, 260 warnings"]
+        M7C["forge coverage<br/>88.86% lines"]
+    end
+
+    M7 --> M8
+
+    subgraph M8["LANGKAH 8: ANALISIS STATISTIK"]
+        M8A["Welch's t-test<br/>p-value < 0.001"]
+        M8B["Cohen's d<br/>220.64 (large effect)"]
+        M8C["SPG calculation<br/>Tier D: 220.1 (terbaik)"]
+    end
+
+    M8 --> M9
+
+    subgraph M9["LANGKAH 9: TULIS HASIL"]
+        T1["Gas: Tier D hemat 72-88%"]
+        T2["Security: Tier D 8/8 (sempurna)"]
+        T3["SPG: Tier D 3.4x lebih efisien"]
+        T4["Statistik: signifikan (p < 0.001)"]
+    end
+
+    T1 --> T5
+    T2 --> T5
+    T3 --> T5
+    T4 --> T5
+
+    T5["KESIMPULAN:<br/>EIP-1153 inline = solusi optimal"]
+
+    T5 --> OUT1
+    T5 --> OUT2
+
+    OUT1["SKRIPSI<br/>BAB 1-5"]
+    OUT2["JURNAL<br/>IEEE Format"]
+
+    START --> M1
+
+    style START fill:#2c3e50,color:#fff
+    style M1 fill:#e74c3c,color:#fff
+    style M2 fill:#e67e22,color:#fff
+    style M3 fill:#f1c40f,color:#333
+    style M4 fill:#2ecc71,color:#fff
+    style M5 fill:#1abc9c,color:#fff
+    style M6 fill:#3498db,color:#fff
+    style M7 fill:#9b59b6,color:#fff
+    style M8 fill:#8e44ad,color:#fff
+    style M9 fill:#2c3e50,color:#fff
+    style T5 fill:#e74c3c,color:#fff
+    style OUT1 fill:#1abc9c,color:#fff
+    style OUT2 fill:#1abc9c,color:#fff
 ```
 
 ---
 
-## Detail Isi Setiap BAB
+## Penjelasan Setiap Langkah
 
-### BAB I: PENDAHULUAN
+### LANGKAH 1: IDENTIFIKASI MASALAH
+> "Mengapa penelitian ini perlu dilakukan?"
+- Bridge sering diserang (miliaran dollar hilang)
+- Gas untuk keamanan sangat mahal
+- EIP-1153 belum dimanfaatkan optimal
 
-| Sub-bab | Isi Utama |
-|---------|-----------|
-| 1.1 Latar Belakang | DeFi growth, bridge attacks ($1.13B), gas SSTORE 22.900, EIP-1153 solusi |
-| 1.2 Identifikasi Masalah | 4 masalah: gas tinggi, external calls, belum ada framework, EIP-1153 belum optimal |
-| 1.3 Rumusan Masalah | 3 pertanyaan: optimasi gas, arsitektur 4-tier, penghematan EIP-1153 |
-| 1.4 Batasan Masalah | Metode (7 poin), Tools (10 poin), Proses (7 poin) |
-| 1.5 Tujuan Penelitian | 4 tujuan: optimasi, rancang, buktikan, ukur SPG |
-| 1.6 Manfaat Penelitian | Penulis, Universitas, Pengembang + Peneliti |
+### LANGKAH 2: TINJAUAN PUSTAKA
+> "Apa yang sudah dilakukan orang lain?"
+- Kumpulkan 20 paper relevan
+- Identifikasi gap penelitian
+- Rumuskan 3 pertanyaan penelitian
 
-### BAB II: TINJAUAN PUSTAKA
+### LANGKAH 3: RANCANG ARSITEKTUR
+> "Bagaimana solusinya?"
+- Rancang 4 tier bridge (A/B/C/D)
+- Tier D = kontribusi utama (inline EIP-1153)
 
-| Sub-bab | Isi Utama |
-|---------|-----------|
-| 2.1 Penelitian Terdahulu | 20 paper: gas optimization, security, EIP-1153, bridge |
-| 2.2 Tabel Perbandingan | Gap analysis: belum ada framework komparatif |
-| 2.3 Kesimpulan | Belum ada yang menggabungkan optimasi gas + keamanan inline |
+### LANGKAH 4: IMPLEMENTASI KONTRAK
+> "Bangun sistemnya"
+- Implementasi 4 kontrak Solidity
+- Implementasi 8 fitur keamanan
+- Implementasi EIP-1153 inline
 
-### BAB III: METODOLOGI
+### LANGKAH 5: TULIS TEST CASES
+> "Bagaimana cara membuktikan?"
+- Tulis 216 test cases (13 file)
+- Gunakan 10 metode pengujian
+- Sertakan attack simulation
 
-| Sub-bab | Isi Utama |
-|---------|-----------|
-| 3.1 Paradigma | Empiris-kuantitatif (ukur fakta) |
-| 3.2 Data | Primer (gas + security) + Sekunder (literatur) |
-| 3.3 Perancangan | 4-Tier: A (baseline), B (statis), C (dynamic eksternal), D (dynamic inline) |
-| 3.4 Platform | Solidity 0.8.28, Foundry v1.7.1, EVM Cancun |
-| 3.5 Metode Pengujian | 10 metode: unit, integration, fuzz, invariant, gas benchmark, statistical, attack sim, economic sim, state machine, edge case |
-| 3.6 Pengukuran Gas | 100 sampel/operasi, statistik deskriptif, CI 95% |
-| 3.7 Pengujian Keamanan | 8 fitur: reentrancy, MEV, penalty, pause, block tracking, cross-function, consecutive, custom errors |
-| 3.8 Validasi Statistik | Welch's t-test + Cohen's d effect size |
-| 3.9 Analisis Data | SPG (Security Points per Gas) + ROI serangan |
+### LANGKAH 6: JALANKAN TESTS
+> "Apakah sistem bekerja?"
+- Jalankan semua tests (216 PASS)
+- Ukur gas (100 sampel/operasi)
+- Verifikasi keamanan (8 fitur)
+
+### LANGKAH 7: ANALISIS KEAMANAN
+> "Apakah kode aman?"
+- Slither: 0 critical vulnerabilities
+- Solhint: 0 errors
+- Coverage: 88.86% lines
+
+### LANGKAH 8: ANALISIS STATISTIK
+> "Apakah hasil signifikan?"
+- Welch's t-test: p < 0.001
+- Cohen's d: 220.64 (large effect)
+- SPG: Tier D = 220.1 (terbaik)
+
+### LANGKAH 9: TULIS HASIL
+> "Apa yang ditemukan?"
+- Gas: Tier D hemat 72-88%
+- Security: Tier D 8/8 (sempurna)
+- SPG: Tier D 3.4x lebih efisien
+- Statistik: signifikan
 
 ---
 
-## Tools yang Digunakan
+## Output Penelitian
 
-| Kategori | Tools | Fungsi |
-|----------|-------|--------|
-| Development | Solidity 0.8.28 | Bahasa pemrograman |
-| Compiler | Foundry v1.7.1 | Kompilasi + testing |
-| EVM | Cancun | Mendukung EIP-1153 |
-| Static Analysis | Slither v0.11.5 | Deteksi vulnerability |
-| Linting | Solhint | Validasi best practices |
-| Coverage | forge coverage | Ukur kode teruji (88.86%) |
-| Gas Profiling | forge --gas-report | Gas detail per fungsi |
+| Output | Format | Isi |
+|--------|--------|-----|
+| **Skripsi** | BAB 1-5 | Pendahuluan, Tinjauan Pustaka, Metodologi, Hasil, Kesimpulan |
+| **Jurnal** | IEEE Format | Abstract, Introduction, Methodology, Results, Conclusion |
 
 ---
 
-## Flow Logika Penulisan
+## Ringkasan Alur
 
 ```
-BAB I: "Mengapa penelitian ini ada?" (Masalah)
-  ↓
-BAB II: "Apa yang sudah dilakukan orang lain?" (Literatur)
-  ↓
-BAB III: "Bagaimana cara membuktikan?" (Metode)
-  ↓
-OUTPUT: Proposal Sempro (BAB 1-3)
+MASALAH → LITERATUR → RANCANGAN → IMPLEMENTASI → TESTS → ANALISIS → HASIL → KESIMPULAN
+   ↓           ↓           ↓            ↓           ↓         ↓         ↓          ↓
+Mengapa?    Apa ada?    Bagaimana?    Bangun?      Buktikan?  Validasi?  Temuan?    Artinya?
 ```
