@@ -60,9 +60,9 @@ Inovasi utama dari Tier D adalah pendekatan inline, yaitu memindahkan seluruh lo
 
 Jika dibandingkan dengan Tier C yang memerlukan minimal 5 external calls ke MonitorMock untuk setiap transaksi, Tier D hanya memerlukan 0 external calls. Seluruh logika keamanan diimplementasikan menggunakan inline assembly dengan opcode TSTORE dan TLOAD.
 
-Mekanisme kerja Tier D menggunakan EIP-1153 untuk mengelola status keamanan secara internal. Misalnya, untuk reentrancy guard, Tier D menggunakan TSTORE untuk mengatur lock dan TLOAD untuk memeriksa status lock dengan biaya total hanya 200 gas.
+Keunggulan pendekatan inline ini adalah eliminasi risiko cross-contract reentrancy, pengurangan gas overhead dari external calls, serta attack surface yang lebih sempit karena hanya satu kontrak yang perlu di-deploy dan di-audit.
 
-Untuk MEV sandwich detection, Tier D menggunakan single-slot LastTx struct yang menyimpan informasi transaksi sebelumnya. Setiap transaksi baru menimpa data sebelumnya, sehingga hanya memerlukan SSTORE warm sebesar 2.900 gas dibandingkan dynamic array pada Tier C yang memerlukan 22.100 gas per push.
+Tier D membuktikan bahwa konsolidasi semua logika keamanan secara inline dapat menghasilkan keamanan yang setara dengan biaya yang jauh lebih rendah. Ini merupakan paradoks baru dalam desain bridge, yaitu keamanan lebih banyak justru biayanya lebih murah.
 
 ---
 
@@ -72,11 +72,11 @@ Tier D berhasil mencapai skor keamanan penuh 8 dari 8 fitur yang dievaluasi, sam
 
 Fitur pertama adalah proteksi reentrancy. Tier D memblokir semua jenis reentrancy attack yaitu single-function, cross-function, dan consecutive reentrancy. Mekanismenya menggunakan TSTORE untuk mengatur lock dan TLOAD untuk memeriksa status lock. Jika callDepth lebih dari 0, transaksi akan langsung ditolak.
 
-Fitur kedua adalah deteksi MEV sandwich. Tier D menggunakan Early Warning System atau EWS yang terintegrasi secara inline. Sistem ini mendeteksi pola frontrun-victim dalam satu blok dengan probabilitas deteksi sebesar 96 persen.
+Fitur kedua adalah deteksi MEV sandwich. Tier D menggunakan single-slot LastTx struct yang menyimpan informasi transaksi sebelumnya. Setiap transaksi baru menimpa data sebelumnya, sehingga hanya memerlukan SSTORE warm sebesar 2.900 gas. Sistem ini mendeteksi pola frontrun-victim dalam satu blok dengan probabilitas deteksi sebesar 96 persen.
 
-Fitur ketiga adalah economic penalty. Jika serangan terdeteksi, penyerang akan dikenai penalti ekonomi secara otomatis sebesar 14,4 persen dari jumlah transaksi. Formula penalti diimplementasikan sebagai pure function tanpa akses storage, sehingga biayanya minimal.
+Fitur ketiga adalah economic penalty. Jika serangan terdeteksi, penyerang akan dikenai penalti ekonomi secara otomatis sebesar 14,4 persen dari jumlah transaksi. Formula penalti diimplementasikan sebagai pure function tanpa akses storage, sehingga biayanya minimal hanya 300 gas.
 
-Fitur tambahan lainnya adalah emergency pause yang memungkinkan admin untuk menghentikan operasi bridge secara darurat, serta block tracking untuk melacak blok transaksi guna deteksi anomali.
+Fitur tambahan lainnya adalah emergency pause yang memungkinkan admin untuk menghentikan operasi bridge secara darurat, serta block tracking untuk melacak blok transaksi guna deteksi anomali lintas blok.
 
 ---
 
