@@ -14,89 +14,95 @@ Pada kesempatan ini, saya akan mempresentasikan proposal penelitian saya yang be
 
 ---
 
-## SLIDE 2: LATAR BELAKANG (1,5 menit)
+## SLIDE 2: LATAR BELAKANG (2 menit)
 
 Bapak/Ibu yang saya hormati,
 
-Blockchain bridge itu seperti jembatan penghubung antardesa. Tanpa jembatan, penduduk di dua desa yang terpisah sungai tidak bisa saling berkunjung. Begitu juga dengan blockchain, bridge memungkinkan transfer aset dari satu jaringan ke jaringan lainnya.
+Decentralized Finance, atau yang kerap disebut DeFi, merupakan sistem keuangan yang beroperasi tanpa perantara lembaga konvensional. Dalam ekosistem DeFi, terdapat komponen kritis yang disebut bridge blockchain.
 
-Tapi, seperti jembatan yang kurang kokoh, bridge juga rentan runtuh. Ronin Bridge kehilangan 620 juta dolar, Wormhole Bridge 320 juta dolar, dan Nomad Bridge 190 juta dolar. Total kerugiannya lebih dari 1 miliar dolar.
+Secara analogi, bridge berfungsi seperti jembatan penghubung antardesa. Tanpa jembatan, penduduk di dua desa yang terpisah sungai tidak bisa saling berkunjung. Begitu pula dengan blockchain, bridge memungkinkan transfer aset dari satu jaringan ke jaringan lainnya.
 
-Dua serangan yang paling berbahaya adalah reentrancy attack dan MEV sandwich attack. Reentrancy itu seperti orang yang mondar-mandir di pintu keluar supermarket, mengambil barang berkali-kali sebelum sempat membayar. Sedangkan MEV sandwich itu seperti bot yang memotong antrian di kasir.
+Namun, seperti jembatan yang kurang kokoh, bridge juga rentan mengalami kegagalan. Beberapa insiden bridge yang pernah terjadi menunjukkan kerugian yang sangat signifikan: Ronin Bridge kehilangan 620 juta dolar, Wormhole Bridge 320 juta dolar, dan Nomad Bridge 190 juta dolar. Total kerugian mencapai lebih dari 1 miliar dolar.
 
-Masalahnya, untuk melindungi bridge dari serangan ini butuh mekanisme keamanan yang mahal. Reentrancy guard konvensional membutuhkan 22.900 gas per transaksi. Bagi bridge dengan volume tinggi, beban ini sangat memberatkan.
+Dua jenis serangan yang paling berbahaya adalah reentrancy attack dan MEV sandwich attack. Reentrancy attack adalah kondisi di mana penyerang memanggil fungsi withdraw secara rekursif sebelum state diperbarui, seperti orang yang mondar-mandir di pintu keluar supermarket mengambil barang berkali-kali sebelum sempat membayar. Sedangkan MEV sandwich attack melibatkan bot yang memanipulasi urutan transaksi di mempool, ibarat seseorang yang memotong antrian di kasir.
 
-Tapi untungnya, Ethereum punya solusi. EIP-1153 memperkenalkan TSTORE dan TLOAD yang hanya butuh 100 gas per operasi. Penghematannya mencapai 98,7 persen.
+Dilema yang muncul adalah mekanisme keamanan konvensional menggunakan SSTORE membutuhkan 22.900 gas per transaksi. Bagi bridge dengan volume transaksi tinggi, beban biaya ini sangat memberatkan. Akibatnya, pengembang sering kali dihadapkan pada pilihan sulit antara keamanan dan efisiensi gas.
 
----
-
-## SLIDE 3: MASALAH & GAP (1 menit)
-
-Setelah ditelusuri, masih ada celah yang belum tertutupi.
-
-Penelitian oleh Zhang dan Debono (2024) menemukan bahwa lebih dari 50 persen kontrak yang sudah pakai EIP-1153 hanya menggunakannya untuk reentrancy guard saja. Padahal, potensi EIP-1153 jauh lebih besar.
-
-Selain itu, banyak pengembang yang menerapkan keamanan melalui external calls ke kontrak terpisah. Ironis, karena pendekatan ini justru menambah biaya gas yang tidak sedikit, padahal tujuan awalnya adalah untuk menghemat.
-
-Belum ada penelitian yang secara spesifik menggabungkan optimasi gas statis dan dinamis secara inline dalam satu arsitektur bridge.
+Beruntung, Ethereum menawarkan solusi melalui EIP-1153: Transient Storage Opcodes. Teknologi ini memperkenalkan TSTORE dan TLOAD yang hanya membutuhkan 100 gas per operasi, jauh lebih ringan dibandingkan SSTORE konvensional. Penghematan yang ditawarkan mencapai 98,7 persen.
 
 ---
 
-## SLIDE 4: METODOLOGI (1,5 menit)
+## SLIDE 3: IDENTIFIKASI MASALAH (1,5 menit)
 
-Untuk mengatasi masalah tersebut, saya menggunakan pendekatan studi komparatif kuantitatif.
+Berdasarkan pemaparan latar belakang, teridentifikasi beberapa permasalahan sebagai berikut.
 
-Saya merancang empat tingkat arsitektur bridge yang saya sebut 4-Tier Architecture.
+Pertama, mekanisme keamanan konvensional menggunakan SSTORE membutuhkan 22.900 gas per transaksi. Biaya ini memberatkan operasional bridge dengan volume transaksi tinggi.
 
-Tier A adalah baseline tanpa optimasi sama sekali. Tier A merepresentasikan kondisi bridge yang berjalan di Ethereum saat ini tanpa optimasi gas maupun fitur keamanan.
+Kedua, implementasi keamanan berbasis EIP-1153 yang ada saat ini sebagian besar masih menggunakan external calls ke kontrak terpisah. Pendekatan ini justru menambah biaya gas overhead yang tidak sedikit.
+
+Ketiga, EIP-1153 transient storage belum dimanfaatkan secara optimal. Berdasarkan studi Zhang dan Debono (2024), lebih dari 50 persen kontrak yang sudah mengadopsi EIP-1153 hanya menggunakannya untuk reentrancy guard saja.
+
+Keempat, belum ada framework komparatif yang secara sistematis membandingkan berbagai tingkat optimasi gas dan keamanan dalam satu arsitektur bridge.
+
+Berdasarkan permasalahan di atas, rumusan masalah penelitian ini adalah: bagaimana mengoptimalkan biaya gas pada smart contract bridge melalui implementasi optimasi statis dan dinamis berbasis EIP-1153 transient storage?
+
+---
+
+## SLIDE 4: PENELITIAN TERDAHULU (1,5 menit)
+
+Untuk mendapatkan pemahaman yang cukup tentang topik yang diangkat, berikut disajikan beberapa penelitian terdahulu yang relevan.
+
+Penelitian oleh Zhang dan Debono (2024) menganalisis lebih dari 250 kontrak yang sudah mengadopsi EIP-1153. Hasilnya cukup mengejutkan: lebih dari setengah hanya menggunakannya untuk reentrancy guard saja. Potensi yang belum tergarap masih sangat besar.
+
+Chainsecurity (2023) memberikan temuan penting terkait implikasi keamanan EIP-1153. Mereka menunjukkan bahwa TSTORE tidak punya batas gas minimum seperti SSTORE, sehingga mekanisme keamanan lama perlu dievaluasi ulang.
+
+Di Sorbo et al. (2022) mengidentifikasi 19 code smells pada Solidity yang menyebabkan kontrak menjadi boros gas. Temuan ini menunjukkan masih banyaknya pemborosan gas yang tidak disadari oleh pengembang.
+
+Berdasarkan kajian literatur, teridentifikasi celah penelitian yang belum tertutupi: belum ada penelitian yang secara spesifik menggabungkan optimasi gas statis dan dinamis secara inline dalam satu arsitektur bridge dengan pengukuran cost-effectiveness.
+
+---
+
+## SLIDE 5: METODOLOGI (2 menit)
+
+Untuk mengatasi permasalahan di atas, penelitian ini menggunakan pendekatan studi komparatif kuantitatif.
+
+Penulis merancang empat tingkat arsitektur bridge yang disebut 4-Tier Architecture.
+
+Tier A merupakan baseline tanpa optimasi sama sekali. Tier A merepresentasikan kondisi bridge yang berjalan di Ethereum saat ini tanpa optimasi gas maupun fitur keamanan.
 
 Tier B menggunakan optimasi statis berupa CEI Pattern, variable packing, dan custom errors. Gas-nya rendah namun hanya memiliki 2 dari 8 fitur keamanan.
 
 Tier C menggunakan EIP-1153 transient storage secara penuh melalui kontrak terpisah bernama MonitorMock. Skor keamanannya penuh 8 dari 8, namun gas-nya sangat tinggi karena banyak external calls.
 
-Tier D adalah kontribusi utama penelitian ini. Tier D menggunakan inline dynamic defense, yaitu memindahkan seluruh fitur keamanan Tier C ke dalam kode kontrak utama tanpa external calls. Tier D mencapai skor keamanan 8 dari 8 dengan gas yang jauh lebih rendah dari Tier C.
+Tier D merupakan kontribusi utama penelitian ini. Tier D menggunakan inline dynamic defense, yaitu memindahkan seluruh fitur keamanan Tier C ke dalam kode kontrak utama tanpa external calls.
+
+Untuk pengukuran gas, penelitian ini menggunakan framework Foundry dengan 100 sampel per operasi. Jumlah sampel ini dipilih berdasarkan Central Limit Theorem yang menyatakan bahwa distribusi mean akan mendekati normal untuk n >= 30.
+
+Evaluasi keamanan dilakukan berdasarkan delapan fitur yang dianggap kritis: reentrancy guard, MEV sandwich detection, economic penalty, emergency pause, block tracking, cross-function reentrancy, consecutive reentrancy, dan MEV cross-block.
+
+Validasi statistik menggunakan Welch's t-test untuk membandingkan gas cost antara Tier C dan Tier D, serta Cohen's d untuk mengukur effect size.
 
 ---
 
-## SLIDE 5: KONTRIBUSI TIER D (1,5 menit)
+## SLIDE 6: MANFAAT PENELITIAN (1 menit)
 
-Inovasi utama dari Tier D adalah pendekatan inline.
+Penelitian ini diharapkan memberikan manfaat bagi beberapa pihak.
 
-Jika dibandingkan dengan Tier C yang memerlukan minimal 5 external calls ke MonitorMock untuk setiap transaksi, Tier D hanya memerlukan 0 external calls. Seluruh logika keamanan diimplementasikan menggunakan inline assembly dengan opcode TSTORE dan TLOAD.
+Bagi penulis, sebagai sarana mengimplementasikan ilmu yang sudah dipelajari selama perkuliahan dan meningkatkan pemahaman mengenai penerapan EIP-1153 transient storage dalam optimasi gas dan keamanan smart contract.
 
-Keunggulan pendekatan inline ini adalah eliminasi risiko cross-contract reentrancy, pengurangan gas overhead dari external calls, serta attack surface yang lebih sempit karena hanya satu kontrak yang perlu di-deploy dan di-audit.
+Bagi universitas, sebagai referensi dan kontribusi ilmiah dalam pengembangan riset blockchain di lingkungan kampus, khususnya terkait optimalisasi gas dan keamanan smart contract.
 
-Tier D membuktikan bahwa konsolidasi semua logika keamanan secara inline dapat menghasilkan keamanan yang setara dengan biaya yang jauh lebih rendah.
-
----
-
-## SLIDE 6: HASIL & VALIDASI (2 menit)
-
-Hasil pengukuran gas menunjukkan bahwa Tier D memiliki efisiensi gas yang jauh lebih baik dibandingkan Tier C.
-
-Untuk operasi deposit, Tier D memerlukan 103.652 gas dibandingkan Tier C yang memerlukan 173.461 gas. Penghematan sebesar 40 persen.
-
-Untuk operasi withdraw, Tier D memerlukan 44.188 gas dibandingkan Tier C yang memerlukan 140.237 gas. Penghematan mencapai 76 persen.
-
-Untuk operasi swap, Tier D memerlukan 84.134 gas dibandingkan Tier C yang memerlukan 154.581 gas. Penghematan sebesar 54 persen.
-
-Validasi statistik menggunakan Welch's t-test menunjukkan p-value sebesar 2,25 kali 10 pangkat minus 222. Angka ini jauh lebih kecil dari threshold 0,05, sehingga perbedaan gas antara Tier C dan Tier D sangat signifikan secara statistik.
-
-Metrik SPG (Security Points per Gas) menunjukkan bahwa Tier D memiliki SPG sebesar 220,1, sedangkan Tier C hanya 65,2. Artinya, Tier D 3,15 kali lebih efisien dalam mengubah biaya gas menjadi perlindungan keamanan.
-
-Seluruh klaim di atas sudah diverifikasi melalui 216 test Foundry yang semuanya PASS, dengan coverage 88,86 persen dan 0 critical vulnerability dari Slither static analysis.
+Bagi pengembang dan peneliti, sebagai bahan referensi bagi pengembang smart contract yang ingin mengoptimalkan biaya gas sekaligus menjaga keamanan bridge, serta bagi peneliti selanjutnya yang tertarik pada pengembangan arsitektur bridge yang lebih efisien dan aman.
 
 ---
 
-## SLIDE 7: PENUTUP (1 menit)
+## SLIDE 7: PENUTUP (0,5 menit)
 
-Berdasarkan seluruh hasil penelitian ini, dapat disimpulkan bahwa Tier D merupakan solusi paling optimal yang menggabungkan keamanan maksimal dengan biaya gas yang sangat rendah melalui modifikasi EIP-1153 secara inline.
+Demikian presentasi proposal penelitian saya. Penelitian ini bertujuan untuk mengoptimalkan biaya gas dan keamanan smart contract bridge melalui implementasi EIP-1153 transient storage pada arsitektur 4-tier.
 
-Kontribusi utama penelitian ini adalah membuktikan bahwa EIP-1153 bisa dimodifikasi dari fungsi tunggal reentrancy guard menjadi platform keamanan multifungsi yang mencakup lima mekanisme pertahanan.
+Saya berharap proposal ini dapat diterima untuk dilanjutkan ke tahap penelitian selanjutnya.
 
-Saran untuk pengembangan selanjutnya adalah integrasi formal verification menggunakan Halmos atau Certora, pengembangan multi-pattern MEV detection, serta pengujian pada multi-chain testnet seperti Sepolia atau Arbitrum.
-
-Sekian presentasi dari saya. Terima kasih atas perhatiannya.
+Terima kasih atas perhatian Bapak/Ibu Dosen.
 
 Wassalamualaikum warahmatullahi wabarakatuh.
 
@@ -107,11 +113,11 @@ Wassalamualaikum warahmatullahi wabarakatuh.
 | Slide | Judul | Durasi |
 |-------|-------|--------|
 | 1 | Pembukaan | 0,5 menit |
-| 2 | Latar Belakang | 1,5 menit |
-| 3 | Masalah & Gap | 1 menit |
-| 4 | Metodologi | 1,5 menit |
-| 5 | Kontribusi Tier D | 1,5 menit |
-| 6 | Hasil & Validasi | 2 menit |
-| 7 | Penutup | 1 menit |
+| 2 | Latar Belakang | 2 menit |
+| 3 | Identifikasi Masalah | 1,5 menit |
+| 4 | Penelitian Terdahulu | 1,5 menit |
+| 5 | Metodologi | 2 menit |
+| 6 | Manfaat Penelitian | 1 menit |
+| 7 | Penutup | 0,5 menit |
 | **Total** | | **9 menit** |
 | **Sisa** | Q&A | **1 menit** |

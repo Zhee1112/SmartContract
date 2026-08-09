@@ -4,19 +4,19 @@
 
 ### 1. Apa itu blockchain?
 
-**Jawaban:** Blockchain itu seperti buku besar digital yang bisa dilihat oleh semua orang tapi tidak bisa diubah. Semua transaksi tercatat secara transparan dan permanen.
+**Jawaban:** Blockchain adalah buku besar digital terdistribusi yang mencatat semua transaksi secara transparan dan tidak bisa diubah. Semua peserta jaringan bisa melihat data yang sama tanpa memerlukan perantara.
 
 ### 2. Apa itu smart contract?
 
-**Jawaban:** Smart contract itu kontrak otomatis berupa kode komputer. Jika kondisi yang ditentukan terpenuhi, kode langsung dieksekusi tanpa perlu perantara.
+**Jawaban:** Smart contract adalah kontrak otomatis berupa kode komputer yang dieksekusi ketika kondisi yang ditentukan terpenuhi. Tidak memerlukan perantara untuk menjalankannya.
 
 ### 3. Apa itu DeFi?
 
-**Jawaban:** DeFi adalah keuangan tanpa bank. Semua transaksi dilakukan langsung antar pengguna, tanpa melalui lembaga keuangan konvensional.
+**Jawaban:** DeFi adalah sistem keuangan yang beroperasi tanpa bank atau lembaga keuangan konvensional. Semua transaksi dilakukan langsung antar pengguna melalui smart contract.
 
 ### 4. Apa itu bridge?
 
-**Jawaban:** Bridge itu jembatan penghubung antar blockchain. Bridge memungkinkan transfer aset dari satu jaringan ke jaringan lainnya, misalnya dari Ethereum ke Arbitrum.
+**Jawaban:** Bridge adalah jembatan penghubung antar blockchain. Bridge memungkinkan transfer aset dari satu jaringan ke jaringan lainnya yang sebelumnya terisolasi.
 
 ### 5. Kenapa bridge penting?
 
@@ -24,23 +24,23 @@
 
 ### 6. Apa itu gas?
 
-**Jawaban:** Gas itu biaya transaksi di Ethereum. Setiap operasi di blockchain membutuhkan biaya yang dibayarkan dalam bentuk gas.
+**Jawaban:** Gas adalah biaya transaksi di Ethereum. Setiap operasi di blockchain membutuhkan biaya yang diukur dalam satuan gas.
 
 ### 7. Apa itu reentrancy?
 
-**Jawaban:** Reentrancy itu serangan di mana penyerang memanggil fungsi withdraw secara berulang kali sebelum saldo benar-benar diperbarui. Seperti orang yang mondar-mandir di pintu keluar supermarket, mengambil barang berkali-kali sebelum sempat membayar.
+**Jawaban:** Reentrancy adalah serangan di mana penyerang memanggil fungsi withdraw secara berulang kali sebelum state diperbarui. Seperti orang yang mondar-mandir di pintu keluar supermarket mengambil barang berkali-kali.
 
 ### 8. Apa itu MEV?
 
-**Jawaban:** MEV adalah Maximum Extractable Value. Ini adalah keuntungan yang bisa didapat dari manipulasi urutan transaksi di mempool. Contohnya, bot yang memotong antrian di kasir.
+**Jawaban:** MEV adalah Maximum Extractable Value, yaitu keuntungan yang bisa didapat dari manipulasi urutan transaksi di mempool. Contohnya, bot yang memotong antrian di kasir.
 
 ### 9. Bedanya EIP-1153 dengan SSTORE?
 
 **Jawaban:** EIP-1153 menggunakan TSTORE yang hanya butuh 100 gas per operasi. Sedangkan SSTORE konvensional membutuhkan 20.000 gas. Penghematannya mencapai 98,7 persen.
 
-### 10. Apa yang dibuat dalam penelitian ini?
+### 10. Apa yang akan dibuat dalam penelitian ini?
 
-**Jawaban:** Saya membuat 4 versi bridge dengan tingkat optimasi yang berbeda, lalu membandingkan gas dan keamanannya. Tujuannya untuk menemukan konfigurasi paling efisien.
+**Jawaban:** Penelitian ini akan membuat 4 versi bridge dengan tingkat optimasi yang berbeda, lalu membandingkan gas dan keamanannya untuk menemukan konfigurasi paling efisien.
 
 ---
 
@@ -52,7 +52,7 @@
 
 ### 2. Mengapa menggunakan inline assembly?
 
-**Jawaban:** Karena opcode TSTORE dan TLOAD belum tersedia di Solidity high-level. Untuk mengakses fitur ini, kita harus menggunakan inline assembly.
+**Jawaban:** Karena opcode TSTORE dan TLOAD belum tersedia di Solidity high-level. Untuk mengakses fitur ini, implementasi harus menggunakan inline assembly.
 
 ### 3. Apa bedanya Tier C dan Tier D?
 
@@ -60,31 +60,31 @@
 
 ### 4. Bagaimana MEV sandwich dideteksi?
 
-**Jawaban:** Saya menggunakan single-slot LastTx struct yang menyimpan informasi transaksi sebelumnya. Jika terdeteksi pola frontrun-victim dalam blok yang sama, transaksi akan ditandai sebagai mencurigakan.
+**Jawaban:** Menggunakan single-slot LastTx struct yang menyimpan informasi transaksi sebelumnya. Jika terdeteksi pola frontrun-victim dalam blok yang sama, transaksi akan ditandai sebagai mencurigakan.
 
 ### 5. Apa itu SPG?
 
-**Jawaban:** SPG adalah Security Points per Gas. Rumusnya: (Skor Keamanan / Gas Deposit) x 1.000.000. Makin tinggi nilainya, makin efisien bridge tersebut dalam mengubah biaya gas menjadi keamanan.
+**Jawaban:** SPG adalah Security Points per Gas, yaitu metrik untuk mengukur efisiensi bridge dalam mengubah biaya gas menjadi keamanan. Rumusnya: (Skor Keamanan / Gas Deposit) x 1.000.000.
 
 ### 6. Bagaimana validasi statistik dilakukan?
 
-**Jawaban:** Saya menggunakan Welch's t-test untuk menentukan signifikansi perbedaan gas antara Tier C dan Tier D. Serta Cohen's d untuk mengukur effect size atau besarnya perbedaan.
+**Jawaban:** Menggunakan Welch's t-test untuk menentukan signifikansi perbedaan gas antar tier, serta Cohen's d untuk mengukur effect size atau besarnya perbedaan.
 
-### 7. Mengapa menggunakan Welch's t-test bukan t-test biasa?
+### 7. Mengapa menggunakan Welch's t-test?
 
-**Jawaban:** Karena Welch's t-test tidak memerlukan asumsi homogenitas variansi. Ini lebih robust dan cocok untuk data yang variansinya berbeda antar grup.
+**Jawaban:** Karena Welch's t-test tidak memerlukan asumsi homogenitas variansi. Lebih robust dan cocok untuk data dengan variansi yang berbeda antar grup.
 
 ### 8. Apa itu fuzz testing?
 
-**Jawaban:** Fuzz testing adalah property-based testing dengan input acak. Tujuannya untuk menemukan edge cases atau kondisi batas yang mungkin terlewatkan oleh test biasa.
+**Jawaban:** Fuzz testing adalah property-based testing dengan input acak. Tujuannya untuk menemukan edge cases atau kondisi batas yang mungkin terlewatkan.
 
 ### 9. Bagaimana economic penalty dihitung?
 
-**Jawaban:** Rumusnya: Penalty = Amount x (Lambda x P_detect / 100.000.000). Lambda adalah faktor penalti risiko (15.000 = 1,5), P_detect adalah probabilitas deteksi (9.600 = 96%).
+**Jawaban:** Rumusnya: Penalty = Amount x (Lambda x P_detect / 100.000.000). Lambda adalah faktor penalti risiko, P_detect adalah probabilitas deteksi.
 
-### 10. Apa yang terjadi jika serangan terdeteksi?
+### 10. Mengapa memilih 4 tier?
 
-**Jawaban:** Penyerang akan dikenai penalti ekonomi secara otomatis sebesar 14,4 persen dari jumlah transaksi. Penalti ini membuat serangan menjadi tidak menguntungkan secara ekonomi.
+**Jawaban:** Empat tier merepresentasikan spektrum optimasi dari yang paling dasar (tanpa optimasi) hingga yang paling canggih (inline dynamic). Memungkinkan perbandingan yang komprehensif.
 
 ---
 
@@ -92,123 +92,83 @@
 
 ### 1. Mengapa menggunakan 100 sampel?
 
-**Jawaban:** Berdasarkan Central Limit Theorem, distribusi mean akan mendekati normal untuk n >= 30. Jumlah 100 sampel memberikan akurasi yang lebih tinggi untuk pengukuran gas.
+**Jawaban:** Berdasarkan Central Limit Theorem, distribusi mean akan mendekati normal untuk n >= 30. Jumlah 100 sampel memberikan akurasi yang lebih tinggi dan confidence interval yang lebih sempit.
 
 ### 2. Bagaimana gas diukur?
 
-**Jawaban:** Gas diukur menggunakan forge test --gas-report pada environment EVM simulasi. Setiap operasi diukur 100 kali untuk mendapatkan statistik yang akurat.
+**Jawaban:** Gas diukur menggunakan forge test --gas-report pada environment EVM simulasi dengan Foundry. Setiap operasi diukur 100 kali untuk mendapatkan statistik yang akurat.
 
 ### 3. Apakah simulasi sama dengan production?
 
-**Jawaban:** Tidak sama persis, tapi cukup representatif untuk perbandingan relatif. Yang penting adalah perbandingan antar tier, bukan nilai absolutnya.
+**Jawaban:** Tidak sama persis, tapi cukup representatif untuk perbandingan relatif antar tier. Yang penting adalah konsistensi pengukuran dalam environment yang sama.
 
 ### 4. Mengapa hanya 3 operasi yang diuji?
 
-**Jawaban:** Deposit, withdraw, dan swap adalah operasi utama bridge. Ketiga operasi ini paling representatif untuk mengukur kinerja bridge.
+**Jawaban:** Deposit, withdraw, dan swap adalah operasi utama bridge yang paling representatif untuk mengukur kinerja dan keamanan smart contract bridge.
 
-### 5. Mengapa menggunakan Foundry bukan Hardhat?
+### 5. Mengapa menggunakan Foundry?
 
-**Jawaban:** Foundry memiliki keunggulan dalam kecepatan dan fitur fuzz testing bawaan. Selain itu, Foundry lebih cocok untuk pengukuran gas yang akurat.
+**Jawaban:** Foundry memiliki keunggulan dalam kecepatan eksekusi dan fitur fuzz testing bawaan. Selain itu, Foundry lebih cocok untuk pengukuran gas yang akurat.
 
 ### 6. Bagaimana dengan deployment cost?
 
-**Jawaban:** Tier D membutuhkan 829.116 gas untuk deploy, sedangkan Tier C membutuhkan 971.051 gas. Tier D lebih ringan karena tidak ada kontrak terpisah.
+**Jawaban:** Deployment cost akan diukur untuk setiap tier. Tier D diperkirakan lebih ringan karena tidak ada kontrak terpisah seperti Tier C.
 
-### 7. Apakah 216 test sudah cukup?
+### 7. Berapa jumlah test yang direncanakan?
 
-**Jawaban:** Cukup. 216 test mencakup 10 metode pengujian berbeda dengan coverage 88,86 persen untuk line dan 98,04 persen untuk fungsi.
+**Jawaban:** Rencananya lebih dari 200 test cases yang mencakup berbagai metode pengujian: unit test, integration test, fuzz testing, invariant testing, dan attack simulation.
 
-### 8. Apakah sudah diuji di testnet?
+### 8. Apakah sudah ada prototipe?
 
-**Jawaban:** Belum, ini menjadi rencana pengembangan selanjutnya. Pengujian akan dilakukan di Sepolia atau Arbitrum testnet.
+**Jawaban:** Ya, prototipe 4 kontrak bridge sudah diimplementasikan. Pengujian dan pengukuran akan dilakukan setelah proposal ini disetujui.
 
 ---
 
-## Kategori D: Pertanyaan Hasil
+## Kategori D: Pertanyaan Penelitian Terdahulu
 
-### 1. Berapa penghematan gas Tier D vs Tier C?
+### 1. Siapa saja peneliti yang sudah menulis tentang EIP-1153?
 
-**Jawaban:** Deposit: 40 persen, Withdraw: 76 persen, Swap: 54 persen. Rata-rata penghematan sekitar 57 persen.
+**Jawaban:** Zhang dan Debono (2024) menganalisis adopsi EIP-1153, Chainsecurity (2023) menulis tentang keamanan TSTORE, dan Benedetti et al. (2024) menganalisis gas cost EIP-1153.
 
-### 2. Apakah hasilnya signifikan?
+### 2. Apa yang menjadi gap dari penelitian sebelumnya?
 
-**Jawaban:** Ya, sangat signifikan. P-value sebesar 2,25 kali 10 pangkat minus 222, jauh lebih kecil dari threshold 0,05.
+**Jawaban:** Belum ada penelitian yang menggabungkan optimasi gas statis dan dinamis secara inline dalam satu arsitektur bridge dengan pengukuran cost-effectiveness.
 
-### 3. Apa arti Cohen's d = 220,64?
+### 3. Apa novelty dari penelitian ini?
 
-**Jawaban:** Effect size yang sangat besar. Artinya, distribusi gas Tier C dan Tier D sama sekali tidak tumpang tindih. Seluruh sampel Tier D memiliki gas yang lebih rendah dari Tier C.
+**Jawaban:** Implementasi EIP-1153 secara inline untuk 5 mekanisme keamanan sekaligus (bukan hanya reentrancy guard) dalam satu kontrak tanpa external calls.
 
-### 4. Mengapa Tier D lebih hemat dari Tier C?
+### 4. Bagaimana penelitian ini berbeda dari OpenZeppelin?
 
-**Jawaban:** Karena Tier D tidak menggunakan external calls. Semua logika keamanan di-inline di dalam kontrak utama, sehingga tidak ada overhead gas dari panggilan antar kontrak.
+**Jawaban:** OpenZeppelin hanya mengimplementasikan reentrancy guard. Penelitian ini mengembangkan 5 mekanisme keamanan: reentrancy guard, MEV detection, economic penalty, emergency pause, dan block tracking.
 
-### 5. Apakah Tier D bisa dipakai di production?
+### 5. Referensi utama yang digunakan?
 
-**Jawaban:** Bisa, tapi perlu beberapa tahap lagi. Formal verification untuk membuktikan kebenaran kode, dan audit keamanan dari pihak ketiga.
-
-### 6. Bagaimana dengan scalability?
-
-**Jawaban:** Tier D lebih scalable karena tidak ada dependency ke kontrak lain. Cukup deploy satu kontrak, semua fitur keamanan sudah terintegrasi.
-
-### 7. Apakah ada kelemahan Tier D?
-
-**Jawaban:** Code size lebih besar karena semua logika di-inline. Selain itu, upgrade lebih sulit karena semua kode ada di satu kontrak.
-
-### 8. Berapa SPG Tier D?
-
-**Jawaban:** 220,1. Sedangkan Tier C hanya 65,2. Artinya, Tier D 3,15 kali lebih efisien dalam mengubah biaya gas menjadi perlindungan keamanan.
-
-### 9. Apakah ada manfaat ekonomi?
-
-**Jawaban:** Untuk bridge dengan 100.000 transaksi per bulan, penghematan biaya operasional mencapai 79.000 hingga 213.000 dolar per bulan.
-
-### 10. Bagaimana dengan keamanan Tier D?
-
-**Jawaban:** Tier D mencapai skor keamanan penuh 8 dari 8 fitur. Slither static analysis menunjukkan 0 critical vulnerability.
+**Jawaban:** Zhang & Debono (2024) untuk adopsi EIP-1153, Chainsecurity (2023) untuk keamanan, Di Sorbo et al. (2022) untuk optimasi gas, dan Benedetti et al. (2024) untuk framework komparatif.
 
 ---
 
 ## Kategori E: Pertanyaan Kritis/Trik
 
-### 1. Apakah ini hanya mengulang penelitian OpenZeppelin?
+### 1. Apakah penelitian ini hanya mengulang penelitian lain?
 
-**Jawaban:** Tidak. OpenZeppelin hanya mengimplementasikan reentrancy guard menggunakan EIP-1153. Penelitian ini mengembangkan 5 mekanisme keamanan sekaligus secara inline: reentrancy guard, MEV detection, economic penalty, emergency pause, dan block tracking.
+**Jawaban:** Tidak. Penelitian ini memiliki novelty dalam pendekatan inline untuk multi-mechanism defense, yang belum ada di penelitian sebelumnya.
 
-### 2. Apakah EIP-1153 sudah di-production?
+### 2. Apakah EIP-1153 sudah stabil?
 
-**Jawaban:** Sudah. EIP-1153 diaktifkan di Fork Cancun pada bulan April 2024. Saat ini sudah banyak kontrak yang mengadopsi fitur ini.
+**Jawaban:** Ya, EIP-1153 sudah diaktifkan di Fork Cancun pada April 2024 dan sudah final di Ethereum.
 
-### 3. Mengapa tidak menggunakan SSTORE2?
+### 3. Mengapa tidak langsung ke implementasi production?
 
-**Jawaban:** SSTORE2 dirancang untuk menyimpan data yang sangat besar. Untuk reentrancy guard yang hanya membutuhkan satu slot, TSTORE jauh lebih efisien.
+**Jawaban:** Karena tahapan penelitian yang benar adalah: proposal → implementasi → pengujian → validasi → publikasi. Saat ini masih dalam tahap proposal.
 
-### 4. Apakah ada risiko keamanan dari inline assembly?
+### 4. Apakah ada risiko dari penelitian ini?
 
-**Jawaban:** Ada potensi risiko, tapi sudah diverifikasi menggunakan Slither static analysis yang menunjukkan 0 critical vulnerability. Selain itu, 216 test cases sudah membuktikan bahwa semua fitur keamanan bekerja dengan benar.
+**Jawaban:** Risiko utama adalah jika EIP-1153 mengalami perubahan di masa depan. Namun, karena sudah final, risiko ini sangat kecil.
 
-### 5. Bagaimana jika EIP-1153 di-deprecate di masa depan?
+### 5. Bagaimana dengan keterbatasan penelitian?
 
-**Jawaban:** Kemungkinan kecil karena EIP-1153 sudah final di Cancun fork. Namun, jika terjadi perubahan, kode bisa di-migrate ke mekanisme baru.
-
-### 6. Apakah ini hanya teori atau sudah diuji?
-
-**Jawaban:** Sudah diuji secara empiris dengan 216 test cases yang semuanya PASS. Pengujian meliputi unit test, integration test, fuzz testing, invariant testing, dan attack simulation.
-
-### 7. Mengapa tidak langsung deploy ke mainnet?
-
-**Jawaban:** Deploy ke mainnet membutuhkan keamanan yang sangat ketat. Diperlukan formal verification dan audit keamanan dari pihak ketiga sebelum bisa digunakan secara production.
-
-### 8. Apakah ada penelitian kompetitor yang serupa?
-
-**Jawaban:** Belum ada yang secara spesifik menggabungkan optimasi gas statis dan dinamis secara inline dalam satu arsitektur bridge dengan pengukuran cost-effectiveness menggunakan metrik SPG.
-
-### 9. Bagaimana dengan volatilitas gas?
-
-**Jawaban:** Pengukuran dilakukan dalam environment terkontrol menggunakan Foundry. Hasilnya relatif stabil karena tidak dipengaruhi oleh kondisi jaringan yang berubah-ubah.
-
-### 10. Apa kontribusi utama penelitian ini?
-
-**Jawaban:** Membuktikan bahwa EIP-1153 bisa dimodifikasi dari fungsi tunggal reentrancy guard menjadi platform keamanan multifungsi yang mencakup lima mekanisme pertahanan dengan biaya gas yang jauh lebih rendah.
+**Jawaban:** Keterbatasan meliputi: belum formal verification, belum testnet, dan baru simulasi. Semua ini menjadi rencana pengembangan selanjutnya.
 
 ---
 
@@ -216,23 +176,23 @@
 
 ### 1. "Mengapa tidak menggunakan formal verification?"
 
-**Jawaban:** Formal verification memang sangat penting untuk keamanan smart contract. Saat ini saya masih dalam tahap pengembangan prototype. Formal verification using Halmos atau Certora menjadi rencana pengembangan selanjutnya setelah proposal ini disetujui.
+**Jawaban:** Formal verification memang penting untuk keamanan smart contract. Saat ini masih dalam tahap proposal. Formal verification using Halmos atau Certora menjadi rencana pengembangan selanjutnya.
 
 ### 2. "Apakah sudah diuji di testnet?"
 
-**Jawaban:** Belum, ini memang menjadi keterbatasan penelitian saat ini. Pengujian di testnet seperti Sepolia atau Arbitrum menjadi rencana pengembangan selanjutnya untuk memvalidasi kinerja di lingkungan yang lebih realistis.
+**Jawaban:** Belum, ini menjadi rencana pengembangan selanjutnya setelah proposal disetujui. Pengujian akan dilakukan di Sepolia atau Arbitrum testnet.
 
-### 3. "Bagaimana dengan overhead deployment?"
+### 3. "Bagaimana dengan validitas pengukuran?"
 
-**Jawaban:** Tier D membutuhkan 829.116 gas untuk deploy, sedangkan Tier C membutuhkan 971.051 gas. Artinya, Tier D lebih ringan sekitar 14,6 persen dari Tier C karena tidak ada kontrak terpisah.
+**Jawaban:** Pengukuran menggunakan 100 sampel per operasi berdasarkan Central Limit Theorem. Environment simulasi menggunakan Foundry dengan EVM Cancun yang standar.
 
-### 4. "Apakah ada bias dalam pengukuran?"
+### 4. "Apakah ada bias dalam penelitian?"
 
-**Jawaban:** Pengukuran menggunakan 100 sampel per operasi berdasarkan Central Limit Theorem. Environment simulasi menggunakan Foundry dengan EVM Cancun yang standar. Meskipun ada perbedaan dengan production, perbandingan antar tier tetap valid.
+**Jawaban:** Penelitian menggunakan pendekatan komparatif yang mengontrol variabel luar. Semua tier diukur dalam environment yang sama untuk memastikan validitas perbandingan.
 
 ### 5. "Mengapa tidak menggunakan Hardhat?"
 
-**Jawaban:** Foundry dipilih karena memiliki keunggulan dalam kecepatan eksekusi dan fitur fuzz testing bawaan. Selain itu, Foundry lebih cocok untuk pengukuran gas yang akurat karena menggunakan EVM simulasi langsung.
+**Jawaban:** Foundry dipilih karena memiliki keunggulan dalam kecepatan dan fitur fuzz testing bawaan. Selain itu, Foundry lebih cocok untuk pengukuran gas yang akurat.
 
 ---
 
@@ -240,8 +200,8 @@
 
 1. **Dengarkan pertanyaan dengan seksama** sebelum menjawab
 2. **Jawab secara singkat dan langsung** pada inti pertanyaan
-3. **Gunakan analogi** untuk menjelaskan konsep teknis kepada dosen yang belum awam
+3. **Gunakan analogi** untuk menjelaskan konsep teknis
 4. **Akui keterbatasan** dengan jujur dan sebutkan rencana pengembangan
-5. **Tunjukkan data** untuk memperkuat jawaban (angka, statistik, test results)
+5. **Sebutkan referensi** untuk memperkuat jawaban
 6. **Tetap tenang** jika ditanya pertanyaan yang sulit
-7. **Siapkan backup data** dari EVIDENCE_TEST.md jika diperlukan
+7. **Siapkan backup data** dari dokumen proposal jika diperlukan
