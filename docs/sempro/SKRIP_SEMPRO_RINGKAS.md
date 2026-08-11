@@ -28,10 +28,11 @@ Decentralized Finance (DeFi) merupakan sistem keuangan yang beroperasi tanpa per
 
 **Dua Serangan Utama:**
 
-| Serangan | Penjelasan |
-|----------|------------|
-| Reentrancy | Penyerang memanggil fungsi withdraw secara berulang sebelum saldo diperbarui, seperti orang yang mondar-mandir di pintu keluar supermarket mengambil barang berkali-kali sebelum membayar |
-| MEV Sandwich | Bot memanipulasi urutan transaksi di mempool, seperti orang yang memotong antrian di kasir |
+*Reentrancy Attack*
+Penyerang memanggil fungsi withdraw secara berulang sebelum saldo diperbarui. Analoginya seperti orang yang mondar-mandir di pintu keluar supermarket mengambil barang berkali-kali sebelum membayar.
+
+*MEV Sandwich Attack*
+Bot memanipulasi urutan transaksi di mempool. Analoginya seperti orang yang memotong antrian di kasir.
 
 **Dilema:**
 Mekanisme keamanan konvensional menggunakan SSTORE membutuhkan 22.900 gas per transaksi. Bagi bridge dengan volume tinggi, beban ini sangat memberatkan. Pengembang dihadapkan pada pilihan sulit antara keamanan dan efisiensi gas.
@@ -60,16 +61,17 @@ Bagaimana mengoptimalkan biaya gas pada smart contract bridge melalui implementa
 
 ## SLIDE 4: PENELITIAN TERDAHULU
 
-**Penelitian Terdahulu:**
+**Zhang & Debono (2024)**
+Menganalisis lebih dari 250 kontrak yang sudah mengadopsi EIP-1153. Hasilnya: lebih dari 50 persen hanya menggunakannya untuk reentrancy guard saja. Potensi yang belum tergarap masih sangat besar.
 
-| Penulis | Tahun | Fokus | Temuan Utama |
-|---------|-------|-------|--------------|
-| Zhang & Debono | 2024 | Adopsi EIP-1153 | 50%+ kontrak hanya pakai untuk reentrancy guard |
-| Chainsecurity | 2023 | Keamanan EIP-1153 | TSTORE tidak punya batas gas minimum seperti SSTORE |
-| Di Sorbo et al. | 2022 | Optimasi gas | 19 code smells pada Solidity yang menyebabkan pemborosan gas |
+**Chainsecurity (2023)**
+Menunjukkan bahwa TSTORE tidak punya batas gas minimum seperti SSTORE. Mekanisme keamanan lama perlu dievaluasi ulang.
+
+**Di Sorbo et al. (2022)**
+Mengidentifikasi 19 code smells pada Solidity yang menyebabkan kontrak menjadi boros gas. Temuan ini menunjukkan masih banyaknya pemborosan gas yang tidak disadari pengembang.
 
 **Gap Penelitian:**
-Berdasarkan kajian literatur, belum ada penelitian yang secara spesifik menggabungkan optimasi gas statis dan dinamis secara inline dalam satu arsitektur bridge dengan pengukuran cost-effectiveness menggunakan metrik SPG.
+Belum ada penelitian yang secara spesifik menggabungkan optimasi gas statis dan dinamis secara inline dalam satu arsitektur bridge dengan pengukuran cost-effectiveness menggunakan metrik SPG.
 
 ---
 
@@ -80,12 +82,17 @@ Studi komparatif kuantitatif dengan empirical design.
 
 **4-Tier Architecture:**
 
-| Tier | Kontrak | Karakteristik | Gas | Keamanan |
-|------|---------|---------------|-----|----------|
-| A | UnoptimizedBridge | Baseline tanpa optimasi | Rendah | 0/8 fitur |
-| B | BridgeStaticOnly | Optimasi statis saja (CEI, packing, custom errors) | Rendah | 2/8 fitur |
-| C | VictimBridge | Full dynamic (EIP-1153 + MonitorMock via external calls) | Tinggi | 8/8 fitur |
-| D | LightweightBridge | Inline dynamic (kontribusi utama) | Rendah | 8/8 fitur |
+*Tier A (UnoptimizedBridge)*
+Baseline tanpa optimasi sama sekali. Gas rendah, skor keamanan 0 dari 8 fitur.
+
+*Tier B (BridgeStaticOnly)*
+Optimasi statis saja: CEI Pattern, variable packing, custom errors. Gas rendah, skor keamanan 2 dari 8 fitur.
+
+*Tier C (VictimBridge)*
+Full dynamic: EIP-1153 + MonitorMock via external calls. Gas sangat tinggi, skor keamanan penuh 8 dari 8 fitur.
+
+*Tier D (LightweightBridge)*
+Inline dynamic: kontribusi utama penelitian. Gas rendah, skor keamanan penuh 8 dari 8 fitur.
 
 **Pengukuran:**
 - Framework: Foundry dengan EVM Cancun
@@ -134,9 +141,9 @@ Proposal ini dapat diterima untuk dilanjutkan ke tahap penelitian selanjutnya, y
 ## CATATAN UNTUK PPT
 
 - **Slide 1:** Judul + identitas (tambah foto/logo)
-- **Slide 2:** Gunakan infografis untuk angka kerugian, tabel untuk serangan
+- **Slide 2:** Gunakan infografis untuk angka kerugian
 - **Slide 3:** Gunakan bullet points dengan numbering
-- **Slide 4:** Gunakan tabel
-- **Slide 5:** Gunakan diagram flow atau tabel perbandingan
+- **Slide 4:** Gunakan bullet points per peneliti
+- **Slide 5:** Gunakan bullet points per tier
 - **Slide 6:** Gunakan 3 kolom dengan ikon
 - **Slide 7:** Kesimpulan singkat + terima kasih
