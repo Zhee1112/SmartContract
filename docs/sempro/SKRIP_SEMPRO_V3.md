@@ -28,7 +28,7 @@ Dua jenis serangan yang paling berbahaya adalah reentrancy attack dan MEV sandwi
 
 Dilema yang muncul adalah mekanisme keamanan konvensional menggunakan SSTORE membutuhkan 22.900 gas per transaksi. Bagi bridge dengan volume transaksi tinggi, beban biaya ini sangat memberatkan. Akibatnya, pengembang sering kali dihadapkan pada pilihan sulit antara keamanan dan efisiensi gas.
 
-Beruntung, Ethereum menawarkan solusi melalui EIP-1153: Transient Storage Opcodes. Teknologi ini memperkenalkan TSTORE dan TLOAD yang hanya membutuhkan 100 gas per operasi. Data di transient storage otomatis ter-reset di akhir transaksi, jadi tidak perlu repot-repot membersihkan secara manual. Penghematan yang ditawarkan mencapai 98,7 persen dibandingkan SSTORE konvensional.
+Beruntung, Ethereum merancang sistem penyimpanan sementara yang disebut transient storage melalui EIP-1153. Sistem ini memperkenalkan dua instruksi baru: TSTORE dan TLOAD yang hanya membutuhkan 100 gas per operasi. Setelah melalui proses diskusi dan pengembangan yang cukup panjang sejak diusulkan pada tahun 2021, EIP-1153 akhirnya diresmikan dan diaktifkan di Fork Cancun pada bulan Maret 2024. Keunggulan utamanya adalah data di transient storage otomatis ter-reset di akhir transaksi tanpa memerlukan biaya tambahan. Penghematan yang ditawarkan mencapai 98,7 persen dibandingkan SSTORE konvensional.
 
 ---
 

@@ -38,7 +38,7 @@ Bot memanipulasi urutan transaksi di mempool. Analoginya seperti orang yang memo
 Mekanisme keamanan konvensional menggunakan SSTORE membutuhkan 22.900 gas per transaksi (OpenZeppelin, 2024). Bagi bridge dengan volume tinggi, beban ini sangat memberatkan (Di Sorbo et al., 2022). Pengembang dihadapkan pada pilihan sulit antara keamanan dan efisiensi gas.
 
 **Solusi:**
-Ethereum mengaktifkan EIP-1153: Transient Storage Opcodes yang memperkenalkan TSTORE dan TLOAD dengan biaya hanya 100 gas per operasi (EIP-1153, 2021). Data otomatis ter-reset di akhir transaksi (Solidity Blog, 2024). Penghematan mencapai 98,7 persen dibandingkan SSTORE.
+Ethereum merancang sistem penyimpanan sementara yang disebut transient storage melalui EIP-1153. Sistem ini memperkenalkan dua instruksi baru: TSTORE dan TLOAD yang hanya membutuhkan 100 gas per operasi. Setelah melalui proses diskusi dan pengembangan yang cukup panjang sejak diusulkan pada tahun 2021, EIP-1153 akhirnya diresmikan dan diaktifkan di Fork Cancun pada bulan Maret 2024. Keunggulan utamanya adalah data di transient storage otomatis ter-reset di akhir transaksi tanpa memerlukan biaya tambahan. Penghematan yang ditawarkan mencapai 98,7 persen dibandingkan SSTORE konvensional.
 
 ---
 
