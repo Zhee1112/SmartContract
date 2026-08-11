@@ -64,35 +64,21 @@ Berdasarkan kajian literatur, teridentifikasi celah penelitian yang belum tertut
 
 ## SLIDE 5: METODOLOGI (2 menit)
 
-Untuk mengatasi permasalahan di atas, penelitian ini menggunakan dua pendekatan utama: kuantitatif dan kualitatif.
+Untuk mengatasi permasalahan di atas, penelitian ini menggunakan paradigma empiris-kuantitatif. Pendekatan empiris dipilih karena berfokus pada pengukuran fakta objektif melalui eksperimen terkontrol.
 
-*Metode Kuantitatif*
-Fokus pada pengukuran angka dan data numerik. Metode yang digunakan meliputi:
-- Gas Benchmark: Pengukuran konsumsi gas dengan 100 sampel per operasi menggunakan Foundry (Cochran, 1977)
-- Statistical Analysis: Analisis statistik deskriptif (mean, min, max, standar deviasi) dan inferensial (Welch's t-test, Cohen's d)
-- Unit Test: Pengujian fungsi individual pada setiap tier (~100 test)
-- Integration Test: Pengujian interaksi antar komponen (~50 test)
-- Fuzz Testing: Property-based testing dengan input acak (8 test)
-- Invariant Testing: Verifikasi properti sistem yang harus selalu benar (3 test)
+**Mengapa 4-Tier?**
 
-*Metode Kualitatif*
-Fokus pada evaluasi kualitas dan fitur keamanan. Metode yang digunakan meliputi:
-- Attack Simulation: Simulasi serangan nyata (reentrancy, MEV sandwich, cross-block MEV) (~30 test)
-- Economic Simulation: Analisis profitabilitas serangan menggunakan expected utility formula (~8 test)
-- State Machine Testing: Pengujian transisi state pause/unpause (14 test)
-- Edge Case Testing: Pengujian kondisi batas dan error handling (28 test)
+4-Tier dirancang untuk merepresentasikan spektrum optimasi dari yang paling dasar hingga yang paling canggih. Setiap tier merepresentasikan kondisi nyata di lapangan dan memiliki paper yang mewakili.
 
-Penulis merancang empat tingkat arsitektur bridge yang disebut 4-Tier Architecture.
+Tier A (UnoptimizedBridge) representasi bridge tanpa optimasi, rentan reentrancy. Mewakili kondisi bridge yang belum dioptimasi seperti yang diidentifikasi oleh Trail of Bits (2022) pada Wormhole Bridge dan Samreen & Alalfi (2020) dalam identifikasi kerentanan reentrancy. Gas rendah, skor keamanan 0 dari 8 fitur.
 
-Tier A merupakan baseline tanpa optimasi sama sekali. Tier A merepresentasikan kondisi bridge yang berjalan di Ethereum saat ini tanpa optimasi gas maupun fitur keamanan.
+Tier B (BridgeStaticOnly) representasi bridge dengan optimasi statis saja: CEI Pattern, variable packing, custom errors. Mewakili pendekatan optimasi gas berbasis code smells yang diidentifikasi oleh Di Sorbo et al. (2022) dan analisis statis oleh Albert et al. (2021). Gas rendah, skor keamanan 2 dari 8 fitur.
 
-Tier B menggunakan optimasi statis berupa CEI Pattern, variable packing, dan custom errors. Gas-nya rendah namun hanya memiliki 2 dari 8 fitur keamanan.
+Tier C (VictimBridge) representasi bridge dengan dynamic protection via external calls ke kontrak terpisah (MonitorMock). Mewakili framework keamanan EIP-1153 dari OpenZeppelin (2024) dan studi empiris Zhang & Debono (2024) yang menunjukkan 50%+ kontrak hanya untuk reentrancy guard. Gas sangat tinggi karena banyak external calls, skor keamanan 8 dari 8 fitur.
 
-Tier C menggunakan EIP-1153 transient storage secara penuh melalui kontrak terpisah bernama MonitorMock. Skor keamanannya penuh 8 dari 8, namun gas-nya sangat tinggi karena banyak external calls.
+Tier D (LightweightBridge) kontribusi utama penelitian. Menggabungkan optimasi statis (Tier B) + dynamic protection secara inline tanpa external calls. Belum ada paper yang mewakili, ini adalah kontribusi baru. Gas rendah, skor keamanan 8 dari 8 fitur.
 
-Tier D merupakan kontribusi utama penelitian ini. Tier D menggunakan inline dynamic defense, yaitu memindahkan seluruh fitur keamanan Tier C ke dalam kode kontrak utama tanpa external calls.
-
-Total pengujian yang dilakukan adalah 216 test cases dalam 13 file test, mencakup seluruh metode di atas.
+Total pengujian yang dilakukan adalah 216 test cases dalam 13 file test menggunakan metode empiris-kuantitatif.
 
 ---
 

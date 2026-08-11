@@ -75,38 +75,24 @@ Belum ada yang menggabungkan optimasi gas statis dan dinamis secara inline dalam
 
 ## SLIDE 5: METODOLOGI
 
-**Dua Pendekatan Penelitian:**
+**Mengapa 4-Tier?**
 
-Penelitian ini menggunakan dua pendekatan utama: kuantitatif dan kualitatif.
+4-Tier dirancang untuk merepresentasikan spektrum optimasi dari yang paling dasar hingga yang paling canggih. Setiap tier merepresentasikan kondisi nyata di lapangan dan memiliki paper yang mewakili.
 
-*Metode Kuantitatif*
-Fokus pada pengukuran angka dan data numerik. Metode yang digunakan meliputi:
-- Gas Benchmark: Pengukuran konsumsi gas dengan 100 sampel per operasi menggunakan Foundry (Cochran, 1977)
-- Statistical Analysis: Analisis statistik deskriptif (mean, min, max, standar deviasi) dan inferensial (Welch's t-test, Cohen's d)
-- Unit Test: Pengujian fungsi individual pada setiap tier (~100 test)
-- Integration Test: Pengujian interaksi antar komponen (~50 test)
-- Fuzz Testing: Property-based testing dengan input acak (8 test)
-- Invariant Testing: Verifikasi properti sistem yang harus selalu benar (3 test)
+**Tier A: UnoptimizedBridge**
+Representasi bridge tanpa optimasi, rentan reentrancy. Mewakili kondisi bridge yang belum dioptimasi seperti yang diidentifikasi oleh Trail of Bits (2022) pada Wormhole Bridge dan Samreen & Alalfi (2020) dalam identifikasi kerentanan reentrancy. Gas rendah, skor keamanan 0 dari 8 fitur.
 
-*Metode Kualitatif*
-Fokus pada evaluasi kualitas dan fitur keamanan. Metode yang digunakan meliputi:
-- Attack Simulation: Simulasi serangan nyata (reentrancy, MEV sandwich, cross-block MEV) (~30 test)
-- Economic Simulation: Analisis profitabilitas serangan menggunakan expected utility formula (~8 test)
-- State Machine Testing: Pengujian transisi state pause/unpause (14 test)
-- Edge Case Testing: Pengujian kondisi batas dan error handling (28 test)
+**Tier B: BridgeStaticOnly**
+Representasi bridge dengan optimasi statis saja: CEI Pattern, variable packing, custom errors. Mewakili pendekatan optimasi gas berbasis code smells yang diidentifikasi oleh Di Sorbo et al. (2022) dan analisis statis oleh Albert et al. (2021). Gas rendah, skor keamanan 2 dari 8 fitur.
 
-**4-Tier Architecture:**
+**Tier C: VictimBridge**
+Representasi bridge dengan dynamic protection via external calls ke kontrak terpisah (MonitorMock). Mewakili framework keamanan EIP-1153 dari OpenZeppelin (2024) dan studi empiris Zhang & Debono (2024) yang menunjukkan 50%+ kontrak hanya untuk reentrancy guard. Gas sangat tinggi karena banyak external calls, skor keamanan 8 dari 8 fitur.
 
-Tier A (UnoptimizedBridge) adalah baseline tanpa optimasi sama sekali. Gas rendah, skor keamanan 0 dari 8 fitur.
-
-Tier B (BridgeStaticOnly) menggunakan optimasi statis: CEI Pattern, variable packing, custom errors. Gas rendah, skor keamanan 2 dari 8 fitur.
-
-Tier C (VictimBridge) menggunakan full dynamic: EIP-1153 + MonitorMock via external calls. Gas sangat tinggi, skor keamanan 8 dari 8 fitur.
-
-Tier D (LightweightBridge) menggunakan inline dynamic: kontribusi utama penelitian. Gas rendah, skor keamanan 8 dari 8 fitur.
+**Tier D: LightweightBridge**
+Kontribusi utama penelitian. Menggabungkan optimasi statis (Tier B) + dynamic protection secara inline tanpa external calls. Belum ada paper yang mewakili, ini adalah kontribusi baru. Gas rendah, skor keamanan 8 dari 8 fitur.
 
 **Total Pengujian:**
-216 test cases dalam 13 file test, mencakup seluruh metode di atas.
+216 test cases dalam 13 file test menggunakan metode empiris-kuantitatif.
 
 **Metrik:**
 SPG = (Skor Keamanan / Gas Deposit) x 1.000.000 (Benedetti et al., 2024)
