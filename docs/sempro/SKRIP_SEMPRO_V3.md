@@ -64,7 +64,13 @@ Berdasarkan kajian literatur, teridentifikasi celah penelitian yang belum tertut
 
 ## SLIDE 5: METODOLOGI (2 menit)
 
-Untuk mengatasi permasalahan di atas, penelitian ini menggunakan pendekatan studi komparatif kuantitatif.
+Untuk mengatasi permasalahan di atas, penelitian ini menggunakan dua pendekatan utama: kuantitatif dan kualitatif.
+
+*Pendekatan Kuantitatif*
+Fokus pada pengukuran angka dan data numerik. Dalam penelitian ini, pendekatan kuantitatif digunakan untuk mengukur konsumsi gas pada setiap tier arsitektur bridge. Hasil pengukuran dianalisis menggunakan statistik deskriptif dan inferensial untuk mendapatkan kesimpulan yang objektif dan terukur.
+
+*Pendekatan Kualitatif*
+Fokus pada evaluasi kualitas dan fitur keamanan. Dalam penelitian ini, pendekatan kualitatif digunakan untuk mengevaluasi delapan fitur keamanan pada setiap tier: reentrancy guard, MEV sandwich detection, economic penalty, emergency pause, block tracking, cross-function reentrancy, consecutive reentrancy, dan MEV cross-block. Evaluasi ini memberikan gambaran komprehensif tentang tingkat keamanan yang dicapai oleh masing-masing tier.
 
 Penulis merancang empat tingkat arsitektur bridge yang disebut 4-Tier Architecture.
 
@@ -76,9 +82,9 @@ Tier C menggunakan EIP-1153 transient storage secara penuh melalui kontrak terpi
 
 Tier D merupakan kontribusi utama penelitian ini. Tier D menggunakan inline dynamic defense, yaitu memindahkan seluruh fitur keamanan Tier C ke dalam kode kontrak utama tanpa external calls.
 
-Untuk pengukuran gas, penelitian ini menggunakan framework Foundry dengan 100 sampel per operasi. Jumlah sampel ini dipilih berdasarkan Central Limit Theorem yang menyatakan bahwa distribusi mean akan mendekati normal untuk n >= 30.
+Untuk pengukuran gas (kuantitatif), penelitian ini menggunakan framework Foundry dengan 100 sampel per operasi. Jumlah sampel ini dipilih berdasarkan Central Limit Theorem yang menyatakan bahwa distribusi mean akan mendekati normal untuk n >= 30.
 
-Evaluasi keamanan dilakukan berdasarkan delapan fitur yang dianggap kritis: reentrancy guard, MEV sandwich detection, economic penalty, emergency pause, block tracking, cross-function reentrancy, consecutive reentrancy, dan MEV cross-block.
+Untuk evaluasi keamanan (kualitatif), dilakukan berdasarkan delapan fitur yang dianggap kritis: reentrancy guard, MEV sandwich detection, economic penalty, emergency pause, block tracking, cross-function reentrancy, consecutive reentrancy, dan MEV cross-block.
 
 Validasi statistik menggunakan Welch's t-test untuk membandingkan gas cost antara Tier C dan Tier D, serta Cohen's d untuk mengukur effect size.
 

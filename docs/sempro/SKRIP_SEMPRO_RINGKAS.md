@@ -75,8 +75,15 @@ Belum ada yang menggabungkan optimasi gas statis dan dinamis secara inline dalam
 
 ## SLIDE 5: METODOLOGI
 
-**Pendekatan:**
-Studi komparatif kuantitatif dengan empirical design (Park et al., 2024).
+**Dua Pendekatan Penelitian:**
+
+Penelitian ini menggunakan dua pendekatan utama: kuantitatif dan kualitatif.
+
+*Pendekatan Kuantitatif*
+Fokus pada pengukuran angka dan data numerik. Dalam penelitian ini, pendekatan kuantitatif digunakan untuk mengukur konsumsi gas pada setiap tier arsitektur bridge. Hasil pengukuran dianalisis menggunakan statistik deskriptif dan inferensial untuk mendapatkan kesimpulan yang objektif dan terukur.
+
+*Pendekatan Kualitatif*
+Fokus pada evaluasi kualitas dan fitur keamanan. Dalam penelitian ini, pendekatan kualitatif digunakan untuk mengevaluasi delapan fitur keamanan pada setiap tier: reentrancy guard, MEV sandwich detection, economic penalty, emergency pause, block tracking, cross-function reentrancy, consecutive reentrancy, dan MEV cross-block. Evaluasi ini memberikan gambaran komprehensif tentang tingkat keamanan yang dicapai oleh masing-masing tier.
 
 **4-Tier Architecture:**
 
@@ -88,10 +95,15 @@ Tier C (VictimBridge) menggunakan full dynamic: EIP-1153 + MonitorMock via exter
 
 Tier D (LightweightBridge) menggunakan inline dynamic: kontribusi utama penelitian. Gas rendah, skor keamanan 8 dari 8 fitur.
 
-**Pengukuran:**
+**Pengukuran (Kuantitatif):**
 - Framework: Foundry dengan EVM Cancun
 - Sampel: 100 per operasi (Cochran, 1977)
 - Operasi: deposit, withdraw, swap
+
+**Evaluasi Keamanan (Kualitatif):**
+- 8 fitur keamanan yang dievaluasi
+- Skor 0-8 untuk setiap tier
+- Analisis kualitatif terhadap mekanisme pertahanan
 
 **Validasi Statistik:**
 - Welch's t-test untuk signifikansi (Welch, 1947)
