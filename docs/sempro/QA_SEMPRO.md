@@ -16,7 +16,7 @@
 
 ### 4. Apa itu bridge?
 
-**Jawaban:** Bridge adalah money changer di dunia blockchain. Bridge memungkinkan pengguna menukarkan aset dari satu jaringan ke jaringan lainnya, misalnya dari Ethereum ke Arbitrum, seperti menukarkan Rupiah ke Dolar AS.
+**Jawaban:** Bridge adalah jembatan penghubung antar blockchain. Seperti jembatan penghubung antardesa yang memungkinkan penduduk berpindah dari satu desa ke desa lain, bridge memungkinkan transfer aset dari satu jaringan ke jaringan lainnya.
 
 ### 5. Kenapa bridge penting?
 
@@ -28,15 +28,15 @@
 
 ### 7. Apa itu reentrancy?
 
-**Jawaban:** Reentrancy adalah serangan di mana penyerang memanfaatkan celah sebelum transaksi selesai. Analoginya seperti seseorang yang memesan makanan di restoran, makan, tapi sebelum membayar, ia kabur lalu kembali lagi untuk memesan makanan baru tanpa membayar yang pertama.
+**Jawaban:** Reentrancy adalah serangan di mana penyerang memanggil fungsi withdraw secara berulang kali sebelum saldo benar-benar diperbarui. Bayangkan seperti orang yang mondar-mandir di pintu keluar supermarket, mengambil barang berkali-kali sebelum sempat membayar.
 
 ### 8. Apa itu MEV?
 
-**Jawaban:** MEV adalah Maximum Extractable Value, yaitu keuntungan yang bisa didapat dari manipulasi urutan transaksi. Analoginya seperti seseorang yang melihat Anda akan membeli banyak apel di pasar, lalu ia buru-buru membeli semua apel terlebih dahulu dengan harga murah, kemudian menjualnya kepada Anda dengan harga lebih mahal.
+**Jawaban:** MEV adalah Maximum Extractable Value, yaitu keuntungan yang bisa didapat dari manipulasi urutan transaksi. Analoginya seperti bot yang berdiri di antara transaksi Anda dan tujuannya, lalu memanfaatkan urutan transaksi untuk mengambil keuntungan dari selisih harga. Seperti ada orang yang memotong antrian di kasir.
 
 ### 9. Bedanya EIP-1153 dengan SSTORE?
 
-**Jawaban:** EIP-1153 menggunakan TSTORE yang hanya butuh 100 gas. Analoginya seperti menulis di sticky note yang otomatis terbuang setelah digunakan. Sedangkan SSTORE konvensional membutuhkan 20.000 gas, seperti menulis di papan tulis permanen yang tidak bisa dihapus tanpa biaya tambahan. Penghematannya mencapai 98,7 persen.
+**Jawaban:** EIP-1153 menggunakan TSTORE yang hanya butuh 100 gas per operasi. Data di transient storage otomatis ter-reset di akhir transaksi, jadi tidak perlu membersihkan secara manual. Sedangkan SSTORE konvensional membutuhkan 20.000 gas. Penghematannya mencapai 98,7 persen.
 
 ### 10. Apa yang akan dibuat dalam penelitian ini?
 
