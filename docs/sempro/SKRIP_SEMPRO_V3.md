@@ -66,11 +66,21 @@ Berdasarkan kajian literatur, teridentifikasi celah penelitian yang belum tertut
 
 Untuk mengatasi permasalahan di atas, penelitian ini menggunakan dua pendekatan utama: kuantitatif dan kualitatif.
 
-*Pendekatan Kuantitatif*
-Fokus pada pengukuran angka dan data numerik. Dalam penelitian ini, pendekatan kuantitatif digunakan untuk mengukur konsumsi gas pada setiap tier arsitektur bridge. Hasil pengukuran dianalisis menggunakan statistik deskriptif dan inferensial untuk mendapatkan kesimpulan yang objektif dan terukur.
+*Metode Kuantitatif*
+Fokus pada pengukuran angka dan data numerik. Metode yang digunakan meliputi:
+- Gas Benchmark: Pengukuran konsumsi gas dengan 100 sampel per operasi menggunakan Foundry (Cochran, 1977)
+- Statistical Analysis: Analisis statistik deskriptif (mean, min, max, standar deviasi) dan inferensial (Welch's t-test, Cohen's d)
+- Unit Test: Pengujian fungsi individual pada setiap tier (~100 test)
+- Integration Test: Pengujian interaksi antar komponen (~50 test)
+- Fuzz Testing: Property-based testing dengan input acak (8 test)
+- Invariant Testing: Verifikasi properti sistem yang harus selalu benar (3 test)
 
-*Pendekatan Kualitatif*
-Fokus pada evaluasi kualitas dan fitur keamanan. Dalam penelitian ini, pendekatan kualitatif digunakan untuk mengevaluasi delapan fitur keamanan pada setiap tier: reentrancy guard, MEV sandwich detection, economic penalty, emergency pause, block tracking, cross-function reentrancy, consecutive reentrancy, dan MEV cross-block. Evaluasi ini memberikan gambaran komprehensif tentang tingkat keamanan yang dicapai oleh masing-masing tier.
+*Metode Kualitatif*
+Fokus pada evaluasi kualitas dan fitur keamanan. Metode yang digunakan meliputi:
+- Attack Simulation: Simulasi serangan nyata (reentrancy, MEV sandwich, cross-block MEV) (~30 test)
+- Economic Simulation: Analisis profitabilitas serangan menggunakan expected utility formula (~8 test)
+- State Machine Testing: Pengujian transisi state pause/unpause (14 test)
+- Edge Case Testing: Pengujian kondisi batas dan error handling (28 test)
 
 Penulis merancang empat tingkat arsitektur bridge yang disebut 4-Tier Architecture.
 
@@ -82,11 +92,7 @@ Tier C menggunakan EIP-1153 transient storage secara penuh melalui kontrak terpi
 
 Tier D merupakan kontribusi utama penelitian ini. Tier D menggunakan inline dynamic defense, yaitu memindahkan seluruh fitur keamanan Tier C ke dalam kode kontrak utama tanpa external calls.
 
-Untuk pengukuran gas (kuantitatif), penelitian ini menggunakan framework Foundry dengan 100 sampel per operasi. Jumlah sampel ini dipilih berdasarkan Central Limit Theorem yang menyatakan bahwa distribusi mean akan mendekati normal untuk n >= 30.
-
-Untuk evaluasi keamanan (kualitatif), dilakukan berdasarkan delapan fitur yang dianggap kritis: reentrancy guard, MEV sandwich detection, economic penalty, emergency pause, block tracking, cross-function reentrancy, consecutive reentrancy, dan MEV cross-block.
-
-Validasi statistik menggunakan Welch's t-test untuk membandingkan gas cost antara Tier C dan Tier D, serta Cohen's d untuk mengukur effect size.
+Total pengujian yang dilakukan adalah 216 test cases dalam 13 file test, mencakup seluruh metode di atas.
 
 ---
 

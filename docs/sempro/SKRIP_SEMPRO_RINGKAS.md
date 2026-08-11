@@ -79,11 +79,21 @@ Belum ada yang menggabungkan optimasi gas statis dan dinamis secara inline dalam
 
 Penelitian ini menggunakan dua pendekatan utama: kuantitatif dan kualitatif.
 
-*Pendekatan Kuantitatif*
-Fokus pada pengukuran angka dan data numerik. Dalam penelitian ini, pendekatan kuantitatif digunakan untuk mengukur konsumsi gas pada setiap tier arsitektur bridge. Hasil pengukuran dianalisis menggunakan statistik deskriptif dan inferensial untuk mendapatkan kesimpulan yang objektif dan terukur.
+*Metode Kuantitatif*
+Fokus pada pengukuran angka dan data numerik. Metode yang digunakan meliputi:
+- Gas Benchmark: Pengukuran konsumsi gas dengan 100 sampel per operasi menggunakan Foundry (Cochran, 1977)
+- Statistical Analysis: Analisis statistik deskriptif (mean, min, max, standar deviasi) dan inferensial (Welch's t-test, Cohen's d)
+- Unit Test: Pengujian fungsi individual pada setiap tier (~100 test)
+- Integration Test: Pengujian interaksi antar komponen (~50 test)
+- Fuzz Testing: Property-based testing dengan input acak (8 test)
+- Invariant Testing: Verifikasi properti sistem yang harus selalu benar (3 test)
 
-*Pendekatan Kualitatif*
-Fokus pada evaluasi kualitas dan fitur keamanan. Dalam penelitian ini, pendekatan kualitatif digunakan untuk mengevaluasi delapan fitur keamanan pada setiap tier: reentrancy guard, MEV sandwich detection, economic penalty, emergency pause, block tracking, cross-function reentrancy, consecutive reentrancy, dan MEV cross-block. Evaluasi ini memberikan gambaran komprehensif tentang tingkat keamanan yang dicapai oleh masing-masing tier.
+*Metode Kualitatif*
+Fokus pada evaluasi kualitas dan fitur keamanan. Metode yang digunakan meliputi:
+- Attack Simulation: Simulasi serangan nyata (reentrancy, MEV sandwich, cross-block MEV) (~30 test)
+- Economic Simulation: Analisis profitabilitas serangan menggunakan expected utility formula (~8 test)
+- State Machine Testing: Pengujian transisi state pause/unpause (14 test)
+- Edge Case Testing: Pengujian kondisi batas dan error handling (28 test)
 
 **4-Tier Architecture:**
 
@@ -95,19 +105,8 @@ Tier C (VictimBridge) menggunakan full dynamic: EIP-1153 + MonitorMock via exter
 
 Tier D (LightweightBridge) menggunakan inline dynamic: kontribusi utama penelitian. Gas rendah, skor keamanan 8 dari 8 fitur.
 
-**Pengukuran (Kuantitatif):**
-- Framework: Foundry dengan EVM Cancun
-- Sampel: 100 per operasi (Cochran, 1977)
-- Operasi: deposit, withdraw, swap
-
-**Evaluasi Keamanan (Kualitatif):**
-- 8 fitur keamanan yang dievaluasi
-- Skor 0-8 untuk setiap tier
-- Analisis kualitatif terhadap mekanisme pertahanan
-
-**Validasi Statistik:**
-- Welch's t-test untuk signifikansi (Welch, 1947)
-- Cohen's d untuk effect size (Cohen, 1988)
+**Total Pengujian:**
+216 test cases dalam 13 file test, mencakup seluruh metode di atas.
 
 **Metrik:**
 SPG = (Skor Keamanan / Gas Deposit) x 1.000.000 (Benedetti et al., 2024)
